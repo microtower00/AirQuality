@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "ChartsViewer.h"
 
 #include <QApplication>
 

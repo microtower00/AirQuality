@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef CHARTSVIEWER_H
+#define CHARTSVIEWER_H
 
 #include <QMainWindow>
 
@@ -11,4 +11,4 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 };
-#endif // MAINWINDOW_H
+#endif // CHARTSVIEWER_H

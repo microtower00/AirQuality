@@ -1,16 +1,16 @@
-#include "mainwindow.h"
+#include "ChartsViewer.h"
 #include <QLabel>
-#include<QVBoxLayout>
-#include<QPushButton>
+#include <QVBoxLayout>
+#include <QPushButton>
 #include <QFileDialog>
-#include<QComboBox>
+#include <QComboBox>
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 {
     QLabel *titolo = new QLabel("AirQuality Charts",this);
     QLabel *oppure = new QLabel("oppure",this);
 
-    QVBoxLayout *colonnaBott = new QVBoxLayout(this);
+    QVBoxLayout *colonnaBott = new QVBoxLayout();
     QPushButton *bottone1 = new QPushButton("Apri file");
     QFileDialog *file = new QFileDialog(this, "Open file", "C://");
     QPushButton *bottone2 = new QPushButton("Ottieni da OpenWeather");
@@ -20,10 +20,11 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 
     colonnaBott->addWidget(titolo);
     colonnaBott->addWidget(bottone1);
-    //colonnaBott->addWidget(file);
     colonnaBott->addWidget(oppure);
     colonnaBott->addWidget(bottone2);
     colonnaBott->addWidget(combo);
+
+    resize(500,500);
 
     QWidget *finestra = new QWidget();
     finestra->setLayout(colonnaBott);

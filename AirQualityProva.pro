@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,7 +15,7 @@ SOURCES += \
     model.cpp
 
 HEADERS += \
-    AirQualityRetirever.h \
+    AirQualityRetriever.h \
     ChartsViewer.h \
     model.h
 

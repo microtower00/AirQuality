@@ -1,3 +1,5 @@
+#include "AirQualityRetriever.h"
+#include<iostream>
 
 
 AirQualityRetriever::AirQualityRetriever(QString apik): apikey(apik)
@@ -14,7 +16,7 @@ QJsonDocument AirQualityRetriever::retrieve(double lat, double lon){
 
     QObject::connect(prova, &QNetworkReply::finished, [=]() {
 
-        if(prova->error() == QNetworkReply::NoError)
+    if(prova->error() == QNetworkReply::NoError)
         {
             QByteArray response = prova->readAll();
             QTextStream ts(stdout);
@@ -25,7 +27,6 @@ QJsonDocument AirQualityRetriever::retrieve(double lat, double lon){
         }
         else // handle error
         {
-          qDebug("DioAsSaSs");
-        }
+          qDebug("DioAsSaSs");        }
     });
 }

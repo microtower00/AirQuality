@@ -4,6 +4,9 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QComboBox>
+#include "AirQualityRetriever.h"
+#include<iostream>
+using namespace std;
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
 {

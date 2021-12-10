@@ -14,8 +14,11 @@
 
 
 
-class AirQualityRetriever
-{
+class AirQualityRetriever: public QObject{
+//Non so ancora se sia giusto
+/*public slots:
+    QJsonDocument replyEnded();*/
+
 public:
     QNetworkAccessManager *manager;
     QString apikey;

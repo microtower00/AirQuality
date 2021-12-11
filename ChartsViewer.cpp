@@ -1,4 +1,6 @@
 #include "ChartsViewer.h"
+#include "AirQualityRetriever.h"
+
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -7,12 +9,12 @@
 #include <QGroupBox>
 #include <QTextEdit>
 #include <QDateEdit>
-
-#include "AirQualityRetriever.h"
+#include <QJsonObject>
 #include<iostream>
-using namespace std;
 
-MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
+//using namespace std;
+QLabel *jsLabel;
+ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
 {
     QLabel *titolo = new QLabel("AirQuality Charts",this);
     QLabel *oppure = new QLabel("oppure",this);
@@ -85,6 +87,15 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
     rigaAzioni->addWidget(openWeather);
     mainCol->addLayout(rigaAzioni);
 
+    jsLabel = new QLabel("");
+    mainCol->addWidget(jsLabel);
+
+    //Qui solo per ragioni di test
+    AirQualityRetriever *aq = new AirQualityRetriever("7b6bde71c02400af4d2b61da7b315b31");
+    aq->retrieve(45.4079700,11.8858600);
+
+    connect(aq,SIGNAL(readReady(QJsonDocument*)),this,SLOT(receiveJson(QJsonDocument*)));
+
     resize(250,150);
 
     QWidget *finestra = new QWidget();
@@ -93,6 +104,18 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent)
     setCentralWidget(finestra);
 }
 
-MainWindow::~MainWindow()
-{
+void ChartsViewer::receiveJson(QJsonDocument* json){
+    qDebug() << "Slot chiamato";
+    if(json->isObject()){
+        QJsonObject jsObj = json->object();
+        QStringList chiavi = jsObj.keys();
+        QString label;
+        for(auto it = chiavi.begin();it < chiavi.end(); ++it){
+            label.append(*it);
+            label.append("|");
+        }
+        jsLabel->setText(label);
+    }
 }
+
+ChartsViewer::~ChartsViewer(){}

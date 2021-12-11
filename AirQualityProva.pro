@@ -11,13 +11,13 @@ CONFIG += c++11
 SOURCES += \
     AirQualityRetriever.cpp \
     ChartsViewer.cpp \
-    main.cpp \
-    model.cpp
+    Model.cpp \
+    main.cpp
 
 HEADERS += \
     AirQualityRetriever.h \
     ChartsViewer.h \
-    model.h
+    Model.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

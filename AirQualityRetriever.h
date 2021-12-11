@@ -19,14 +19,16 @@ Q_OBJECT
 private:
     QNetworkAccessManager *manager;
     QString apikey;
-//Non so ancora se sia giusto
-public slots:
-    QJsonDocument replyEnded(QNetworkReply*);
-
 public:
     AirQualityRetriever(QString);
-    QJsonDocument retrieve(double,double);
+    void retrieve(double,double);
     virtual ~AirQualityRetriever();
+
+public slots:
+    QJsonDocument replyEnded(QNetworkReply*);
+signals:
+    void readReady(QJsonDocument*);
+
 };
 
 

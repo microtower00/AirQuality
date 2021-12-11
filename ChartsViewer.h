@@ -2,13 +2,15 @@
 #define CHARTSVIEWER_H
 
 #include <QMainWindow>
+#include <QJsonDocument>
 
-class MainWindow : public QMainWindow
+class ChartsViewer : public QMainWindow
 {
     Q_OBJECT
-
+public slots:
+    void receiveJson(QJsonDocument*);
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ChartsViewer(QWidget *parent = nullptr);
+    ~ChartsViewer();
 };
 #endif // CHARTSVIEWER_H

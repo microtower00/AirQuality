@@ -8,17 +8,17 @@ AirQualityRetriever::AirQualityRetriever(QString apik): apikey(apik)
     qInfo()<< "Costruito AqRetr";
 
 }
-
-QJsonDocument AirQualityRetriever::retrieve(double lat, double lon){
+//modificato tipo di ritorno a void perché non si puó ritornare nulla da uno slot
+void AirQualityRetriever::retrieve(double lat, double lon){
     //Creo stringa per URL e creo URL
-    QString *stringaRichiesta = new QString("http://api.openweathermap.org/data/2.5/air_pollution?lat=50&lon=50&appid=7b6bde71c02400af4d2b61da7b315b31");
+    QString *stringaRichiesta = new QString("http://api.openweathermap.org/data/2.5/air_pollution?lat=" + QString::number(lat) + "&lon=" + QString::number(lon) + "&appid=" + apikey);
     QUrl urlRichiesta(*stringaRichiesta);
 
     //Creo l'oggetto richiesta, non dovrebbe servire header visto che é GET
     QNetworkRequest *richiesta = new QNetworkRequest(urlRichiesta);
 
     //Invio richiesta
-    /*QNetworkReply *response = */manager->get(*richiesta);
+    manager->get(*richiesta);
 
     //Collego segnale di richiesta finita allo slot apposito
     connect(manager, SIGNAL(finished(QNetworkReply*)),this, SLOT(replyEnded(QNetworkReply*)));
@@ -38,8 +38,11 @@ QJsonDocument AirQualityRetriever::replyEnded(QNetworkReply* response){
     //DIOP VA
     QString risposta= QString(ba);
     qDebug() << risposta;
-    //Non serve a nulla
-    return QJsonDocument::fromJson(ba);
+
+    QJsonDocument dati = QJsonDocument::fromJson(ba);
+    emit readReady(&dati);
+    //Non serve a nulla, a meno che lo slot non venga usato come metodo
+    return dati;
 }
 
 AirQualityRetriever::~AirQualityRetriever(){}

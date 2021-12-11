@@ -104,6 +104,7 @@ ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
     setCentralWidget(finestra);
 }
 
+//Per testare come aggiungere qualcosa al main letto da json
 void ChartsViewer::receiveJson(QJsonDocument* json){
     qDebug() << "Slot chiamato";
     if(json->isObject()){

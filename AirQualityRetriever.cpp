@@ -25,6 +25,7 @@ void AirQualityRetriever::retrieve(double lat, double lon){
 
 }
 
+//Slot per acchiappare la richiesta appena finita
 QJsonDocument AirQualityRetriever::replyEnded(QNetworkReply* response){
     //qDebug() << "Richiesta terminata: "<< response->isFinished();
     QByteArray ba;
@@ -38,9 +39,10 @@ QJsonDocument AirQualityRetriever::replyEnded(QNetworkReply* response){
     //DIOP VA
     QString risposta= QString(ba);
     qDebug() << risposta;
-
+    //emetto un sengale prendibile da chi vuole leggere il file json
     QJsonDocument dati = QJsonDocument::fromJson(ba);
     emit readReady(&dati);
+
     //Non serve a nulla, a meno che lo slot non venga usato come metodo
     return dati;
 }

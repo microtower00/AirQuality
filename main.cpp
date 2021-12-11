@@ -10,9 +10,9 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    /*AirQualityRetriever *aq = new AirQualityRetriever("a");
+    AirQualityRetriever *aq = new AirQualityRetriever("a");
     QJsonDocument risp = aq->retrieve(5,5);
-    qDebug() << risp.isObject();
+    /*qDebug() << risp.isObject();
     if( risp.isObject() )
             {
                 QJsonObject jsonObj = risp.object();

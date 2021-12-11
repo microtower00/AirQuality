@@ -6,13 +6,8 @@ AirQualityRetriever::AirQualityRetriever(QString apik): apikey(apik)
 {
     manager = new QNetworkAccessManager();
     qInfo()<< "Costruito AqRetr";
-    //connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply*)));
 
 }
-/*
-QJsonDocument replyEnded(){
-    qDebug()<<"Si muove qualcosa";
-}*/
 
 QJsonDocument AirQualityRetriever::retrieve(double lat, double lon){
     //Creo stringa per URL e creo URL
@@ -23,26 +18,28 @@ QJsonDocument AirQualityRetriever::retrieve(double lat, double lon){
     QNetworkRequest *richiesta = new QNetworkRequest(urlRichiesta);
 
     //Invio richiesta
-    QNetworkReply *response = manager->get(*richiesta);
+    /*QNetworkReply *response = */manager->get(*richiesta);
 
-    qDebug() << response->error();
-    qDebug() << response->isFinished();
+    //Collego segnale di richiesta finita allo slot apposito
+    connect(manager, SIGNAL(finished(QNetworkReply*)),this, SLOT(replyEnded(QNetworkReply*)));
 
-    //Va fatto con segnali e slot ma non riesco
-    //connect(response, SIGNAL(finished()),this, SLOT(replyEnded()));
-
-    //qInfo()<< "Preciclo";
-
-    //Questo ciclo non va
-    while (response->isFinished()){}
-    if(response->error()!=QNetworkReply::NoError){
-        qDebug() << response->error();
-    }
-    //qDebug() << response->error();
-
-    //Parso da ByteArray a JSonDocument, funziona ma viene fatto senza attendere che la risposta sia comletata, devo fixare
-    QByteArray ba = response->readAll();
-    QString responseString(ba);
-    //qDebug() << responseString;
-    return QJsonDocument::fromJson(ba);;
 }
+
+QJsonDocument AirQualityRetriever::replyEnded(QNetworkReply* response){
+    //qDebug() << "Richiesta terminata: "<< response->isFinished();
+    QByteArray ba;
+    if(response->error()==QNetworkReply::NoError){
+         ba = response->readAll();
+         qDebug() << "Leggo risposta";
+    }else
+        qDebug() << response->error();
+
+    response->deleteLater();
+    //DIOP VA
+    QString risposta= QString(ba);
+    qDebug() << risposta;
+    //Non serve a nulla
+    return QJsonDocument::fromJson(ba);
+}
+
+AirQualityRetriever::~AirQualityRetriever(){}

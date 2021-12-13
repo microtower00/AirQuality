@@ -7,10 +7,11 @@
 #include <QFileDialog>
 #include <QComboBox>
 #include <QGroupBox>
-#include <QTextEdit>
+#include <QLineEdit>
 #include <QDateEdit>
 #include <QJsonObject>
 #include<iostream>
+#include <QCompleter>
 
 //using namespace std;
 QLabel *jsLabel;
@@ -37,7 +38,7 @@ ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
 
     QPushButton *apriFileButton = new QPushButton("Importa");
     QPushButton *openWeatherButton = new QPushButton("Ottieni");
-    QTextEdit *cityText = new QTextEdit();
+    QLineEdit *cityText = new QLineEdit();
     QDateEdit *dataInizio = new QDateEdit();
     QDateEdit *dataFine = new QDateEdit;
 

@@ -43,6 +43,10 @@ QJsonDocument AirQualityRetriever::replyEnded(QNetworkReply* response){
     QJsonDocument dati = QJsonDocument::fromJson(ba);
     emit readReady(&dati);
 
+    // Stampa la stessa porcheria con dati.object()["coord"]
+    // Volevo provare a ottenere solo una delle due coordinate ma per adesso non riesco
+    qDebug() << *dati.object().find("coord");
+
     //Non serve a nulla, a meno che lo slot non venga usato come metodo
     return dati;
 }

@@ -44,6 +44,15 @@ ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
 
     QFileDialog *file = new QFileDialog(this, "Open file", "C://");
 
+    //COMPLETER COPIATO DALLA DOC
+    QStringList wordList;
+    wordList << "alpha" << "omega" << "omicron" << "zeta";
+
+    QCompleter *completer = new QCompleter(wordList, this);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    cityText->setCompleter(completer);
+    //FINE COMPLETER COPIATO
+
     this->setWindowTitle(" ");
 
     connect(apriFileButton, SIGNAL(clicked()),file,SLOT(open()));

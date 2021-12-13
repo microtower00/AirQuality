@@ -1,9 +1,13 @@
 #include <QString>
 #include <QJsonDocument>
 #include <QNetworkAccessManager>
+#include <QJsonObject>
+#include <QJsonArray>
 #include <QNetworkReply>
 #include <QUrl>
 #include <QObject>
+#include <QVariant>
+
 
 #ifndef WEATHERRETRIEVER_H
 #define WEATHERRETRIEVER_H

@@ -27,8 +27,9 @@ void AirQualityRetriever::retrieve(double lat, double lon){
 void AirQualityRetriever::retrieveHistorical(double lat, double lon, QDate start, QDate end){
     //Creo stringa per URL e creo URL
 
-    QString *stringaRichiesta = new QString("http://api.openweathermap.org/data/2.5/air_pollution?lat=" + QString::number(lat) + "&lon=" + QString::number(lon) + "&start=" + QString::number((new QDateTime(start))->toTime_t()) + "&end=" + QString::number((new QDateTime(end))->toTime_t()) + "&appid=" + apikey);
+    QString *stringaRichiesta = new QString("http://api.openweathermap.org/data/2.5/air_pollution/history?lat=" + QString::number(lat) + "&lon=" + QString::number(lon) + "&start=" + QString::number((new QDateTime(start))->toTime_t()) + "&end=" + QString::number((new QDateTime(end))->toTime_t()) + "&appid=" + apikey);
     QUrl urlRichiesta(*stringaRichiesta);
+    qDebug() << "stringa richiesta"<<*stringaRichiesta;
 
     //Creo l'oggetto richiesta, non dovrebbe servire header visto che é GET
     QNetworkRequest *richiesta = new QNetworkRequest(urlRichiesta);

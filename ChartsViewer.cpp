@@ -104,7 +104,7 @@ ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
     AirQualityRetriever *aq = new AirQualityRetriever("7b6bde71c02400af4d2b61da7b315b31");
     //aq->retrieve(45.4079700,11.8858600);
 
-    aq->retrieveHistorical(45.4079700,11.8858600, QDate(2021,12,14), QDate(2021,12,13));
+    aq->retrieveHistorical(45.4079700, 11.8858600, QDate(2021,12,10), QDate(2021,12,12));
 
     connect(aq,SIGNAL(readReady(QJsonDocument*)),this,SLOT(receiveJson(QJsonDocument*)));
 
@@ -123,18 +123,38 @@ void ChartsViewer::receiveJson(QJsonDocument* json){
         QJsonObject jsObj = json->object();
         QStringList chiavi = jsObj.keys();
 
-        QString label;
-        for(auto it = chiavi.begin();it < chiavi.end(); ++it){
+        //QString label;
 
+        //JSON DELLA RICHIESTA STORICA GIÀ FORMATTATO GIUSTO
+        //auto value = json->toJson();
+
+        //MA DIMMI TE SE UNO POI NON DEVE BESTEMMIARE NON RIESCO NÈ A LEGGERE
+        //NÈ A SCRIVERE UN FILE
+        /*QFile fileRichiesta("fileRichiesta.txt");
+        fileRichiesta.open(QIODevice::ReadWrite);
+        qDebug() << fileRichiesta.isReadable();
+
+        fileRichiesta.write("ciao ragazzi ciao a tutti sono zeb89");
+        char testringa[64];
+        fileRichiesta.readLine(testringa, sizeof(testringa));
+        qDebug() << "PROVAFILE" << testringa << endl;
+        //fileRichiesta.close();
+        //qDebug() << "value"<<value;
+
+        //ATTUALMENTE POCO UTILE
+        /*for(auto it = chiavi.begin();it < chiavi.end(); ++it){
             auto value = jsObj.take(*it);
-
-            qDebug()<<"testdc"<<value.toObject().take("lat").toDouble();
-            qDebug()<<"testdc"<<value.toObject().take("lon").toDouble();
-            label.append(*it);
-            label.append("|");
+            qDebug() << "value"<<value;
+            //qDebug()<<"testdc"<<value.toObject().take("lat").toDouble();
+            //qDebug()<<"testdc"<<value.toObject().take("lon").toDouble();
+            //label.append(*it);
+            //label.append("|");
             //qDebug()<<"tostring"<<(*jsObj.find("coord")).toObject();
         }
+
+        //qDebug() << "stampo l'intera risposta?" << json->toJson();
         jsLabel->setText(label);
+        */
     }
 }
 

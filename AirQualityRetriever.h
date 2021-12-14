@@ -26,6 +26,7 @@ private:
 public:
     AirQualityRetriever(QString);
     void retrieve(double,double);
+    void retrieveHistorical(double,double,QDate,QDate);
     virtual ~AirQualityRetriever();
 
 public slots:

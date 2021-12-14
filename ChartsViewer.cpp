@@ -102,7 +102,9 @@ ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
 
     //Qui solo per ragioni di test
     AirQualityRetriever *aq = new AirQualityRetriever("7b6bde71c02400af4d2b61da7b315b31");
-    aq->retrieve(45.4079700,11.8858600);
+    //aq->retrieve(45.4079700,11.8858600);
+
+    aq->retrieveHistorical(45.4079700,11.8858600, QDate(2021,12,14), QDate(2021,12,13));
 
     connect(aq,SIGNAL(readReady(QJsonDocument*)),this,SLOT(receiveJson(QJsonDocument*)));
 
@@ -120,10 +122,17 @@ void ChartsViewer::receiveJson(QJsonDocument* json){
     if(json->isObject()){
         QJsonObject jsObj = json->object();
         QStringList chiavi = jsObj.keys();
+
         QString label;
         for(auto it = chiavi.begin();it < chiavi.end(); ++it){
+
+            auto value = jsObj.take(*it);
+
+            qDebug()<<"testdc"<<value.toObject().take("lat").toDouble();
+            qDebug()<<"testdc"<<value.toObject().take("lon").toDouble();
             label.append(*it);
             label.append("|");
+            //qDebug()<<"tostring"<<(*jsObj.find("coord")).toObject();
         }
         jsLabel->setText(label);
     }

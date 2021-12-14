@@ -2,6 +2,7 @@
 #define CHARTSVIEWER_H
 
 #include <QMainWindow>
+#include<QGeoCoordinate>
 #include <QJsonDocument>
 
 class ChartsViewer : public QMainWindow

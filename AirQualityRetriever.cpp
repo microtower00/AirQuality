@@ -7,6 +7,9 @@ AirQualityRetriever::AirQualityRetriever(QString apik): apikey(apik)
     manager = new QNetworkAccessManager();
     qInfo()<< "Costruito AqRetr";
 
+    //Collego segnale di richiesta finita allo slot apposito
+    connect(manager, SIGNAL(finished(QNetworkReply*)),this, SLOT(replyEnded(QNetworkReply*)));
+
 }
 //modificato tipo di ritorno a void perché non si puó ritornare nulla da uno slot
 void AirQualityRetriever::retrieve(double lat, double lon){
@@ -19,10 +22,19 @@ void AirQualityRetriever::retrieve(double lat, double lon){
 
     //Invio richiesta
     manager->get(*richiesta);
+}
 
-    //Collego segnale di richiesta finita allo slot apposito
-    connect(manager, SIGNAL(finished(QNetworkReply*)),this, SLOT(replyEnded(QNetworkReply*)));
+void AirQualityRetriever::retrieveHistorical(double lat, double lon, QDate start, QDate end){
+    //Creo stringa per URL e creo URL
 
+    QString *stringaRichiesta = new QString("http://api.openweathermap.org/data/2.5/air_pollution?lat=" + QString::number(lat) + "&lon=" + QString::number(lon) + "&start=" + QString::number((new QDateTime(start))->toTime_t()) + "&end=" + QString::number((new QDateTime(end))->toTime_t()) + "&appid=" + apikey);
+    QUrl urlRichiesta(*stringaRichiesta);
+
+    //Creo l'oggetto richiesta, non dovrebbe servire header visto che é GET
+    QNetworkRequest *richiesta = new QNetworkRequest(urlRichiesta);
+
+    //Invio richiesta
+    manager->get(*richiesta);
 }
 
 //Slot per acchiappare la richiesta appena finita

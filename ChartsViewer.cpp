@@ -1,54 +1,39 @@
 #include "ChartsViewer.h"
 #include "AirQualityRetriever.h"
 
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QFileDialog>
-#include <QComboBox>
-#include <QGroupBox>
-#include <QLineEdit>
-#include <QDateEdit>
-#include <QJsonObject>
-#include<iostream>
-#include <QCompleter>
-
-//using namespace std;
-QLabel *jsLabel;
 ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
 {
-    QLabel *titolo = new QLabel("AirQuality Charts",this);
-    QLabel *oppure = new QLabel("oppure",this);
-    QLabel *inizio = new QLabel("Inizio",this);
-    QLabel *fine = new QLabel("Fine",this);
+    titolo = new QLabel("AirQuality Charts",this);
+    oppure = new QLabel("oppure",this);
+    inizio = new QLabel("Inizio",this);
+    fine = new QLabel("Fine",this);
 
-    QVBoxLayout *mainCol = new QVBoxLayout();
+    mainCol = new QVBoxLayout();
 
-    QHBoxLayout *rigaTitle = new QHBoxLayout();
-    QHBoxLayout *rigaAzioni = new QHBoxLayout();
+    rigaTitle = new QHBoxLayout();
+    rigaAzioni = new QHBoxLayout();
 
-    QVBoxLayout *importaVbox = new QVBoxLayout();
-    QVBoxLayout *openWeatherVbox = new QVBoxLayout();
+    importaVbox = new QVBoxLayout();
+    openWeatherVbox = new QVBoxLayout();
 
-    QGroupBox *importa = new QGroupBox("Apri file");
-    QGroupBox *openWeather = new QGroupBox("Scarica da OpenWeather");
+    importa = new QGroupBox("Apri file");
+    openWeather = new QGroupBox("Scarica da OpenWeather");
 
-    QHBoxLayout *rigaDataInizio = new QHBoxLayout();
-    QHBoxLayout *rigaDataFine = new QHBoxLayout();
+    rigaDataInizio = new QHBoxLayout();
+    rigaDataFine = new QHBoxLayout();
 
-    QPushButton *apriFileButton = new QPushButton("Importa");
-    QPushButton *openWeatherButton = new QPushButton("Ottieni");
-    QLineEdit *cityText = new QLineEdit();
-    QDateEdit *dataInizio = new QDateEdit();
-    QDateEdit *dataFine = new QDateEdit;
+    apriFileButton = new QPushButton("Importa");
+    openWeatherButton = new QPushButton("Ottieni");
+    cityText = new QLineEdit();
+    dataInizio = new QDateEdit();
+    dataFine = new QDateEdit;
 
-    QFileDialog *file = new QFileDialog(this, "Open file", "C://");
+    file = new QFileDialog(this, "Open file", "C://");
 
     //COMPLETER COPIATO DALLA DOC
-    QStringList wordList;
     wordList << "alpha" << "omega" << "omicron" << "zeta";
 
-    QCompleter *completer = new QCompleter(wordList, this);
+    completer = new QCompleter(wordList, this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     cityText->setCompleter(completer);
     //FINE COMPLETER COPIATO
@@ -110,7 +95,7 @@ ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
 
     resize(250,150);
 
-    QWidget *finestra = new QWidget();
+    finestra = new QWidget();
     finestra->setLayout(mainCol);
 
     setCentralWidget(finestra);
@@ -118,7 +103,7 @@ ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
 
 //Per testare come aggiungere qualcosa al main letto da json
 void ChartsViewer::receiveJson(QJsonDocument* json){
-    qDebug() << "Slot chiamato";
+    //qDebug() << "Slot chiamato";
     if(json->isObject()){
         QJsonObject jsObj = json->object();
         QStringList chiavi = jsObj.keys();
@@ -128,16 +113,15 @@ void ChartsViewer::receiveJson(QJsonDocument* json){
         //JSON DELLA RICHIESTA STORICA GIÀ FORMATTATO GIUSTO
         //auto value = json->toJson();
 
-        //MA DIMMI TE SE UNO POI NON DEVE BESTEMMIARE NON RIESCO NÈ A LEGGERE
-        //NÈ A SCRIVERE UN FILE
-        /*QFile fileRichiesta("fileRichiesta.txt");
+        //Non va qui ma intanto funziona
+        QFile fileRichiesta("fileRichiesta.txt");
         fileRichiesta.open(QIODevice::ReadWrite);
-        qDebug() << fileRichiesta.isReadable();
+        //qDebug() << fileRichiesta.isReadable();
 
-        fileRichiesta.write("ciao ragazzi ciao a tutti sono zeb89");
-        char testringa[64];
-        fileRichiesta.readLine(testringa, sizeof(testringa));
-        qDebug() << "PROVAFILE" << testringa << endl;
+        fileRichiesta.write(json->toJson());
+        //QTString
+        //fileRichiesta.readLine(testringa, sizeof(testringa));
+        //qDebug() << "PROVAFILE" << testringa << endl;
         //fileRichiesta.close();
         //qDebug() << "value"<<value;
 

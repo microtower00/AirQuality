@@ -6,17 +6,11 @@
 #include <QNetworkReply>
 #include <QUrl>
 #include <QObject>
-#include <QVariant>
+//#include <QVariant>
 
 
 #ifndef WEATHERRETRIEVER_H
 #define WEATHERRETRIEVER_H
-
-
-
-//#include <QtMobi
-
-
 
 class AirQualityRetriever: public QObject{
 Q_OBJECT

@@ -56,7 +56,9 @@ private:
     QStringList wordList;
     QCompleter *completer;
 
-    QWidget *finestra = new QWidget();
+    QWidget *finestra;
+
+    QPushButton *bottoneCambio;
 };
 
 

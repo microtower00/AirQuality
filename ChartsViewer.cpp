@@ -24,9 +24,11 @@ ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
 
     apriFileButton = new QPushButton("Importa");
     openWeatherButton = new QPushButton("Ottieni");
+    bottoneCambio = new QPushButton("Cambia finestra");
     cityText = new QLineEdit();
     dataInizio = new QDateEdit();
     dataFine = new QDateEdit;
+
 
     file = new QFileDialog(this, "Open file", "C://");
 

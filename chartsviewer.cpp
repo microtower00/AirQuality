@@ -1,4 +1,5 @@
-#include "ChartsViewer.h"
+#include "chartsviewer.h"
+#include "chartschoser.h"
 #include "AirQualityRetriever.h"
 
 ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
@@ -86,6 +87,15 @@ ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
 
     jsLabel = new QLabel("");
     mainCol->addWidget(jsLabel);
+
+    //bottone dal nome auto-esplicativo dichiarato malamente qua apposta
+    QPushButton* testNewWindow = new QPushButton("Test nuova finestra");
+    mainCol->addWidget(testNewWindow);
+    ChartsChoser* c = new ChartsChoser;
+    connect(testNewWindow, SIGNAL(clicked()),c,SLOT(show()));
+    connect(testNewWindow, SIGNAL(clicked()),this,SLOT(hide()));
+    //qua sotto provo a far riapparire questa finestra alla chiusura di choser ma senza successo
+    //connect(c, SIGNAL(exit()),this,SLOT(show()));
 
     //Qui solo per ragioni di test
     AirQualityRetriever *aq = new AirQualityRetriever("7b6bde71c02400af4d2b61da7b315b31");

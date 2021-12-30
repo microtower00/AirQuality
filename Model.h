@@ -3,17 +3,23 @@
 
 #include <AirQualityRetriever.h>
 #include <QFile>
+#include <QFileDialog>
+#include <QGeoCoordinate>
 
 class Model: public QObject
 {
+    Q_OBJECT
 public:
     Model(QString);
+    //Non ancora implementato
+    QGeoCoordinate getCityCoords(QString);
 public slots:
-    void getAirQuality(double,double);
-    void getAirQuality(double,double,QDate,QDate);
+    void ottieniDati(QString,QDate,QDate);
+    void saveJSonReply(QJsonDocument*);
+    void openFileDialog(QWidget*);
 
-    void readingJSon(QJsonDocument*);
-
+signals:
+    void savedFile(QString);
 private:
     AirQualityRetriever aqRet;
 };

@@ -24,13 +24,14 @@ class ChartsViewer : public QMainWindow
 {
     Q_OBJECT
 public slots:
-    //void receiveJson(QJsonDocument);
+    void bottoneOttieni();
+    void cliccatoImporta();
 public:
     ChartsViewer(QWidget *parent = nullptr);
     ~ChartsViewer();
 private:
 
-    Model model;
+    Model* model;
 
     QLabel *jsLabel;
     QLabel *titolo;

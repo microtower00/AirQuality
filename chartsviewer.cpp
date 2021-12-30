@@ -1,8 +1,8 @@
 #include "chartsviewer.h"
-#include "chartschoser.h"
-#include "AirQualityRetriever.h"
 
-ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
+ChartsViewer::ChartsViewer(QWidget *parent):
+    QMainWindow(parent),
+    model("7b6bde71c02400af4d2b61da7b315b31")
 {
     titolo = new QLabel("AirQuality Charts",this);
     oppure = new QLabel("oppure",this);
@@ -97,13 +97,10 @@ ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
     //qua sotto provo a far riapparire questa finestra alla chiusura di choser ma senza successo
     //connect(c, SIGNAL(exit()),this,SLOT(show()));
 
-    //Qui solo per ragioni di test
-    AirQualityRetriever *aq = new AirQualityRetriever("7b6bde71c02400af4d2b61da7b315b31");
-    //aq->retrieve(45.4079700,11.8858600);
 
-    aq->retrieveHistorical(45.4079700, 11.8858600, QDate(2021,12,10), QDate(2021,12,12));
-
-    connect(aq,SIGNAL(readReady(QJsonDocument*)),this,SLOT(receiveJson(QJsonDocument*)));
+    double lat=10,lon=15;
+    model.getAirQuality(lat,lon);
+    connect(openWeatherButton,SIGNAL(clicked()),&model,SLOT(getAirQuality(lat,lon)));
 
     resize(250,150);
 
@@ -114,7 +111,7 @@ ChartsViewer::ChartsViewer(QWidget *parent): QMainWindow(parent)
 }
 
 //Per testare come aggiungere qualcosa al main letto da json
-void ChartsViewer::receiveJson(QJsonDocument* json){
+/*void ChartsViewer::receiveJson(QJsonDocument* json){
     //qDebug() << "Slot chiamato";
     if(json->isObject()){
         QJsonObject jsObj = json->object();
@@ -150,8 +147,8 @@ void ChartsViewer::receiveJson(QJsonDocument* json){
 
         //qDebug() << "stampo l'intera risposta?" << json->toJson();
         jsLabel->setText(label);
-        */
+
     }
-}
+}*/
 
 ChartsViewer::~ChartsViewer(){}

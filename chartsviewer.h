@@ -16,15 +16,22 @@
 #include<iostream>
 #include <QCompleter>
 
+#include "chartschoser.h"
+#include "AirQualityRetriever.h"
+#include "Model.h"
+
 class ChartsViewer : public QMainWindow
 {
     Q_OBJECT
 public slots:
-    void receiveJson(QJsonDocument*);
+    //void receiveJson(QJsonDocument);
 public:
     ChartsViewer(QWidget *parent = nullptr);
     ~ChartsViewer();
 private:
+
+    Model model;
+
     QLabel *jsLabel;
     QLabel *titolo;
     QLabel *oppure;

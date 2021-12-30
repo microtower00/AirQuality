@@ -6,7 +6,6 @@
 #include <QNetworkReply>
 #include <QUrl>
 #include <QObject>
-//#include <QVariant>
 
 
 #ifndef WEATHERRETRIEVER_H
@@ -19,9 +18,10 @@ private:
     QString apikey;
 public:
     AirQualityRetriever(QString);
-    void retrieve(double,double);
-    void retrieveHistorical(double,double,QDate,QDate);
-    virtual ~AirQualityRetriever();
+    AirQualityRetriever(const AirQualityRetriever&);
+    void retrieve(double,double)const;
+    void retrieveHistorical(double,double,QDate,QDate)const;
+    ~AirQualityRetriever();
 
 public slots:
     QJsonDocument replyEnded(QNetworkReply*);

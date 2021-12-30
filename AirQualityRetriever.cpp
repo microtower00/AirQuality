@@ -11,8 +11,12 @@ AirQualityRetriever::AirQualityRetriever(QString apik): apikey(apik)
     connect(manager, SIGNAL(finished(QNetworkReply*)),this, SLOT(replyEnded(QNetworkReply*)));
 
 }
+
+AirQualityRetriever::AirQualityRetriever(const AirQualityRetriever& ret){
+    this->apikey=ret.apikey;
+}
 //modificato tipo di ritorno a void perché non si puó ritornare nulla da uno slot
-void AirQualityRetriever::retrieve(double lat, double lon){
+void AirQualityRetriever::retrieve(double lat, double lon)const{
     //Creo stringa per URL e creo URL
     QString *stringaRichiesta = new QString("http://api.openweathermap.org/data/2.5/air_pollution?lat=" + QString::number(lat) + "&lon=" + QString::number(lon) + "&appid=" + apikey);
     QUrl urlRichiesta(*stringaRichiesta);
@@ -24,7 +28,7 @@ void AirQualityRetriever::retrieve(double lat, double lon){
     manager->get(*richiesta);
 }
 
-void AirQualityRetriever::retrieveHistorical(double lat, double lon, QDate start, QDate end){
+void AirQualityRetriever::retrieveHistorical(double lat, double lon, QDate start, QDate end)const{
     //Creo stringa per URL e creo URL
 
     QString *stringaRichiesta = new QString("http://api.openweathermap.org/data/2.5/air_pollution/history?lat=" + QString::number(lat) + "&lon=" + QString::number(lon) + "&start=" + QString::number((new QDateTime(start))->toTime_t()) + "&end=" + QString::number((new QDateTime(end))->toTime_t()) + "&appid=" + apikey);
@@ -66,3 +70,4 @@ QJsonDocument AirQualityRetriever::replyEnded(QNetworkReply* response){
 }
 
 AirQualityRetriever::~AirQualityRetriever(){}
+

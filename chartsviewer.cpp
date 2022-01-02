@@ -33,17 +33,12 @@ ChartsViewer::ChartsViewer(QWidget *parent):
 
     file = new QFileDialog(this, "Open file", "C://");
 
-    //COMPLETER COPIATO DALLA DOC
-    wordList << "alpha" << "omega" << "omicron" << "zeta";
-
     completer = new QCompleter(model->getCompleterList(), this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     cityText->setCompleter(completer);
-    //FINE COMPLETER COPIATO
 
     this->setWindowTitle(" ");
 
-    connect(apriFileButton, SIGNAL(clicked()),this,SLOT(cliccatoImporta()));
 
     rigaAzioni->setAlignment(Qt::AlignHCenter);
     //rigaTitle->setAlignment(Qt::AlignHCenter);
@@ -88,10 +83,7 @@ ChartsViewer::ChartsViewer(QWidget *parent):
     jsLabel = new QLabel("");
     mainCol->addWidget(jsLabel);
 
-    //bottone dal nome auto-esplicativo dichiarato malamente qua apposta
-    //QPushButton* testNewWindow = new QPushButton("Test nuova finestra");
-    //mainCol->addWidget(testNewWindow);
-    ChartsChoser* c = new ChartsChoser;
+    charts = new ChartsChoser;
     //connect(testNewWindow, SIGNAL(clicked()),c,SLOT(show()));
     //connect(testNewWindow, SIGNAL(clicked()),this,SLOT(hide()));
     //qua sotto provo a far riapparire questa finestra alla chiusura di chooser ma senza successo
@@ -102,8 +94,9 @@ ChartsViewer::ChartsViewer(QWidget *parent):
     connect(openWeatherButton,SIGNAL(clicked()),this,SLOT(bottoneOttieni()));
 
     //Una volta che il file é stato salvato, apre la nuova finesta
-    connect(model, SIGNAL(savedFile(QString)), c, SLOT(show()));
-
+    connect(model, SIGNAL(savedFile(QString)), charts, SLOT(show()));
+    //Chiama la gestione per aprire il file dialog quando si preme Importa
+    connect(apriFileButton, SIGNAL(clicked()),this,SLOT(cliccatoImporta()));
     resize(250,150);
 
     finestra = new QWidget();
@@ -116,48 +109,8 @@ void ChartsViewer::bottoneOttieni(){
     //qDebug()<< "Data inizio: "<< dataInizio->date()<<",Data fine: "<<dataFine->date();
     model->ottieniDati(cityText->text(),dataInizio->date(),dataFine->date());
 }
+
 void ChartsViewer::cliccatoImporta(){
     model->openFileDialog(this);
 }
-//Per testare come aggiungere qualcosa al main letto da json
-/*void ChartsViewer::receiveJson(QJsonDocument* json){
-    //qDebug() << "Slot chiamato";
-    if(json->isObject()){
-        QJsonObject jsObj = json->object();
-        QStringList chiavi = jsObj.keys();
-
-        //QString label;
-
-        //JSON DELLA RICHIESTA STORICA GIÀ FORMATTATO GIUSTO
-        //auto value = json->toJson();
-
-        //Non va qui ma intanto funziona
-        QFile fileRichiesta("fileRichiesta.txt");
-        fileRichiesta.open(QIODevice::ReadWrite);
-        //qDebug() << fileRichiesta.isReadable();
-
-        fileRichiesta.write(json->toJson());
-        //QTString
-        //fileRichiesta.readLine(testringa, sizeof(testringa));
-        //qDebug() << "PROVAFILE" << testringa << endl;
-        //fileRichiesta.close();
-        //qDebug() << "value"<<value;
-
-        //ATTUALMENTE POCO UTILE
-        /*for(auto it = chiavi.begin();it < chiavi.end(); ++it){
-            auto value = jsObj.take(*it);
-            qDebug() << "value"<<value;
-            //qDebug()<<"testdc"<<value.toObject().take("lat").toDouble();
-            //qDebug()<<"testdc"<<value.toObject().take("lon").toDouble();
-            //label.append(*it);
-            //label.append("|");
-            //qDebug()<<"tostring"<<(*jsObj.find("coord")).toObject();
-        }
-
-        //qDebug() << "stampo l'intera risposta?" << json->toJson();
-        jsLabel->setText(label);
-
-    }
-}*/
-
 ChartsViewer::~ChartsViewer(){}

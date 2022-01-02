@@ -1,15 +1,15 @@
 #include "chartschoser.h"
 #include "chartsviewer.h"
-#include <QVBoxLayout>
 
 ChartsChoser::ChartsChoser(QWidget* parent) : QMainWindow(parent)
 {
-    testLab = new QLabel("test");
-    QLabel* testLab2 = new QLabel("test2");
-    QLabel* testLab3 = new QLabel("test3");
-    QLabel* testLab4 = new QLabel("test4");
-    QLabel* testLab5 = new QLabel("test5");
-    QLabel* testLab6 = new QLabel("test6");
+    testLab = new QLabel("Scegli il tipo di grafico:");
+    bottLinee = new QPushButton("A linee");
+    bottArea = new QPushButton("Ad area");
+    bottIsto = new QPushButton("Istogramma");
+    bottPlot = new QPushButton("Plot");
+    bottRadar = new QPushButton("Radar");
+
     QGridLayout* gridCharts = new QGridLayout;
 
     resize(250,150);
@@ -17,12 +17,12 @@ ChartsChoser::ChartsChoser(QWidget* parent) : QMainWindow(parent)
     testFin = new QWidget();
     testFin->setLayout(gridCharts);
 
-    gridCharts->addWidget(testLab);
-    gridCharts->addWidget(testLab2);
-    gridCharts->addWidget(testLab3);
-    gridCharts->addWidget(testLab4);
-    gridCharts->addWidget(testLab5);
-    gridCharts->addWidget(testLab6);
+    gridCharts->addWidget(testLab, 0, 0, 1, 2);
+    gridCharts->addWidget(bottLinee, 1, 0, 1, 1);
+    gridCharts->addWidget(bottArea, 1, 1, 1, 1);
+    gridCharts->addWidget(bottIsto, 2, 0, 1, 1);
+    gridCharts->addWidget(bottPlot, 2, 1, 1, 1);
+    gridCharts->addWidget(bottRadar, 3, 0, 1, 2);
 
     setCentralWidget(testFin);
 }

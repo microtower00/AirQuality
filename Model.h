@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QGeoCoordinate>
+#include <QCoreApplication>
 
 class Model: public QObject
 {

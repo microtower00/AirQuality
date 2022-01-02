@@ -27,7 +27,7 @@ void Model::saveJSonReply(const QJsonDocument* doc) const{
         fileRichiesta.write(doc->toJson());
         fileRichiesta.close();
 
-        emit savedFile(filename);
+        emit savedFile(QCoreApplication::applicationDirPath()+filename);
     }
 }
 
@@ -36,10 +36,10 @@ void Model::openFileDialog(QWidget* window) const{
     QString fileName = QFileDialog::getOpenFileName(window, "Scegli un file grafico","","File JSON (*.json)");
     if(fileName!=NULL)
         emit savedFile(fileName);
+    qDebug()<<fileName;
 }
 
-
-//Capire cosa ritornare se la cittá non viene trovata
+//Capire cosa ritornare se la cittá non viene trovata, Eccezione?
 QGeoCoordinate Model::coordsResolver(const QString citta) const{
     //leggo il file
     //qDebug()<< "Model::coordsResolver(const QString citta) const";
@@ -71,7 +71,9 @@ QGeoCoordinate Model::coordsResolver(const QString citta) const{
     }
 }
 
+//Ritorrna tutte le citta contenute sotto la chiave "city_ascii" nel file worldcities.json
 QStringList Model::getCompleterList() const{
+    //stesso codice per aprire di coordsResolver, magari riutilizzare
     QStringList listaCitta;
     QString val;
     QFile file;

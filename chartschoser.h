@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QMainWindow>
 #include <QLabel>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 class ChartsChoser : public QMainWindow
 {
@@ -15,40 +17,13 @@ public:
     ~ChartsChoser();
 private:
     QLabel *testLab;
+    QPushButton* bottLinee;
+    QPushButton* bottArea;
+    QPushButton* bottIsto;
+    QPushButton* bottPlot;
+    QPushButton* bottRadar;
+
     QWidget *testFin;
-    /*
-    QLabel *titolo;
-    QLabel *oppure;
-    QLabel *inizio;
-    QLabel *fine;
-
-    QVBoxLayout *mainCol;
-
-    QHBoxLayout *rigaTitle;
-    QHBoxLayout *rigaAzioni;
-
-    QVBoxLayout *importaVbox;
-    QVBoxLayout *openWeatherVbox;
-    QGroupBox *importa;
-    QGroupBox *openWeather;
-
-    QHBoxLayout *rigaDataInizio;
-    QHBoxLayout *rigaDataFine;
-
-    QPushButton *apriFileButton;
-    QPushButton *openWeatherButton;
-    QLineEdit *cityText;
-    QDateEdit *dataInizio;
-    QDateEdit *dataFine;
-
-    QFileDialog *file;
-
-
-    QStringList wordList;
-    QCompleter *completer;
-
-    QPushButton *bottoneCambio;
-    */
 };
 
 #endif // CHARTSCHOSER_H

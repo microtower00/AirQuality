@@ -32,6 +32,7 @@ public:
 private:
 
     Model* model;
+    ChartsChoser* charts;
 
     QLabel *jsLabel;
     QLabel *titolo;

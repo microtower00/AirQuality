@@ -12,7 +12,8 @@ class Model: public QObject
 public:
     Model(QString);
     //Non ancora implementato
-    QGeoCoordinate getCityCoords(QString);
+    QGeoCoordinate coordsResolver(const QString)const;
+    QList<QString> getCompleterList()const;
 public slots:
     void ottieniDati(QString,QDate,QDate);
     void saveJSonReply(QJsonDocument*);

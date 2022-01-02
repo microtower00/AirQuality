@@ -6,9 +6,9 @@ Model::Model(QString apikey):aqRet(apikey){
 
 //Fa la chiamata al retriever. Non ritorna nulla perché i valori di ritorno vengono gestiti dal segnale readReady, connesso a saveJSonReply
 void Model::ottieniDati(QString citta, QDate inizio, QDate fine){
-    coordsResolver(citta);
+    QGeoCoordinate coords_citta = coordsResolver(citta);
     qDebug() << "Model::ottieniDati(QString,QDate,QDate)";
-    aqRet.retrieveHistorical(50, 50, inizio, fine);
+    aqRet.retrieveHistorical(coords_citta.latitude(), coords_citta.longitude(), inizio, fine);
 }
 
 //Salva un oggetto QJSonDocument come file JSon, ed emette il segnale savedFile
@@ -40,24 +40,36 @@ void Model::openFileDialog(QWidget* window){
 
 QGeoCoordinate Model::coordsResolver(const QString citta) const{
     //leggo il file
+    qDebug()<< "Model::coordsResolver(const QString citta) const";
     QString val;
     QFile file;
     file.setFileName("worldcities.json");
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     val = file.readAll();
+    //qDebug()<< val;
     file.close();
-    qWarning() << val;
-    QJsonDocument json = QJsonDocument::fromJson(val.toUtf8());
-
-    //cerco la entry di citta
-    const auto entries = json["entries"];
-
-    for (const auto entry: entries.toArray()) {
-      const auto obj = entry.toObject();
-      if (obj["city_ascii"] == citta) {
-        qDebug() << "Longitude is" << obj["lon"];
-        break;
-      }
+    QJsonDocument json = QJsonDocument::fromJson(val.toLocal8Bit());
+    if(json.isNull())
+        qDebug()<<"Can't open "+file.fileName()+": it is not a JSON document";
+    if(!json.isArray())
+        qDebug()<< file.fileName()+" is not/doesn't contain a JSON array";
+    QJsonArray json_array = json.array();
+    if(json_array.isEmpty()){
+        qDebug() << "The array is empty";
     }
 
+    //ottengo le coordinate
+    QJsonValue json_obj;
+    qDebug() << json_array.at(0).toObject();
+
+    //cerco in tutto l'array
+    for(int i=0; i< json_array.count(); ++i){
+        json_obj = json_array.at(i).toObject();
+        if(json_obj["city_ascii"]==citta){
+            qDebug() << "trovata";
+            qDebug() << json_obj["lat"].toDouble();
+            qDebug() << json_obj["lng"].toDouble();
+            return QGeoCoordinate(json_obj["lat"].toDouble(),json_obj["lng"].toDouble());
+        }
+    }
 }

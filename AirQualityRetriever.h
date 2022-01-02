@@ -26,7 +26,7 @@ public:
 public slots:
     QJsonDocument replyEnded(QNetworkReply*);
 signals:
-    void readReady(QJsonDocument*);
+    void readReady(const QJsonDocument*);
 
 };
 

@@ -36,7 +36,7 @@ ChartsViewer::ChartsViewer(QWidget *parent):
     //COMPLETER COPIATO DALLA DOC
     wordList << "alpha" << "omega" << "omicron" << "zeta";
 
-    completer = new QCompleter(wordList, this);
+    completer = new QCompleter(model->getCompleterList(), this);
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     cityText->setCompleter(completer);
     //FINE COMPLETER COPIATO

@@ -12,15 +12,15 @@ class Model: public QObject
 public:
     Model(QString);
     //Non ancora implementato
-    QGeoCoordinate coordsResolver(const QString)const;
-    QList<QString> getCompleterList()const;
+    QGeoCoordinate coordsResolver(QString) const;
+    QStringList getCompleterList() const;
 public slots:
-    void ottieniDati(QString,QDate,QDate);
-    void saveJSonReply(QJsonDocument*);
-    void openFileDialog(QWidget*);
+    void ottieniDati(QString, QDate, QDate) const;
+    void saveJSonReply(const QJsonDocument*) const;
+    void openFileDialog(QWidget*) const;
 
 signals:
-    void savedFile(QString);
+    void savedFile(QString) const;
 private:
     AirQualityRetriever aqRet;
 };

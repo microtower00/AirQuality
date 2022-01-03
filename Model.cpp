@@ -6,8 +6,12 @@ Model::Model(QString apikey):aqRet(apikey){
 
 //Fa la chiamata al retriever. Non ritorna nulla perché i valori di ritorno vengono gestiti dal segnale readReady, connesso a saveJSonReply
 void Model::ottieniDati(QString citta, QDate inizio, QDate fine) const{
+    //senza la riga sottostante crasha se non viene messa la città, non ha nessun senso
+    //in più prende londra in totale autonomia senza che sia specificato da nessuna parte
+    citta.isNull() ? qDebug()<<"null" : qDebug()<<"OK";
     QGeoCoordinate coords_citta = coordsResolver(citta);
     qDebug() << "Model::ottieniDati(QString,QDate,QDate)";
+    //if(coords_citta.isValid()) {qDebug()<<"ciao";}
     aqRet.retrieveHistorical(coords_citta.latitude(), coords_citta.longitude(), inizio, fine);
 }
 
@@ -60,7 +64,8 @@ QGeoCoordinate Model::coordsResolver(const QString citta) const{
     }
 
     //ottengo le coordinate
-    QJsonValue json_obj;
+    //era QJsonValue e non andava
+    QJsonObject json_obj;
 
     //cerco in tutto l'array
     for(int i=0; i< json_array.count(); ++i){

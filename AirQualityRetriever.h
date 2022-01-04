@@ -12,7 +12,7 @@
 #define WEATHERRETRIEVER_H
 
 class AirQualityRetriever: public QObject{
-Q_OBJECT
+    Q_OBJECT
 private:
     QNetworkAccessManager *manager;
     QString apikey;

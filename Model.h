@@ -12,9 +12,9 @@ class Model: public QObject
     Q_OBJECT
 public:
     Model(QString);
-    //Non ancora implementato
     QGeoCoordinate coordsResolver(QString) const;
     QStringList getCompleterList() const;
+    QJsonDocument apriWC() const;
 public slots:
     void ottieniDati(QString, QDate, QDate) const;
     void saveJSonReply(const QJsonDocument*) const;

@@ -41,7 +41,7 @@ void dataviewer::createTable(QJsonObject retrievedObj)
     layout->addWidget(tableJS);
 
     setCentralWidget(mainW);
-
+    resize(1000,500);
     show();
 }
 

@@ -46,8 +46,8 @@ QJsonDocument AirQualityRetriever::replyEnded(QNetworkReply* response){
     //qDebug() << "Richiesta terminata: "<< response->isFinished();
     QByteArray ba;
     if(response->error()==QNetworkReply::NoError){
-         ba = response->readAll();
-         //qDebug() << "Leggo risposta";
+        ba = response->readAll();
+        //qDebug() << "Leggo risposta";
     }else
         qDebug() << response->error();
 

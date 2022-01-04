@@ -40,34 +40,42 @@ void Model::saveJSonReply(const QJsonDocument* doc) const{
 //Apre un file dialog, ed emette savedFile solamente se viene scelto un file
 void Model::openFileDialog(QWidget* window) const{
     QString fileName = QFileDialog::getOpenFileName(window, "Scegli un file grafico","","File JSON (*.json)");
-    if(fileName!=NULL)
-        emit savedFile(fileName);
-    qDebug()<<fileName;
+    if(fileName!=NULL) emit savedFile(fileName);
 }
 
-//Capire cosa ritornare se la cittá non viene trovata, Eccezione?
-QGeoCoordinate Model::coordsResolver(const QString citta) const{
+QJsonDocument Model::apriWC() const {
     //leggo il file
     //qDebug()<< "Model::coordsResolver(const QString citta) const";
     QString val;
     QFile file;
+
     file.setFileName("worldcities.json");
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     val = file.readAll();
     file.close();
+
     QJsonDocument json = QJsonDocument::fromJson(val.toLocal8Bit());
     if(json.isNull())
-        qDebug()<<"Can't open "+file.fileName()+": it is not a JSON document";
+        qDebug()<<"Errore nell'apertura di "+file.fileName()+": non è un documento JSON.";
     if(!json.isArray())
-        qDebug()<< file.fileName()+" is not/doesn't contain a JSON array";
+        qDebug()<< file.fileName()+" non è/contiene un array JSON";
+
     QJsonArray json_array = json.array();
+
     if(json_array.isEmpty()){
-        qDebug() << "The array is empty";
+        qDebug() << "L'array è vuoto";
     }
 
+    return json;
+}
+
+//Capire cosa ritornare se la cittá non viene trovata, Eccezione?
+QGeoCoordinate Model::coordsResolver(const QString citta) const{
     //ottengo le coordinate
     //era QJsonValue e non andava
     QJsonObject json_obj;
+
+    QJsonArray json_array = apriWC().array();
 
     //cerco in tutto l'array
     for(int i=0; i< json_array.count(); ++i){
@@ -78,33 +86,14 @@ QGeoCoordinate Model::coordsResolver(const QString citta) const{
     }
 }
 
-//Ritorrna tutte le citta contenute sotto la chiave "city_ascii" nel file worldcities.json
+//Ritorna tutte le citta contenute sotto la chiave "city_ascii" nel file worldcities.json
 QStringList Model::getCompleterList() const{
-    //stesso codice per aprire di coordsResolver, magari riutilizzare
     QStringList listaCitta;
-    QString val;
-    QFile file;
-    file.setFileName("worldcities.json");
-    file.open(QIODevice::ReadOnly | QIODevice::Text);
-    val = file.readAll();
-    file.close();
-    QJsonDocument json = QJsonDocument::fromJson(val.toLocal8Bit());
-    if(json.isNull())
-        qDebug()<<"Can't open "+file.fileName()+": it is not a JSON document";
-    if(!json.isArray())
-        qDebug()<< file.fileName()+" is not/doesn't contain a JSON array";
-    QJsonArray json_array = json.array();
-    if(json_array.isEmpty()){
-        qDebug() << "The array is empty";
-    }
-
-    //ottengo le cittá
-    QJsonValue json_obj;
+    QJsonArray json_array = apriWC().array();
 
     //cerco in tutto l'array
-    for(int i=0; i< json_array.count(); ++i){
+    for(int i=0; i<json_array.count(); ++i)
         listaCitta.append(json_array.at(i).toObject()["city_ascii"].toString());
-    }
-    //qDebug()<< listaCitta;
+
     return listaCitta;
 }

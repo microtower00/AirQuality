@@ -31,6 +31,8 @@ void Model::saveJSonReply(const QJsonDocument* doc) const{
         fileRichiesta.write(doc->toJson());
         fileRichiesta.close();
 
+        //segnale aggiunto per comodita nella creazione della tabella
+        emit savedObj(jsObj);
         emit savedFile(QCoreApplication::applicationDirPath()+filename);
     }
 }

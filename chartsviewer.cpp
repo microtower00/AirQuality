@@ -93,8 +93,10 @@ ChartsViewer::ChartsViewer(QWidget *parent):
     //Quando premi, salva un file che contiene il json dell'intervallo selezionato
     connect(openWeatherButton,SIGNAL(clicked()),this,SLOT(bottoneOttieni()));
 
-    //Una volta che il file é stato salvato, apre la nuova finesta
-    connect(model, SIGNAL(savedFile(QString)), charts, SLOT(show()));
+    //Una volta che il file é stato salvato, apre la nuova finestra che ne mostra i dati
+    data = new dataviewer;
+    connect(model, SIGNAL(savedObj(QJsonObject)), data, SLOT(createTable(QJsonObject)));
+
     //Chiama la gestione per aprire il file dialog quando si preme Importa
     connect(apriFileButton, SIGNAL(clicked()),this,SLOT(cliccatoImporta()));
     resize(250,150);

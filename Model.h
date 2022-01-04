@@ -22,6 +22,7 @@ public slots:
 
 signals:
     void savedFile(QString) const;
+    void savedObj(QJsonObject) const;
 private:
     AirQualityRetriever aqRet;
 };

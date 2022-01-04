@@ -17,6 +17,7 @@
 #include <QCompleter>
 
 #include "chartschoser.h"
+#include "dataviewer.h"
 #include "AirQualityRetriever.h"
 #include "Model.h"
 
@@ -33,6 +34,7 @@ private:
 
     Model* model;
     ChartsChoser* charts;
+    dataviewer* data;
 
     QLabel *jsLabel;
     QLabel *titolo;

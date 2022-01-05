@@ -1,5 +1,6 @@
 #include "Model.h"
 
+
 Model::Model(QString apikey):aqRet(apikey){
     connect(&aqRet,SIGNAL(readReady(const QJsonDocument*)),this,SLOT(saveJSonReply(const QJsonDocument*)));
 }
@@ -33,32 +34,39 @@ void Model::saveJSonReply(const QJsonDocument* doc) const{
 
         //segnale aggiunto per comodita nella creazione della tabella
         emit savedObj(jsObj);
-        emit savedFile(QCoreApplication::applicationDirPath()+filename);
+        //emit savedFile(QCoreApplication::applicationDirPath()+filename);
     }
 }
 
 //Apre un file dialog, ed emette savedFile solamente se viene scelto un file
 void Model::openFileDialog(QWidget* window) const{
     QString fileName = QFileDialog::getOpenFileName(window, "Scegli un file grafico","","File JSON (*.json)");
-    if(fileName!=NULL) emit savedFile(fileName);
+    if(fileName!=NULL){
+        //emit savedFile(fileName);
+        emit savedObj(openJSon(fileName).object());
+    }
 }
 
-QJsonDocument Model::apriWC() const {
-    //leggo il file
-    //qDebug()<< "Model::coordsResolver(const QString citta) const";
+QJsonDocument Model::openJSon(QString relativePath) const{
     QString val;
     QFile file;
 
-    file.setFileName("worldcities.json");
+    file.setFileName(relativePath);
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     val = file.readAll();
     file.close();
 
     QJsonDocument json = QJsonDocument::fromJson(val.toLocal8Bit());
     if(json.isNull())
-        qDebug()<<"Errore nell'apertura di "+file.fileName()+": non è un documento JSON.";
+        throw std::invalid_argument("Il file che si sta cercando di aprire non é valido");
+    return json;
+}
+
+QJsonDocument Model::apriWC() const {
+    QJsonDocument json = openJSon("worldcities.json");
+
     if(!json.isArray())
-        qDebug()<< file.fileName()+" non è/contiene un array JSON";
+        throw std::invalid_argument("Il file che si sta cercando di aprire non contiene un JSON");
 
     QJsonArray json_array = json.array();
 
@@ -69,7 +77,6 @@ QJsonDocument Model::apriWC() const {
     return json;
 }
 
-//Capire cosa ritornare se la cittá non viene trovata, Eccezione?
 QGeoCoordinate Model::coordsResolver(const QString citta) const{
     //ottengo le coordinate
     //era QJsonValue e non andava
@@ -84,6 +91,7 @@ QGeoCoordinate Model::coordsResolver(const QString citta) const{
             return QGeoCoordinate(json_obj["lat"].toDouble(),json_obj["lng"].toDouble());
         }
     }
+    throw std::domain_error("La cittá inserita non é presente nel dominio di cittá indicizzate");
 }
 
 //Ritorna tutte le citta contenute sotto la chiave "city_ascii" nel file worldcities.json

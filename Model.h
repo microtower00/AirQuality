@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QGeoCoordinate>
 #include <QCoreApplication>
+#include <exception>
 
 class Model: public QObject
 {
@@ -15,6 +16,7 @@ public:
     QGeoCoordinate coordsResolver(QString) const;
     QStringList getCompleterList() const;
     QJsonDocument apriWC() const;
+    QJsonDocument openJSon(QString path) const;
 public slots:
     void ottieniDati(QString, QDate, QDate) const;
     void saveJSonReply(const QJsonDocument*) const;

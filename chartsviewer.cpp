@@ -18,7 +18,7 @@ ChartsViewer::ChartsViewer(QWidget *parent):
     openWeatherVbox = new QVBoxLayout();
 
     importa = new QGroupBox("Apri file");
-    openWeather = new QGroupBox("Scarica da OpenWeather");
+    openWeather = new QGroupBox("Scarica da internet");
 
     rigaDataInizio = new QHBoxLayout();
     rigaDataFine = new QHBoxLayout();
@@ -37,11 +37,10 @@ ChartsViewer::ChartsViewer(QWidget *parent):
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     cityText->setCompleter(completer);
 
-    this->setWindowTitle(" ");
+    this->setWindowTitle("AirQuality Charts");
 
 
     rigaAzioni->setAlignment(Qt::AlignHCenter);
-    //rigaTitle->setAlignment(Qt::AlignHCenter);
     mainCol->setSpacing(30);
 
     QFont ubuntuF("Ubuntu Thin", 24);
@@ -108,7 +107,6 @@ ChartsViewer::ChartsViewer(QWidget *parent):
 }
 
 void ChartsViewer::bottoneOttieni(){
-    //qDebug()<< "Data inizio: "<< dataInizio->date()<<",Data fine: "<<dataFine->date();
     model->ottieniDati(cityText->text(),dataInizio->date(),dataFine->date());
 }
 

@@ -4,7 +4,7 @@ void dataviewer::createTable(QJsonObject retrievedObj)
 {
     QJsonArray listArray = retrievedObj["list"].toArray();
 
-    //air quality index attualmente inutilizzato
+    //air quality index del primo momento, attualmente inutilizzato
     int aqi = listArray.at(1).toObject()["main"].toObject()["aqi"].toInt();
 
     //ottengo la lista dei nomi dei componenti

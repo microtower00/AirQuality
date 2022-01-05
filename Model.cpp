@@ -13,7 +13,12 @@ void Model::ottieniDati(QString citta, QDate inizio, QDate fine) const{
     QGeoCoordinate coords_citta = coordsResolver(citta);
     qDebug() << "Model::ottieniDati(QString,QDate,QDate)";
     //if(coords_citta.isValid()) {qDebug()<<"ciao";}
-    aqRet.retrieveHistorical(coords_citta.latitude(), coords_citta.longitude(), inizio, fine);
+
+    QDate inizioAPI = inizioAPI.fromString("2020-11-27", Qt::ISODate);
+
+    if(inizio>=inizioAPI && fine<=QDate::currentDate() && fine>inizio)
+        aqRet.retrieveHistorical(coords_citta.latitude(), coords_citta.longitude(), inizio, fine);
+    else throw std::invalid_argument("Date non valide");
 }
 
 //Salva un oggetto QJSonDocument come file JSon, ed emette il segnale savedFile
@@ -21,7 +26,8 @@ void Model::saveJSonReply(const QJsonDocument* doc) const{
     qDebug() << "Model::saveJSonReply(QJsonDocument*)";
     if(doc->isObject()){
         QJsonObject jsObj = doc->object();
-        QStringList chiavi = jsObj.keys();
+        //commentato perchè non in uso
+        //QStringList chiavi = jsObj.keys();
         qDebug()<< "filename: "<< QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
 
         QString filename= QString(QDateTime::currentDateTimeUtc().toString(Qt::ISODate)).append(".json");
@@ -79,7 +85,6 @@ QJsonDocument Model::apriWC() const {
 
 QGeoCoordinate Model::coordsResolver(const QString citta) const{
     //ottengo le coordinate
-    //era QJsonValue e non andava
     QJsonObject json_obj;
 
     QJsonArray json_array = apriWC().array();
@@ -91,7 +96,7 @@ QGeoCoordinate Model::coordsResolver(const QString citta) const{
             return QGeoCoordinate(json_obj["lat"].toDouble(),json_obj["lng"].toDouble());
         }
     }
-    throw std::domain_error("La cittá inserita non é presente nel dominio di cittá indicizzate");
+    throw std::domain_error("La città inserita non è disponibile");
 }
 
 //Ritorna tutte le citta contenute sotto la chiave "city_ascii" nel file worldcities.json

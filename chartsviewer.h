@@ -70,6 +70,12 @@ private:
     QWidget *finestra;
 
     QPushButton *bottoneCambio;
+
+    QLabel *erroreCityLab;
+    QLabel *erroreDateLab;
+
+
+signals:
 };
 
 

@@ -8,6 +8,8 @@ ChartsViewer::ChartsViewer(QWidget *parent):
     oppure = new QLabel("oppure",this);
     inizio = new QLabel("Inizio",this);
     fine = new QLabel("Fine",this);
+    erroreDateLab = new QLabel();
+    erroreCityLab = new QLabel();
 
     mainCol = new QVBoxLayout();
 
@@ -38,7 +40,6 @@ ChartsViewer::ChartsViewer(QWidget *parent):
     cityText->setCompleter(completer);
 
     this->setWindowTitle("AirQuality Charts");
-
 
     rigaAzioni->setAlignment(Qt::AlignHCenter);
     mainCol->setSpacing(30);
@@ -79,6 +80,12 @@ ChartsViewer::ChartsViewer(QWidget *parent):
     rigaAzioni->addWidget(openWeather);
     mainCol->addLayout(rigaAzioni);
 
+    erroreDateLab->setVisible(false);
+    openWeatherVbox->addWidget(erroreDateLab);
+
+    erroreCityLab->setVisible(false);
+    openWeatherVbox->addWidget(erroreCityLab);
+
     jsLabel = new QLabel("");
     mainCol->addWidget(jsLabel);
 
@@ -107,7 +114,19 @@ ChartsViewer::ChartsViewer(QWidget *parent):
 }
 
 void ChartsViewer::bottoneOttieni(){
-    model->ottieniDati(cityText->text(),dataInizio->date(),dataFine->date());
+    //gestione delle eccezioni non sufficientemente granulare
+    try {
+        model->ottieniDati(cityText->text(),dataInizio->date(),dataFine->date());
+        erroreDateLab->setVisible(false);
+        erroreCityLab->setVisible(false);
+    } catch(std::domain_error) {
+        erroreCityLab->setText("<body style='color: red'>Errore nella città</body>");
+        erroreCityLab->setVisible(true);
+        //qDebug()<<"catchata";
+    } catch(std::invalid_argument) {
+        erroreDateLab->setText("<body style='color: red'>Errore nelle date</body>");
+        erroreDateLab->setVisible(true);
+    }
 }
 
 void ChartsViewer::cliccatoImporta(){

@@ -2,8 +2,8 @@
 
 void dataviewer::createTable(QJsonObject retrievedObj)
 {
-    QJsonArray listArray = retrievedObj["list"].toArray();
-    QStringList componentsNames = listArray.at(1).toObject()["components"].toObject().keys();
+    QJsonArray listArray = retrievedObj.value("list").toArray();
+    QStringList componentsNames = listArray.at(1).toObject().value("components").toObject().keys();
 
     //singola riga, una mappa con coppie chiave:valore
     QMap<QString, double> singleRow;
@@ -15,7 +15,7 @@ void dataviewer::createTable(QJsonObject retrievedObj)
     chiavi.push_back("aqi");
 
     //numero di righe
-    unsigned int rowsSize = retrievedObj["list"].toArray().size();
+    unsigned int rowsSize = listArray.size();
 
     //ogni riga è una mappa, l'insieme delle righe è una lista di mappe
     QList<QMap<QString, double>> rows;
@@ -23,9 +23,9 @@ void dataviewer::createTable(QJsonObject retrievedObj)
     //riempio le singole righe e l'insieme di righe
     for(unsigned int i=0; i<rowsSize; ++i) {
         for(auto it = chiavi.begin(); it!=chiavi.end(); ++it) {
-            if(*it=="Data") singleRow.insert(*it, listArray.at(i).toObject()["dt"].toDouble());
-            else if(*it=="aqi") singleRow.insert(*it, listArray.at(i).toObject()["main"].toObject()["aqi"].toDouble());
-            else singleRow.insert(*it, listArray.at(i).toObject()["components"].toObject()[*it].toDouble());
+            if(*it=="Data") singleRow.insert(*it, listArray.at(i).toObject().value("dt").toDouble());
+            else if(*it=="aqi") singleRow.insert(*it, listArray.at(i).toObject().value("main").toObject().value("aqi").toDouble());
+            else singleRow.insert(*it, listArray.at(i).toObject().value("components").toObject().value(*it).toDouble());
         }
         rows.push_back(singleRow);
     }
@@ -35,10 +35,10 @@ void dataviewer::createTable(QJsonObject retrievedObj)
     tableJS->setHorizontalHeaderLabels(chiavi);
 
     //riempio la tabella
-    for(unsigned int i=0; i<rowsSize; ++i) {
-        for(auto it = chiavi.begin(); it!=chiavi.end(); ++it) {
-            QTableWidgetItem *newItem = new QTableWidgetItem(QString::number(rows[i][*it]));
-            tableJS->setItem(i, std::distance(chiavi.begin(), it), newItem);
+    for(auto itR = rows.begin(); itR!=rows.end(); ++itR) {
+        for(auto itC = chiavi.begin(); itC!=chiavi.end(); ++itC) {
+            QTableWidgetItem *newItem = new QTableWidgetItem(QString::number(itR->value(*itC)));
+            tableJS->setItem(std::distance(rows.begin(), itR), std::distance(chiavi.begin(), itC), newItem);
         }
     }
 

@@ -3,7 +3,7 @@
 ChartsViewer::ChartsViewer(QWidget *parent):
     QMainWindow(parent)
 {
-    model = new Model("7b6bde71c02400af4d2b61da7b315b31");
+    qDebug()<<"Costruisco chartsviewer";
     titolo = new QLabel("AirQuality Charts",this);
     oppure = new QLabel("oppure",this);
     inizio = new QLabel("Inizio",this);
@@ -35,9 +35,6 @@ ChartsViewer::ChartsViewer(QWidget *parent):
 
     file = new QFileDialog(this, "Open file", "C://");
 
-    completer = new QCompleter(model->getCompleterList(), this);
-    completer->setCaseSensitivity(Qt::CaseInsensitive);
-    cityText->setCompleter(completer);
 
     this->setWindowTitle("AirQuality Charts");
 
@@ -100,8 +97,8 @@ ChartsViewer::ChartsViewer(QWidget *parent):
     connect(openWeatherButton,SIGNAL(clicked()),this,SLOT(bottoneOttieni()));
 
     //Una volta che il file é stato salvato, apre la nuova finestra che ne mostra i dati
-    data = new dataviewer;
-    connect(model, SIGNAL(savedObj(QJsonObject)), data, SLOT(createTable(QJsonObject)));
+    //data = new dataviewer;
+    //-->connect(model, SIGNAL(savedObj(QJsonObject)), data, SLOT(createTable(QJsonObject)));
 
     //Chiama la gestione per aprire il file dialog quando si preme Importa
     connect(apriFileButton, SIGNAL(clicked()),this,SLOT(cliccatoImporta()));
@@ -114,9 +111,9 @@ ChartsViewer::ChartsViewer(QWidget *parent):
 }
 
 void ChartsViewer::bottoneOttieni(){
+    emit needDati(cityText->text(),dataInizio->date(),dataFine->date());
     //gestione delle eccezioni non sufficientemente granulare
     try {
-        model->ottieniDati(cityText->text(),dataInizio->date(),dataFine->date());
         erroreDateLab->setVisible(false);
         erroreCityLab->setVisible(false);
     } catch(std::domain_error) {
@@ -130,6 +127,13 @@ void ChartsViewer::bottoneOttieni(){
 }
 
 void ChartsViewer::cliccatoImporta(){
-    model->openFileDialog(this);
+    //-->model->openFileDialog(this);
 }
+
+void ChartsViewer::setCompleterList(QStringList listaCitta){
+    completer=new QCompleter(listaCitta);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    cityText->setCompleter(completer);
+}
+
 ChartsViewer::~ChartsViewer(){}

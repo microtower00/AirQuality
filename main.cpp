@@ -1,14 +1,11 @@
-#include "chartsviewer.h"
-#include "AirQualityRetriever.h"
-#include "chartschoser.h"
+#include "Model.h"
 
 #include <iostream>
 #include <QApplication>
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    ChartsViewer w;
-    w.show();
+    Model model("7b6bde71c02400af4d2b61da7b315b31");
 
     return a.exec();
 }

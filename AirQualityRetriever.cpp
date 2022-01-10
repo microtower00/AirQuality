@@ -5,7 +5,7 @@
 AirQualityRetriever::AirQualityRetriever(QString apik): apikey(apik)
 {
     manager = new QNetworkAccessManager();
-    //qInfo()<< "Costruito AqRetr";
+    qInfo()<< "Costruito AqRetr";
 
     //Collego segnale di richiesta finita allo slot apposito
     connect(manager, SIGNAL(finished(QNetworkReply*)),this, SLOT(replyEnded(QNetworkReply*)));

@@ -45,4 +45,6 @@ void dataviewer::createTable(QJsonObject retrievedObj)
     show();
 }
 
-dataviewer::dataviewer(QWidget *parent) : QMainWindow(parent) {}
+dataviewer::dataviewer(QWidget *parent) : QMainWindow(parent) {
+    qDebug()<<"Doveo el clacson";
+}

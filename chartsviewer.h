@@ -17,9 +17,7 @@
 #include <QCompleter>
 
 #include "chartschoser.h"
-#include "dataviewer.h"
 #include "AirQualityRetriever.h"
-#include "Model.h"
 
 class ChartsViewer : public QMainWindow
 {
@@ -29,12 +27,10 @@ public slots:
     void cliccatoImporta();
 public:
     ChartsViewer(QWidget *parent = nullptr);
+    void setCompleterList(QStringList);
     ~ChartsViewer();
 private:
-
-    Model* model;
     ChartsChoser* charts;
-    dataviewer* data;
 
     QLabel *jsLabel;
     QLabel *titolo;
@@ -76,6 +72,8 @@ private:
 
 
 signals:
+    void cliccatoOttieni();
+    void needDati(QString, QDate, QDate);
 };
 
 

@@ -1,8 +1,18 @@
 #include "Model.h"
 
+const QString Model::APIKEY = "7b6bde71c02400af4d2b61da7b315b31";
 
-Model::Model(QString apikey):aqRet(apikey){
+Model::Model(QString api):mainwindow(), data(), aqRet(api){
+    qDebug()<<"costruisco il model";
+    mainwindow.show();
+    //Quando il retriever ha finito di leggere la risposta, salvala
     connect(&aqRet,SIGNAL(readReady(const QJsonDocument*)),this,SLOT(saveJSonReply(const QJsonDocument*)));
+    connect(&mainwindow, SIGNAL(needDati(QString,QDate,QDate)),this,SLOT(ottieniDati(QString,QDate,QDate)));
+    setViewCompleter();
+    if(data==0)
+        qDebug()<<"Su sta merda de camion";
+    data = new dataviewer;
+    connect(this, SIGNAL(savedObj(QJsonObject)), data, SLOT(createTable(QJsonObject)));
 }
 
 //Fa la chiamata al retriever. Non ritorna nulla perché i valori di ritorno vengono gestiti dal segnale readReady, connesso a saveJSonReply
@@ -12,7 +22,6 @@ void Model::ottieniDati(QString citta, QDate inizio, QDate fine) const{
     citta.isNull() ? qDebug()<<"null" : qDebug()<<"OK";
     QGeoCoordinate coords_citta = coordsResolver(citta);
     qDebug() << "Model::ottieniDati(QString,QDate,QDate)";
-    //if(coords_citta.isValid()) {qDebug()<<"ciao";}
 
     QDate inizioAPI = inizioAPI.fromString("2020-11-27", Qt::ISODate);
 
@@ -100,7 +109,7 @@ QGeoCoordinate Model::coordsResolver(const QString citta) const{
 }
 
 //Ritorna tutte le citta contenute sotto la chiave "city_ascii" nel file worldcities.json
-QStringList Model::getCompleterList() const{
+void Model::setViewCompleter(){
     QStringList listaCitta;
     QJsonArray json_array = apriWC().array();
 
@@ -108,5 +117,5 @@ QStringList Model::getCompleterList() const{
     for(int i=0; i<json_array.count(); ++i)
         listaCitta.append(json_array.at(i).toObject()["city_ascii"].toString());
 
-    return listaCitta;
+    mainwindow.setCompleterList(listaCitta);
 }

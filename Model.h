@@ -1,7 +1,9 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include <AirQualityRetriever.h>
+#include "AirQualityRetriever.h"
+#include "chartsviewer.h"
+#include "dataviewer.h"
 #include <QFile>
 #include <QFileDialog>
 #include <QGeoCoordinate>
@@ -14,7 +16,7 @@ class Model: public QObject
 public:
     Model(QString);
     QGeoCoordinate coordsResolver(QString) const;
-    QStringList getCompleterList() const;
+    void setViewCompleter();
     QJsonDocument apriWC() const;
     QJsonDocument openJSon(QString path) const;
 public slots:
@@ -26,6 +28,9 @@ signals:
     void savedFile(QString) const;
     void savedObj(QJsonObject) const;
 private:
+    const static QString APIKEY;
+    ChartsViewer mainwindow;
+    dataviewer* data;
     AirQualityRetriever aqRet;
 };
 

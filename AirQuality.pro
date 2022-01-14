@@ -14,14 +14,18 @@ SOURCES += \
     chartschoser.cpp \
     chartsviewer.cpp \
     dataviewer.cpp \
-    main.cpp
+    main.cpp \
+    selectorcontroller.cpp \
+    selectorview.cpp
 
 HEADERS += \
     AirQualityRetriever.h \
     Model.h \
     chartschoser.h \
     chartsviewer.h \
-    dataviewer.h
+    dataviewer.h \
+    selectorcontroller.h \
+    selectorview.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

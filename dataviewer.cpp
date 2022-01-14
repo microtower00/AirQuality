@@ -2,41 +2,51 @@
 
 void dataviewer::createTable(QJsonObject retrievedObj)
 {
-    QJsonArray listArray = retrievedObj["list"].toArray();
+    QJsonArray listArray = retrievedObj.value("list").toArray();
+    QStringList componentsNames = listArray.at(1).toObject().value("components").toObject().keys();
 
-    //air quality index del primo momento, attualmente inutilizzato
-    int aqi = listArray.at(1).toObject()["main"].toObject()["aqi"].toInt();
+    //singola riga, una mappa con coppie chiave:valore
+    QMap<QString, double> singleRow;
 
-    //ottengo la lista dei nomi dei componenti
-    QStringList componentsNames = listArray.at(1).toObject()["components"].toObject().keys();
-    QStringList cols = componentsNames; //aggiungere aqi volendo
+    //Creo e riempio la lista di chiavi con data e aqi oltre ai componenti
+    QStringList chiavi;
+    chiavi.push_back("Data");
+    for(auto it=componentsNames.begin(); it!=componentsNames.end(); ++it) chiavi.push_back(*it);
+    chiavi.push_back("aqi");
 
-    QStringList rows;
+    //numero di righe
+    unsigned int rowsSize = listArray.size();
 
-    //ottengo la lista di date, le converto in stringhe formattate per usarle come righe
-    QDateTime datetest;
-    for(int i=0; i<retrievedObj["list"].toArray().size(); i++)
-        rows.push_back((datetest.fromTime_t(listArray.at(i).toObject()["dt"].toInt())).toString("dd/MM/yyyy hh:mm"));
+    //ogni riga è una mappa, l'insieme delle righe è una lista di mappe
+    QList<QMap<QString, double>> rows;
+
+    //riempio le singole righe e l'insieme di righe
+    for(unsigned int i=0; i<rowsSize; ++i) {
+        for(auto it = chiavi.begin(); it!=chiavi.end(); ++it) {
+            if(*it=="Data") singleRow.insert(*it, listArray.at(i).toObject().value("dt").toDouble());
+            else if(*it=="aqi") singleRow.insert(*it, listArray.at(i).toObject().value("main").toObject().value("aqi").toDouble());
+            else singleRow.insert(*it, listArray.at(i).toObject().value("components").toObject().value(*it).toDouble());
+        }
+        rows.push_back(singleRow);
+    }
+
+    //costruisco la tabella e assegno gli header
+    tableJS = new QTableWidget(rowsSize, chiavi.size());
+    tableJS->setHorizontalHeaderLabels(chiavi);
+
+    //riempio la tabella
+    for(auto itR = rows.begin(); itR!=rows.end(); ++itR) {
+        for(auto itC = chiavi.begin(); itC!=chiavi.end(); ++itC) {
+            QTableWidgetItem *newItem = new QTableWidgetItem(QString::number(itR->value(*itC)));
+            tableJS->setItem(std::distance(rows.begin(), itR), std::distance(chiavi.begin(), itC), newItem);
+        }
+    }
 
     layout = new QVBoxLayout;
-    tableJS = new QTableWidget();
 
     mainW = new QWidget();
 
     mainW->setLayout(layout);
-
-    //creo la tabella
-    tableJS = new QTableWidget(rows.size(), cols.size());
-    tableJS->setVerticalHeaderLabels(rows);
-    tableJS->setHorizontalHeaderLabels(cols);
-
-    //riempio la tabella scorrendo i dati
-    for(int i=0; i<retrievedObj["list"].toArray().size(); i++)
-        for(int j=0; j<8; j++) {
-            //incommentabile dio concatenato
-            QTableWidgetItem *newItem = new QTableWidgetItem(listArray.at(i).toObject()["components"].toObject().toVariantMap().values().at(j).toString());
-            tableJS->setItem(i, j, newItem);
-        }
 
     layout->addWidget(tableJS);
 

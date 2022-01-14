@@ -17,8 +17,8 @@ private:
     QNetworkAccessManager *manager;
     QString apikey;
 public:
-    AirQualityRetriever(QString);
-    AirQualityRetriever(const AirQualityRetriever&);
+
+    AirQualityRetriever(QString="7b6bde71c02400af4d2b61da7b315b31");
     void retrieve(double,double)const;
     void retrieveHistorical(double,double,QDate,QDate)const;
     ~AirQualityRetriever();

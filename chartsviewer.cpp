@@ -1,3 +1,4 @@
+//DEPRECATA
 #include "chartsviewer.h"
 
 ChartsViewer::ChartsViewer(QWidget *parent):
@@ -110,6 +111,7 @@ ChartsViewer::ChartsViewer(QWidget *parent):
     setCentralWidget(finestra);
 }
 
+//DEPRECATO
 void ChartsViewer::bottoneOttieni(){
     emit needDati(cityText->text(),dataInizio->date(),dataFine->date());
     //gestione delle eccezioni non sufficientemente granulare
@@ -126,10 +128,12 @@ void ChartsViewer::bottoneOttieni(){
     }
 }
 
+//DEPRECATO
 void ChartsViewer::cliccatoImporta(){
     //-->model->openFileDialog(this);
 }
 
+//DEPRECATO
 void ChartsViewer::setCompleterList(QStringList listaCitta){
     completer=new QCompleter(listaCitta);
     completer->setCaseSensitivity(Qt::CaseInsensitive);

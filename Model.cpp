@@ -1,3 +1,4 @@
+//DEPRECATO
 #include "Model.h"
 
 const QString Model::APIKEY = "7b6bde71c02400af4d2b61da7b315b31";
@@ -52,7 +53,7 @@ void Model::saveJSonReply(const QJsonDocument* doc) const{
         //emit savedFile(QCoreApplication::applicationDirPath()+filename);
     }
 }
-
+//DEPRECATO
 //Apre un file dialog, ed emette savedFile solamente se viene scelto un file
 void Model::openFileDialog(QWidget* window) const{
     QString fileName = QFileDialog::getOpenFileName(window, "Scegli un file grafico","","File JSON (*.json)");
@@ -61,7 +62,7 @@ void Model::openFileDialog(QWidget* window) const{
         emit savedObj(openJSon(fileName).object());
     }
 }
-
+//DEPRECATO
 QJsonDocument Model::openJSon(QString relativePath) const{
     QString val;
     QFile file;
@@ -76,7 +77,7 @@ QJsonDocument Model::openJSon(QString relativePath) const{
         throw std::invalid_argument("Il file che si sta cercando di aprire non é valido");
     return json;
 }
-
+//DEPRECATO
 QJsonDocument Model::apriWC() const {
     QJsonDocument json = openJSon("worldcities.json");
 
@@ -91,7 +92,7 @@ QJsonDocument Model::apriWC() const {
 
     return json;
 }
-
+//DEPRECATO
 QGeoCoordinate Model::coordsResolver(const QString citta) const{
     //ottengo le coordinate
     QJsonObject json_obj;
@@ -107,7 +108,7 @@ QGeoCoordinate Model::coordsResolver(const QString citta) const{
     }
     throw std::domain_error("La città inserita non è disponibile");
 }
-
+//DEPRECATO
 //Ritorna tutte le citta contenute sotto la chiave "city_ascii" nel file worldcities.json
 void Model::setViewCompleter(){
     QStringList listaCitta;

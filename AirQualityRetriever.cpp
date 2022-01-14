@@ -1,5 +1,4 @@
 #include "AirQualityRetriever.h"
-//#include<iostream>
 
 
 AirQualityRetriever::AirQualityRetriever(QString apik): apikey(apik)
@@ -12,9 +11,6 @@ AirQualityRetriever::AirQualityRetriever(QString apik): apikey(apik)
 
 }
 
-AirQualityRetriever::AirQualityRetriever(const AirQualityRetriever& ret){
-    this->apikey=ret.apikey;
-}
 //modificato tipo di ritorno a void perché non si puó ritornare nulla da uno slot
 void AirQualityRetriever::retrieve(double lat, double lon)const{
     //Creo stringa per URL e creo URL
@@ -33,7 +29,7 @@ void AirQualityRetriever::retrieveHistorical(double lat, double lon, QDate start
     QString *stringaRichiesta = new QString("http://api.openweathermap.org/data/2.5/air_pollution/history?lat=" + QString::number(lat) + "&lon=" + QString::number(lon) + "&start=" + QString::number((new QDateTime(start))->toTime_t()) + "&end=" + QString::number((new QDateTime(end))->toTime_t()) + "&appid=" + apikey);
     QUrl urlRichiesta(*stringaRichiesta);
     //qDebug() << "stringa richiesta"<<*stringaRichiesta;
-
+    qDebug()<<"AQR::retrieveHistorical(double,double,QDate,QDate)";
     //Creo l'oggetto richiesta, non dovrebbe servire header visto che é GET
     QNetworkRequest *richiesta = new QNetworkRequest(urlRichiesta);
 
@@ -58,12 +54,8 @@ QJsonDocument AirQualityRetriever::replyEnded(QNetworkReply* response){
 
     //emetto un sengale prendibile da chi vuole leggere il file json
     QJsonDocument dati = QJsonDocument::fromJson(ba);
+    qDebug()<<"emit readReady(QNetworkReply*)";
     emit readReady(&dati);
-
-    // Stampa la stessa porcheria con dati.object()["coord"]
-    // Volevo provare a ottenere solo una delle due coordinate ma per adesso non riesco
-    //qDebug() << *dati.object().find("coord");
-
     //Non serve a nulla, a meno che lo slot non venga usato come metodo
     return dati;
 }

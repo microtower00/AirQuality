@@ -1,6 +1,8 @@
-#include "fpickercontroller.h"
+#include "startwindow.h"
 
-FPickerController::FPickerController(QWidget *parent)
+const QString StartWindow::APIKEY = "7b6bde71c02400af4d2b61da7b315b31";
+
+StartWindow::StartWindow(QWidget *parent)
     : QMainWindow{parent}
 {
     qDebug()<<"FPickerController::FPickerController()";
@@ -89,21 +91,33 @@ FPickerController::FPickerController(QWidget *parent)
 
     resize(250,150);
     setCentralWidget(finestra);
+
+    //connect(&aqRet,SIGNAL(readReady(const QJsonDocument*)),this,SLOT(saveJSonReply(const QJsonDocument*)));
+    //connect(&mainwindow, SIGNAL(needDati(QString,QDate,QDate)),this,SLOT(ottieniDati(QString,QDate,QDate)));
+    //setViewCompleter();
+    //if(data==0)
+        //qDebug()<<"Su sta merda de camion";
+    data = new DataViewer;
+    //connect(this, SIGNAL(savedObj(QJsonObject)), data, SLOT(createTable(QJsonObject)));
+
     connect(this,SIGNAL(filePronto(const QJsonDocument*)),this,SLOT(creoModel(const QJsonDocument*)));
+    //connect(this,SIGNAL(filePronto(const QJsonDocument*)),this,SLOT(saveJSonReply(const QJsonDocument*)));
     connect(&aqr,SIGNAL(readReady(const QJsonDocument*)),this,SLOT(creoModel(const QJsonDocument*)));
     connect(apriFileButton,SIGNAL(clicked()),this,SLOT(chooseFile()));
     connect(openWeatherButton,SIGNAL(clicked()),this,SLOT(getAirQuality()));
+
+    connect(this, SIGNAL(modelCreato(Dati)), data, SLOT(createTable(Dati)));
 }
 
 //decidere che fare se file scelto é nullo
-void FPickerController::chooseFile(){
+void StartWindow::chooseFile(){
     QString fileName = QFileDialog::getOpenFileName(this, "Scegli un file grafico","","File JSON (*.json)");
     if(fileName!=NULL)
         //creare il modello
         emit filePronto(&openJson(fileName));
 }
 
-void FPickerController::getAirQuality(){
+void StartWindow::getAirQuality(){
     cityText->text().isNull() ? qDebug()<<"null" : qDebug()<<"OK";
     QDate fine = dataFine->date();
     QDate inizio = dataInizio->date();
@@ -117,7 +131,7 @@ void FPickerController::getAirQuality(){
     else throw std::invalid_argument("Date non valide");
 }
 
-QGeoCoordinate FPickerController::coordsResolver(QString citta) const{
+QGeoCoordinate StartWindow::coordsResolver(QString citta) const{
     QJsonObject json_obj;
 
     QJsonArray json_array = getCitiesJson().array();
@@ -132,7 +146,7 @@ QGeoCoordinate FPickerController::coordsResolver(QString citta) const{
     throw std::domain_error("La città inserita non è disponibile");
 }
 
-QJsonDocument& FPickerController::getCitiesJson() const {
+QJsonDocument& StartWindow::getCitiesJson() const {
 
     QJsonDocument* json = new QJsonDocument(openJson("worldcities.json"));
 
@@ -141,14 +155,13 @@ QJsonDocument& FPickerController::getCitiesJson() const {
 
     QJsonArray json_array = json->array();
 
-    if(json_array.isEmpty()){
+    if(json_array.isEmpty())
         qDebug() << "L'array è vuoto";
-    }
 
     return *json;
 }
 
-QCompleter* FPickerController::createCompleter() const{
+QCompleter* StartWindow::createCompleter() const{
     QStringList listaCitta;
     QJsonArray json_array = getCitiesJson().array();
 
@@ -156,14 +169,18 @@ QCompleter* FPickerController::createCompleter() const{
     for(int i=0; i<json_array.count(); ++i)
         listaCitta.append(json_array.at(i).toObject()["city_ascii"].toString());
 
-    return new QCompleter(listaCitta);
+    QCompleter* citylist = new QCompleter(listaCitta);
+    citylist->setCaseSensitivity(Qt::CaseInsensitive);
+    return citylist;
 }
 
-void FPickerController::creoModel(const QJsonDocument*){
+void StartWindow::creoModel(const QJsonDocument* datiDoc) {
+    Dati dati(datiDoc->object());
     qDebug()<<"FPickerController::creoModel(const QJsonDocument*)";
+    emit modelCreato(dati);
 }
 
-QJsonDocument& FPickerController::openJson(QString relativePath) const{
+QJsonDocument& StartWindow::openJson(QString relativePath) const{
     QString val;
     QFile file;
 
@@ -177,4 +194,42 @@ QJsonDocument& FPickerController::openJson(QString relativePath) const{
         throw std::invalid_argument("Il file che si sta cercando di aprire non é valido");
     return *json;
 }
+
+//Fa la chiamata al retriever. Non ritorna nulla perché i valori di ritorno vengono gestiti dal segnale readReady, connesso a saveJSonReply
+void StartWindow::ottieniDati(QString citta, QDate inizio, QDate fine) const{
+    //senza la riga sottostante crasha se non viene messa la città, non ha nessun senso
+    citta.isNull() ? qDebug()<<"null" : qDebug()<<"OK";
+    QGeoCoordinate coords_citta = coordsResolver(citta);
+    qDebug() << "Model::ottieniDati(QString,QDate,QDate)";
+
+    QDate inizioAPI = inizioAPI.fromString("2020-11-27", Qt::ISODate);
+
+    if(inizio>=inizioAPI && fine<=QDate::currentDate() && fine>inizio)
+        aqRet.retrieveHistorical(coords_citta.latitude(), coords_citta.longitude(), inizio, fine);
+    else throw std::invalid_argument("Date non valide");
+}
+
+//Salva un oggetto QJSonDocument come file JSon, ed emette il segnale savedFile
+void StartWindow::saveJSonReply(const QJsonDocument* doc) const{
+    qDebug() << "Model::saveJSonReply(QJsonDocument*)";
+    if(doc->isObject()){
+        QJsonObject jsObj = doc->object();
+        //commentato perchè non in uso
+        //QStringList chiavi = jsObj.keys();
+        qDebug()<< "filename: "<< QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
+
+        QString filename= QString(QDateTime::currentDateTimeUtc().toString(Qt::ISODate)).append(".json");
+
+        QFile fileRichiesta(filename);
+        fileRichiesta.open(QIODevice::ReadWrite);
+
+        fileRichiesta.write(doc->toJson());
+        fileRichiesta.close();
+
+        //segnale aggiunto per comodita nella creazione della tabella
+        //emit savedObj(jsObj);
+        //emit savedFile(QCoreApplication::applicationDirPath()+filename);
+    }
+}
+
 

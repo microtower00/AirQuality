@@ -12,16 +12,17 @@
 #include <QVBoxLayout>
 #include <QDateTime>
 #include <QLabel>
+#include "Model/dati.h"
 
-class dataviewer : public QMainWindow
+class DataViewer : public QMainWindow
 {
     Q_OBJECT
 public slots:
     //funzione che crea la tabella e mostra la finestra
-    void createTable(QJsonObject);
+    void createTable(Dati);
 public:
     //costruttore che non fa assolutamente niente
-    dataviewer(QWidget *parent = nullptr);
+    DataViewer(QWidget *parent = nullptr);
 private:
     QTableWidget* tableJS;
     QWidget* mainW;

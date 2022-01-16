@@ -17,7 +17,7 @@
 #include <QCompleter>
 
 #include "chartschoser.h"
-#include "AirQualityRetriever.h"
+#include "Controller/airqualityretriever.h"
 
 class ChartsViewer : public QMainWindow
 {

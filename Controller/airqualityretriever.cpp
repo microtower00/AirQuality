@@ -1,4 +1,4 @@
-#include "AirQualityRetriever.h"
+#include "airqualityretriever.h"
 
 
 AirQualityRetriever::AirQualityRetriever(QString apik): apikey(apik)
@@ -12,7 +12,7 @@ AirQualityRetriever::AirQualityRetriever(QString apik): apikey(apik)
 }
 
 //modificato tipo di ritorno a void perché non si puó ritornare nulla da uno slot
-void AirQualityRetriever::retrieve(double lat, double lon)const{
+void AirQualityRetriever::retrieve(double lat, double lon) const {
     //Creo stringa per URL e creo URL
     QString *stringaRichiesta = new QString("http://api.openweathermap.org/data/2.5/air_pollution?lat=" + QString::number(lat) + "&lon=" + QString::number(lon) + "&appid=" + apikey);
     QUrl urlRichiesta(*stringaRichiesta);
@@ -24,13 +24,14 @@ void AirQualityRetriever::retrieve(double lat, double lon)const{
     manager->get(*richiesta);
 }
 
-void AirQualityRetriever::retrieveHistorical(double lat, double lon, QDate start, QDate end)const{
+void AirQualityRetriever::retrieveHistorical(double lat, double lon, QDate start, QDate end) const {
     //Creo stringa per URL e creo URL
     QString *stringaRichiesta = new QString("http://api.openweathermap.org/data/2.5/air_pollution/history?lat=" + QString::number(lat) + "&lon=" + QString::number(lon) + "&start=" + QString::number((new QDateTime(start))->toTime_t()) + "&end=" + QString::number((new QDateTime(end))->toTime_t()) + "&appid=" + apikey);
     QUrl urlRichiesta(*stringaRichiesta);
-    //qDebug() << "stringa richiesta"<<*stringaRichiesta;
+
     qDebug()<<"AQR::retrieveHistorical(double,double,QDate,QDate)";
-    //Creo l'oggetto richiesta, non dovrebbe servire header visto che é GET
+
+    //Creo l'oggetto richiesta
     QNetworkRequest *richiesta = new QNetworkRequest(urlRichiesta);
 
     //Invio richiesta
@@ -39,23 +40,19 @@ void AirQualityRetriever::retrieveHistorical(double lat, double lon, QDate start
 
 //Slot per acchiappare la richiesta appena finita
 QJsonDocument AirQualityRetriever::replyEnded(QNetworkReply* response){
-    //qDebug() << "Richiesta terminata: "<< response->isFinished();
     QByteArray ba;
-    if(response->error()==QNetworkReply::NoError){
+    if(response->error()==QNetworkReply::NoError)
         ba = response->readAll();
-        //qDebug() << "Leggo risposta";
-    }else
+    else
         qDebug() << response->error();
 
     response->deleteLater();
-
-    //QString risposta= QString(ba);
-    //qDebug() << risposta;
 
     //emetto un sengale prendibile da chi vuole leggere il file json
     QJsonDocument dati = QJsonDocument::fromJson(ba);
     qDebug()<<"emit readReady(QNetworkReply*)";
     emit readReady(&dati);
+
     //Non serve a nulla, a meno che lo slot non venga usato come metodo
     return dati;
 }

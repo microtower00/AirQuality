@@ -9,21 +9,21 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    AirQualityRetriever.cpp \
-    Model.cpp \
-    chartschoser.cpp \
-    chartsviewer.cpp \
-    dataviewer.cpp \
-    fpickercontroller.cpp \
-    main.cpp
+    Controller/airqualityretriever.cpp \
+    Model/dati.cpp \
+    View/chartschoser.cpp \
+    View/chartsviewer.cpp \
+    View/dataviewer.cpp \
+    main.cpp \
+    Controller/startwindow.cpp
 
 HEADERS += \
-    AirQualityRetriever.h \
-    Model.h \
-    chartschoser.h \
-    chartsviewer.h \
-    dataviewer.h \
-    fpickercontroller.h
+    Controller/airqualityretriever.h \
+    Model/dati.h \
+    View/chartschoser.h \
+    View/chartsviewer.h \
+    View/dataviewer.h \
+    Controller/startwindow.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

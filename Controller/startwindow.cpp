@@ -52,6 +52,7 @@ StartWindow::StartWindow(QWidget *parent)
 
     dataFine->setDate(QDate::currentDate());
     dataInizio->setDate(QDate(2020,11,27));
+    dataFine->setDate(QDate(2020,12,27));
 
     rigaTitle->addWidget(titolo);
     mainCol->addLayout(rigaTitle);

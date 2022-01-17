@@ -10,6 +10,11 @@
 #include <QtCharts/QChartView>
 #include <QtCharts/QChart>
 #include <QtCharts/QLineSeries>
+#include <QDateTimeAxis>
+#include <QChart>
+#include <QBarSet>
+#include <QBarSeries>
+#include <QBarCategoryAxis>
 
 class ChartsChooser : public QMainWindow
 {
@@ -17,7 +22,8 @@ class ChartsChooser : public QMainWindow
 public:
     explicit ChartsChooser(const Dati&, QWidget *parent = nullptr);
 public slots:
-    void graficalo();
+    void createLineChart();
+    void createBarChart();
 signals:
 private:
     Dati data;
@@ -33,7 +39,7 @@ private:
 
     QGridLayout* gridCharts;
 
-    QtCharts::QChartView grafico;
+    QtCharts::QChartView* grafico;
 
 };
 

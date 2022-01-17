@@ -1,4 +1,4 @@
-QT       += core gui network positioning
+QT       += core gui network positioning charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -10,18 +10,16 @@ CONFIG += c++11
 
 SOURCES += \
     Controller/airqualityretriever.cpp \
+    Controller/chartschooser.cpp \
     Model/dati.cpp \
-    View/chartschoser.cpp \
-    View/chartsviewer.cpp \
     View/dataviewer.cpp \
     main.cpp \
     Controller/startwindow.cpp
 
 HEADERS += \
     Controller/airqualityretriever.h \
+    Controller/chartschooser.h \
     Model/dati.h \
-    View/chartschoser.h \
-    View/chartsviewer.h \
     View/dataviewer.h \
     Controller/startwindow.h
 

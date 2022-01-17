@@ -5,7 +5,7 @@ const QString StartWindow::APIKEY = "7b6bde71c02400af4d2b61da7b315b31";
 StartWindow::StartWindow(QWidget *parent)
     : QMainWindow{parent}
 {
-    qDebug()<<"FPickerController::FPickerController()";
+    qDebug()<<"StartWindow::StartWindow()";
 
     titolo = new QLabel("AirQuality Charts",this);
     oppure = new QLabel("oppure",this);
@@ -92,12 +92,8 @@ StartWindow::StartWindow(QWidget *parent)
     resize(250,150);
     setCentralWidget(finestra);
 
-    //connect(&aqRet,SIGNAL(readReady(const QJsonDocument*)),this,SLOT(saveJSonReply(const QJsonDocument*)));
-    //connect(&mainwindow, SIGNAL(needDati(QString,QDate,QDate)),this,SLOT(ottieniDati(QString,QDate,QDate)));
-    //setViewCompleter();
-    //if(data==0)
-        //qDebug()<<"Su sta merda de camion";
-    data = new DataViewer;
+
+
     //connect(this, SIGNAL(savedObj(QJsonObject)), data, SLOT(createTable(QJsonObject)));
 
     connect(this,SIGNAL(filePronto(const QJsonDocument*)),this,SLOT(creoModel(const QJsonDocument*)));
@@ -106,7 +102,10 @@ StartWindow::StartWindow(QWidget *parent)
     connect(apriFileButton,SIGNAL(clicked()),this,SLOT(chooseFile()));
     connect(openWeatherButton,SIGNAL(clicked()),this,SLOT(getAirQuality()));
 
-    connect(this, SIGNAL(modelCreato(Dati)), data, SLOT(createTable(Dati)));
+    qDebug()<<"Sto per crashare";
+    connect(this, SIGNAL(modelCreato(const Dati&)), this, SLOT(apriSelettore(const Dati&)));
+    //data = new DataViewer;
+    //connect(this, SIGNAL(modelCreato(Dati)), data, SLOT(createTable(Dati)));
 }
 
 //decidere che fare se file scelto é nullo
@@ -176,7 +175,7 @@ QCompleter* StartWindow::createCompleter() const{
 
 void StartWindow::creoModel(const QJsonDocument* datiDoc) {
     Dati dati(datiDoc->object());
-    qDebug()<<"FPickerController::creoModel(const QJsonDocument*)";
+    qDebug()<<"StartWindow::creoModel(const QJsonDocument*)";
     emit modelCreato(dati);
 }
 
@@ -205,7 +204,7 @@ void StartWindow::ottieniDati(QString citta, QDate inizio, QDate fine) const{
     QDate inizioAPI = inizioAPI.fromString("2020-11-27", Qt::ISODate);
 
     if(inizio>=inizioAPI && fine<=QDate::currentDate() && fine>inizio)
-        aqRet.retrieveHistorical(coords_citta.latitude(), coords_citta.longitude(), inizio, fine);
+        aqr.retrieveHistorical(coords_citta.latitude(), coords_citta.longitude(), inizio, fine);
     else throw std::invalid_argument("Date non valide");
 }
 
@@ -230,6 +229,11 @@ void StartWindow::saveJSonReply(const QJsonDocument* doc) const{
         //emit savedObj(jsObj);
         //emit savedFile(QCoreApplication::applicationDirPath()+filename);
     }
+}
+
+void StartWindow::apriSelettore(const Dati& d){
+    selettore = new ChartsChooser(d);
+    selettore->show();
 }
 
 

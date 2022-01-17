@@ -114,10 +114,12 @@ ChartsViewer::ChartsViewer(QWidget *parent):
 //DEPRECATO
 void ChartsViewer::bottoneOttieni(){
     emit needDati(cityText->text(),dataInizio->date(),dataFine->date());
-    //gestione delle eccezioni non sufficientemente granulare
+
     try {
         erroreDateLab->setVisible(false);
         erroreCityLab->setVisible(false);
+        //Al momento questa parte é codice morto------|
+        //                                            V
     } catch(std::domain_error) {
         erroreCityLab->setText("<body style='color: red'>Errore nella città</body>");
         erroreCityLab->setVisible(true);

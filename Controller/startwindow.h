@@ -4,6 +4,7 @@
 #include "airqualityretriever.h"
 #include "Model/dati.h"
 #include "View/dataviewer.h"
+#include "chartschooser.h"
 
 #include <QMainWindow>
 #include <QMainWindow>
@@ -74,15 +75,18 @@ public slots:
     void ottieniDati(QString, QDate, QDate) const;
     void saveJSonReply(const QJsonDocument* doc) const;
 
+    void apriSelettore(const Dati&);
+
 signals:
     void filePronto(const QJsonDocument*);
-    void modelCreato(Dati);
+    void modelCreato(const Dati&);
 
 private:
     const static QString APIKEY;
 
     AirQualityRetriever aqr;
     DataViewer* data;
+    ChartsChooser* selettore;
 
     QLabel *jsLabel;
     QLabel *titolo;
@@ -118,8 +122,6 @@ private:
 
     QLabel *erroreCityLab;
     QLabel *erroreDateLab;
-
-    AirQualityRetriever aqRet;
 };
 
 #endif // STARTWINDOW_H

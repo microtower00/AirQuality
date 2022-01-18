@@ -2,19 +2,13 @@
 #define CHARTSCHOOSER_H
 
 #include "Model/dati.h"
+#include "View/mychartview.h"
 
 #include <QMainWindow>
 #include <QLabel>
 #include <QPushButton>
 #include <QGridLayout>
-#include <QtCharts/QChartView>
-#include <QtCharts/QChart>
-#include <QtCharts/QLineSeries>
-#include <QDateTimeAxis>
-#include <QChart>
-#include <QBarSet>
-#include <QBarSeries>
-#include <QBarCategoryAxis>
+#include <QComboBox>
 
 class ChartsChooser : public QMainWindow
 {
@@ -22,8 +16,11 @@ class ChartsChooser : public QMainWindow
 public:
     explicit ChartsChooser(const Dati&, QWidget *parent = nullptr);
 public slots:
-    void createLineChart();
-    void createBarChart();
+    //void createLineChart();
+    //void createBarChart();
+
+    void displayLineChart();
+    void displayBarChart();
 signals:
 private:
     Dati data;
@@ -35,11 +32,13 @@ private:
     QPushButton* bottPlot;
     QPushButton* bottRadar;
 
+    QComboBox* componenti;
+
     QWidget* testFin;
 
     QGridLayout* gridCharts;
 
-    QtCharts::QChartView* grafico;
+    MyChartView* grafico;
 
 };
 

@@ -13,6 +13,7 @@ SOURCES += \
     Controller/chartschooser.cpp \
     Model/dati.cpp \
     View/dataviewer.cpp \
+    View/mychartview.cpp \
     main.cpp \
     Controller/startwindow.cpp
 
@@ -21,7 +22,8 @@ HEADERS += \
     Controller/chartschooser.h \
     Model/dati.h \
     View/dataviewer.h \
-    Controller/startwindow.h
+    Controller/startwindow.h \
+    View/mychartview.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

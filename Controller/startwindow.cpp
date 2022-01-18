@@ -52,7 +52,7 @@ StartWindow::StartWindow(QWidget *parent)
 
     dataFine->setDate(QDate::currentDate());
     dataInizio->setDate(QDate(2020,11,27));
-    dataFine->setDate(QDate(2020,12,27));
+    //dataFine->setDate(QDate(2020,12,27));
 
     rigaTitle->addWidget(titolo);
     mainCol->addLayout(rigaTitle);
@@ -103,7 +103,6 @@ StartWindow::StartWindow(QWidget *parent)
     connect(apriFileButton,SIGNAL(clicked()),this,SLOT(chooseFile()));
     connect(openWeatherButton,SIGNAL(clicked()),this,SLOT(getAirQuality()));
 
-    qDebug()<<"Sto per crashare";
     connect(this, SIGNAL(modelCreato(const Dati&)), this, SLOT(apriSelettore(const Dati&)));
     //data = new DataViewer;
     //connect(this, SIGNAL(modelCreato(Dati)), data, SLOT(createTable(Dati)));

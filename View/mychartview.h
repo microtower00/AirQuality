@@ -11,6 +11,8 @@
 #include <QBarCategoryAxis>
 #include <QDebug>
 #include <QValueAxis>
+#include <QPolarChart>
+#include <QValueAxis>
 
 class MyChartView : public QtCharts::QChartView
 {
@@ -20,6 +22,7 @@ public:
     void lineChart(const Dati&, QString);
     void barChart(const Dati&);
     void radarChart(const Dati&);
+    void areaChart(const Dati&);
 
     void resetView();
 };

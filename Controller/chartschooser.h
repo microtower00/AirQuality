@@ -21,6 +21,7 @@ public slots:
 
     void displayLineChart();
     void displayBarChart();
+    void displayRadarChart();
 signals:
 private:
     Dati data;

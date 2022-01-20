@@ -39,6 +39,7 @@ ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(pa
     setCentralWidget(testFin);
     connect(bottLinee,SIGNAL(clicked()),this,SLOT(displayLineChart()));
     connect(bottIsto,SIGNAL(clicked()),this,SLOT(displayBarChart()));
+    connect(bottRadar,SIGNAL(clicked()),this,SLOT(displayRadarChart()));
 }
 
 void ChartsChooser::displayLineChart(){
@@ -47,6 +48,10 @@ void ChartsChooser::displayLineChart(){
 
 void ChartsChooser::displayBarChart(){
     grafico->barChart(data);
+}
+
+void ChartsChooser::displayRadarChart(){
+    grafico->radarChart(data);
 }
 
 

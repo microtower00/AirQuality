@@ -1,6 +1,14 @@
 #include "mychartview.h"
 #include <QDebug>
 
+#include <QScatterSeries>
+#include <QCategoryAxis>
+#include <typeinfo>
+#define MAX_ELEVATION 90
+
+using namespace QtCharts;
+
+
 MyChartView::MyChartView()
 {}
 
@@ -39,7 +47,7 @@ void MyChartView::lineChart(const Dati& data, QString comp){
 void MyChartView::barChart(const Dati & data){
     resetView();
     QList<QString> chiavi = data.getChiavi();
-    qDebug()<<chiavi;
+    //qDebug()<<chiavi;
     //tolgo data, aqi e co2 (fuori scala)
     chiavi.removeFirst();
     chiavi.removeLast();
@@ -73,6 +81,39 @@ void MyChartView::barChart(const Dati & data){
 
     this->chart()->legend()->setVisible(true);
     this->chart()->legend()->setAlignment(Qt::AlignBottom);
+}
+
+void MyChartView::radarChart(const Dati & data){
+
+    resetView();
+
+QPolarChart *constellation = new QPolarChart();
+QScatterSeries *series = new QScatterSeries();
+QChartView *chartView = new QChartView(constellation);
+
+//asse radiale
+QValueAxis *ugm3 = new QValueAxis;
+ugm3->setRange(0, 500);
+ugm3->setTickCount(6);
+ugm3->setLabelsVisible(true);
+constellation->addAxis(ugm3, QPolarChart::PolarOrientationRadial);
+
+// asse azimutale
+QCategoryAxis *componenti = new QCategoryAxis();
+componenti->setLabelsPosition(QCategoryAxis::AxisLabelsPositionOnValue);
+componenti->setRange(0, 360);
+componenti->setLabelsVisible(true);
+
+
+QStringList chiavi = data.getChiavi();
+chiavi.removeFirst();
+for(int i=0;i<chiavi.length();i++){
+    componenti->append(chiavi.at(i),360/chiavi.length()*i);
+}
+constellation->addAxis(componenti, QPolarChart::PolarOrientationAngular);
+qDebug("Sa incorto che so grosso");
+this->setChart(constellation);
+
 }
 
 void MyChartView::resetView(){

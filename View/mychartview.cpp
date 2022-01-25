@@ -73,7 +73,7 @@ void MyChartView::barChart(const Dati & data){
     QtCharts::QBarCategoryAxis* asse = new QtCharts::QBarCategoryAxis();
 
     for(auto itDati = dati.begin(); itDati!=dati.end(); ++itDati) {
-        asse->append(data.getDateFromDouble(itDati->value("Data"))  .toString(Qt::ISODate));
+        asse->append(data.getDateFromDouble(itDati->value("Data")).toString(Qt::ISODate));
     }
     asse->setRange(QDateTime::currentDateTime().addMonths(-1).toString(),QDateTime::currentDateTime().toString());
     this->chart()->createDefaultAxes();
@@ -86,33 +86,79 @@ void MyChartView::barChart(const Dati & data){
 void MyChartView::radarChart(const Dati & data){
 
     resetView();
+    QList<QMap<QString, double>> dati = data.getDati();
 
-QPolarChart *constellation = new QPolarChart();
-QScatterSeries *series = new QScatterSeries();
-QChartView *chartView = new QChartView(constellation);
+    //recupero dati primo giorno
+    QLineSeries *seriesFirstDay = new QLineSeries();
+    seriesFirstDay->setName("Giorno iniziale");
 
-//asse radiale
-QValueAxis *ugm3 = new QValueAxis;
-ugm3->setRange(0, 500);
-ugm3->setTickCount(6);
-ugm3->setLabelsVisible(true);
-constellation->addAxis(ugm3, QPolarChart::PolarOrientationRadial);
+    QMap<QString, double> datiFirstDay = *dati.begin();
+    datiFirstDay.remove("Data");
+    datiFirstDay.remove("aqi");
+    datiFirstDay.remove("co");
 
-// asse azimutale
-QCategoryAxis *componenti = new QCategoryAxis();
-componenti->setLabelsPosition(QCategoryAxis::AxisLabelsPositionOnValue);
-componenti->setRange(0, 360);
-componenti->setLabelsVisible(true);
+    for(auto it=datiFirstDay.begin(); it!=datiFirstDay.end(); ++it)
+        seriesFirstDay->append(QPointF(360/datiFirstDay.values().length()*std::distance(datiFirstDay.begin(), it), it.value()));
 
+    //seriesFirstDay->append(QPointF(0, datiFirstDay.begin().value()));
 
-QStringList chiavi = data.getChiavi();
-chiavi.removeFirst();
-for(int i=0;i<chiavi.length();i++){
-    componenti->append(chiavi.at(i),360/chiavi.length()*i);
-}
-constellation->addAxis(componenti, QPolarChart::PolarOrientationAngular);
-qDebug("Sa incorto che so grosso");
-this->setChart(constellation);
+    //recupero dati ultimo giorno, ridondante
+    QLineSeries *seriesLastDay = new QLineSeries();
+    seriesLastDay->setName("Giorno finale");
+
+    QMap<QString, double> datiLastDay = *(dati.end()-2);
+    datiLastDay.remove("Data");
+    datiLastDay.remove("aqi");
+    datiLastDay.remove("co");
+
+    for(auto it=datiLastDay.begin(); it!=datiLastDay.end(); ++it)
+        seriesLastDay->append(QPointF(360/datiLastDay.values().length()*std::distance(datiLastDay.begin(), it), it.value()));
+
+    //seriesLastDay->append(QPointF(0, datiLastDay.begin().value()));
+
+    QPolarChart *pChart = new QPolarChart();
+    pChart->addSeries(seriesFirstDay);
+    pChart->addSeries(seriesLastDay);
+
+    double max=0;
+
+    double maxPrimo = *std::max_element(datiFirstDay.begin(), (datiFirstDay.end()));
+    double maxUltimo = *std::max_element(datiLastDay.begin(), (datiLastDay.end()));
+    maxPrimo>maxUltimo ? max=maxPrimo : max=maxUltimo;
+
+    //qDebug()<<max;
+
+    //asse radiale
+    QValueAxis *ugm3 = new QValueAxis;
+    ugm3->setRange(0, max);
+    ugm3->setTickCount(6);
+    ugm3->setLabelsVisible(false);
+    pChart->addAxis(ugm3, QPolarChart::PolarOrientationRadial);
+
+    // asse azimutale
+    QCategoryAxis *componenti = new QCategoryAxis();
+    componenti->setLabelsPosition(QCategoryAxis::AxisLabelsPositionOnValue);
+    componenti->setRange(0, 360);
+    componenti->setLabelsVisible(true);
+    pChart->addAxis(componenti, QPolarChart::PolarOrientationAngular);
+
+    QStringList chiavi = data.getChiavi();
+    chiavi.removeFirst();
+    chiavi.removeLast();
+    chiavi.removeFirst();
+    for(int i=0;i<chiavi.length();i++){
+        componenti->append(chiavi.at(i),360/chiavi.length()*i);
+    }
+
+    seriesFirstDay->attachAxis(componenti);
+    seriesFirstDay->attachAxis(ugm3);
+    seriesLastDay->attachAxis(componenti);
+    seriesLastDay->attachAxis(ugm3);
+
+    //QChartView *chartView = new QChartView(pChart);
+
+    qDebug("Sa incorto che so grosso");
+    this->setChart(pChart);
 
 }
 

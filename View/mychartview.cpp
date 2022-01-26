@@ -20,11 +20,8 @@ void MyChartView::lineChart(const Dati& data, QString comp){
 
     chart()->setTitle("Andamento del "+comp+" nel tempo");
 
-    for(auto itDati = dati.begin(); itDati!=dati.end(); ++itDati) {
-        serieCo->append(QPointF(data.getDateFromDouble(itDati->value("Data")).toMSecsSinceEpoch(),itDati->value(comp)));
-        //qDebug() << data.getDateFromDouble(itDati->value("Data"));
-        //qDebug()<<serieCo->at(std::distance(dati.begin(),itDati));
-    }
+    for(auto itDati:dati)
+        serieCo->append(QPointF(data.getDateFromDouble(itDati.value("Data")).toMSecsSinceEpoch(),itDati.value(comp)));
 
     //QtCharts::QChart* graph = new QtCharts::QChart();
     this->chart()->addSeries(serieCo);
@@ -44,6 +41,41 @@ void MyChartView::lineChart(const Dati& data, QString comp){
     this->chart()->legend()->setAlignment(Qt::AlignBottom);
 }
 
+void MyChartView::areaChart(const Dati& data, QString comp, QString comp2){
+    resetView();
+    QtCharts::QLineSeries* serieComp = new QtCharts::QLineSeries();
+    QtCharts::QLineSeries* serieComp2 = new QtCharts::QLineSeries();
+
+    QList<QMap<QString, double>> dati = data.getDati();
+
+    chart()->setTitle("Andamento di "+comp+" e "+comp2+" nel tempo");
+
+    for(auto itDati:dati) {
+        serieComp->append(QPointF(data.getDateFromDouble(itDati.value("Data")).toMSecsSinceEpoch(),itDati.value(comp)));
+        serieComp2->append(QPointF(data.getDateFromDouble(itDati.value("Data")).toMSecsSinceEpoch(),itDati.value(comp2)));
+    }
+
+    //QtCharts::QChart* graph = new QtCharts::QChart();
+
+    QAreaSeries *series = new QAreaSeries(serieComp, serieComp2);
+    series->setName("Componenti a confronto");
+    this->chart()->addSeries(series);
+
+    QtCharts::QDateTimeAxis* asseX = new QtCharts::QDateTimeAxis;
+    asseX->setFormat("dd-MM-yyyy h:mm");
+    asseX->setTickCount(12);
+
+    this->chart()->addAxis(asseX, Qt::AlignBottom);
+    //serieComp->attachAxis(asseX);
+
+    QtCharts::QValueAxis *axisY = new QtCharts::QValueAxis();
+    this->chart()->addAxis(axisY, Qt::AlignLeft);
+    //serieComp->attachAxis(axisY);
+
+    this->chart()->legend()->setVisible(true);
+    this->chart()->legend()->setAlignment(Qt::AlignBottom);
+}
+
 void MyChartView::barChart(const Dati & data){
     resetView();
     QList<QString> chiavi = data.getChiavi();
@@ -55,16 +87,16 @@ void MyChartView::barChart(const Dati & data){
 
     // tutto ciò che è stato fatto qua sotto è spiegato abbastanza bene nella doc di QBarSeries (barChartExample) (sicuramente spiegato meglio di quanto potrei fare io che sono cotto)
     QList<QtCharts::QBarSet*> componenti;
-    for(auto it=chiavi.begin(); it!=chiavi.end(); ++it)
-        componenti.push_back(new QtCharts::QBarSet(*it));
+    for(auto it:chiavi)
+        componenti.push_back(new QtCharts::QBarSet(it));
 
     QList<QMap<QString, double>> dati = data.getDati();
 
     QtCharts::QBarSeries *serie = new QtCharts::QBarSeries();
 
     for(auto it=chiavi.begin(); it!=chiavi.end(); ++it) {
-        for(auto itDati = dati.begin(); itDati!=dati.end(); ++itDati) {
-            *componenti[(std::distance(chiavi.begin(), it))]<< itDati->value(*it);
+        for(auto itDati:dati) {
+            *componenti[(std::distance(chiavi.begin(), it))]<< itDati.value(*it);
             serie->append(componenti[(std::distance(chiavi.begin(), it))]);
         }
     }
@@ -72,8 +104,8 @@ void MyChartView::barChart(const Dati & data){
     this->chart()->addSeries(serie);
     QtCharts::QBarCategoryAxis* asse = new QtCharts::QBarCategoryAxis();
 
-    for(auto itDati = dati.begin(); itDati!=dati.end(); ++itDati) {
-        asse->append(data.getDateFromDouble(itDati->value("Data")).toString(Qt::ISODate));
+    for(auto itDati:dati) {
+        asse->append(data.getDateFromDouble(itDati.value("Data")).toString(Qt::ISODate));
     }
     asse->setRange(QDateTime::currentDateTime().addMonths(-1).toString(),QDateTime::currentDateTime().toString());
     this->chart()->createDefaultAxes();

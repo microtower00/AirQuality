@@ -22,6 +22,7 @@ public slots:
     void displayLineChart();
     void displayBarChart();
     void displayRadarChart();
+    void displayAreaChart();
 signals:
 private:
     Dati data;
@@ -34,12 +35,15 @@ private:
     QPushButton* bottRadar;
 
     QComboBox* componenti;
+    QComboBox* componenti2;
 
     QWidget* testFin;
 
     QGridLayout* gridCharts;
 
     MyChartView* grafico;
+
+    //QScrollArea* scrollA;
 
 };
 

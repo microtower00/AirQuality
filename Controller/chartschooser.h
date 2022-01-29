@@ -9,6 +9,11 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QComboBox>
+#include <QDebug>
+#include <QDateTimeAxis>
+#include <QSizePolicy>
+#include <QGroupBox>
+#include <QCheckBox>
 
 class ChartsChooser : public QMainWindow
 {
@@ -16,35 +21,45 @@ class ChartsChooser : public QMainWindow
 public:
     explicit ChartsChooser(const Dati&, QWidget *parent = nullptr);
 public slots:
-    //void createLineChart();
-    //void createBarChart();
-
-    void displayLineChart();
-    void displayBarChart();
-    void displayRadarChart();
-    void displayAreaChart();
+    void displayChart();
 signals:
 private:
     Dati data;
 
-    QLabel* testLab;
+    QWidget* finestra;
+
+    QVBoxLayout* mainLayout;
+    QGroupBox* sceltaGraf;
+    QHBoxLayout* sceltaGrafLayout;
+    QGroupBox *sceltaComp;
+
+    QComboBox* grafici;
+    QCheckBox* area;
+
+    QGridLayout* grigliaComp;
+
+    QList<QCheckBox*> cbComponenti;
+
+    QPushButton* conferma;
+
+    MyChartView* grafico;
+
+    /*QLabel* testLab;
     QPushButton* bottLinee;
     QPushButton* bottArea;
     QPushButton* bottIsto;
     QPushButton* bottPlot;
     QPushButton* bottRadar;
 
-    QComboBox* componenti;
-    QComboBox* componenti2;
-
     QWidget* testFin;
 
     QGridLayout* gridCharts;
 
-    MyChartView* grafico;
+    QHBoxLayout *hLayout;
 
-    //QScrollArea* scrollA;
+    QPushButton *sceltaArea;
 
+    //QScrollArea* scrollA;*/
 };
 
 #endif // CHARTSCHOOSER_H

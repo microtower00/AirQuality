@@ -1,8 +1,9 @@
-#ifndef MYCHARTVIEW_H
-#define MYCHARTVIEW_H
+#ifndef CHARTCONTROLLER_H
+#define CHARTCONTROLLER_H
 
 #include "Model/dati.h"
 
+#include <QMainWindow>
 #include <QChartView>
 #include <QLineSeries>
 #include <QDateTimeAxis>
@@ -12,21 +13,22 @@
 #include <QDebug>
 #include <QValueAxis>
 #include <QPolarChart>
-#include <QValueAxis>
 #include <QAreaSeries>
 #include <QColor>
+#include <QScatterSeries>
+#include <QCategoryAxis>
+#include <typeinfo>
 
-class MyChartView : public QtCharts::QChartView
-{
+class MyChartView : public QtCharts::QChartView {
 public:
     MyChartView();
 
-    void lineChart(const Dati&, QString);
-    void barChart(const Dati&);
-    void radarChart(const Dati&);
-    void areaChart(const Dati&);
+    void lineChart(const Dati&, QStringList);
+    void barChart(const Dati&, QStringList);
+    void radarChart(const Dati&, QStringList);
+    void areaChart(const Dati&, QStringList);
 
     void resetView();
 };
 
-#endif // MYCHARTVIEW_H
+#endif // CHARTCONTROLLER_H

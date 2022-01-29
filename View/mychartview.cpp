@@ -65,10 +65,16 @@ void MyChartView::areaChart(const Dati& data, QString comp, QString comp2){
     QtCharts::QLineSeries* serieComp2 = new QtCharts::QLineSeries();
 
     QList<QMap<QString, double>> dati = data.getDati();
+    QMap<QString, QtCharts::QLineSeries*> serie;
 
     chart()->setTitle("Andamento di "+comp+" e "+comp2+" nel tempo");
 
     for(auto itDati:dati) {
+        //Stavo provando a fare area per ogni componente, interrotto per mancanza di tempo
+        /*for(auto componente : itDati.keys()){
+            serie.insert(itDati.value("Data"), itDati.value(componente));
+        }*/
+
         serieComp->append(QPointF(data.getDateFromDouble(itDati.value("Data")).toMSecsSinceEpoch(),itDati.value(comp)));
         serieComp2->append(QPointF(data.getDateFromDouble(itDati.value("Data")).toMSecsSinceEpoch(),itDati.value(comp2)));
     }
@@ -134,7 +140,6 @@ void MyChartView::barChart(const Dati & data){
 }
 
 void MyChartView::radarChart(const Dati & data){
-
     resetView();
     QList<QMap<QString, double>> dati = data.getDati();
     QMap<QString,double> mediePrimoGiorno;
@@ -152,9 +157,9 @@ void MyChartView::radarChart(const Dati & data){
             }
         }
         //se é l'ultimo giorno, itera e fai la media
-        else if(QDateTime::fromTime_t(record.value("Data")).toString("dd-MM-yyyy")==giornoInizio){
+        else if(QDateTime::fromTime_t(record.value("Data")).toString("dd-MM-yyyy")==giornoFine){
             for(auto componente: record.keys()){
-                medieUltimoGiorno.insert(componente, (mediePrimoGiorno.value(componente)+record.value(componente))/2);
+                medieUltimoGiorno.insert(componente, (medieUltimoGiorno.value(componente)+record.value(componente))/2);
             }
         }
     }
@@ -162,14 +167,15 @@ void MyChartView::radarChart(const Dati & data){
     QLineSeries *seriesFirstDay = new QLineSeries();
     seriesFirstDay->setName("Giorno iniziale");
 
-    mediePrimoGiorno.remove("Data");
-    mediePrimoGiorno.remove("aqi");
 
     QLineSeries *seriesLastDay = new QLineSeries();
     seriesLastDay->setName("Giorno finale");
 
     QLineSeries *valRiferimento = new QLineSeries();
     valRiferimento->setName("Valori massimi consentiti");
+
+    mediePrimoGiorno.remove("Data");
+    mediePrimoGiorno.remove("aqi");
 
     medieUltimoGiorno.remove("Data");
     medieUltimoGiorno.remove("aqi");
@@ -181,44 +187,39 @@ void MyChartView::radarChart(const Dati & data){
     for(auto componente:MASSIMICONSENTITI.keys()){
         fondoScala.insert(componente, mediePrimoGiorno.value(componente) > MASSIMICONSENTITI.value(componente) ? std::max(mediePrimoGiorno.value(componente),medieUltimoGiorno.value(componente)) : std::max(MASSIMICONSENTITI.value(componente),medieUltimoGiorno.value(componente)));
     }
-
-    //qDebug()<<fondoScala;
-    //qDebug()<<mediePrimoGiorno;
-
     //inserisco i punti
     for(auto componente:MASSIMICONSENTITI.keys()){
-        qDebug()<<tickN;
 
         seriesFirstDay->append(QPointF(360/mediePrimoGiorno.values().length()*tickN, mediePrimoGiorno.value(componente)*100/fondoScala.value(componente)));
-        //qDebug()<<"Inserisco punto a gradi"+QString::number(360/mediePrimoGiorno.values().length()*tickN);
-        //qDebug()<<" e rispetto al massimo al "+QString::number(mediePrimoGiorno.value(componente)*100/fondoScala.value(componente))+"%";
-
         valRiferimento->append(QPointF(360/MASSIMICONSENTITI.values().length()*tickN, MASSIMICONSENTITI.value(componente)*100/fondoScala.value(componente)));
-        /*
-        seriesLastDay->append(QPointF(360/medieUltimoGiorno.values().length()*tickN++, medieUltimoGiorno.value(componente)*100/massimo));
-    */
+        //qDebug()<<360/medieUltimoGiorno.values().length()*tickN;
+        //qDebug()<<medieUltimoGiorno.value(componente)*100/fondoScala.value(componente);
+        seriesLastDay->append(QPointF(360/medieUltimoGiorno.values().length()*tickN, medieUltimoGiorno.value(componente)*100/fondoScala.value(componente)));
         ++tickN;
     }
 
-    //Servirebbe a chiudere il grafico ma spara a manetta --------------V---------------------------V PROBLEMA QUI
-    //seriesFirstDay->append(QPointF(360, mediePrimoGiorno.values().at(0)/100*fondoScala.values().at(0)));
-    //qDebug()<<"Inserisco a gradi "+QString::number(360)+" e al "+QString::number(mediePrimoGiorno.values().at(0)/100*fondoScala.values().at(0))+"%^";
-    //seriesLastDay->append(QPointF(0, mediePrimoGiorno.values().at(0)));
-
-    //recupero dati ultimo giorno, ridondante
-
-
-    /*QMap<QString, double> datiLastDay = *(dati.end()-2);
-    datiLastDay.remove("Data");
-    datiLastDay.remove("aqi");
-    datiLastDay.remove("co");
-
-    for(auto it=datiLastDay.begin(); it!=datiLastDay.end(); ++it)
-        seriesLastDay->append(QPointF(360/datiLastDay.values().length()*std::distance(datiLastDay.begin(), it), it.value()));
-    */
-    //seriesLastDay->append(QPointF(0, datiLastDay.begin().value()));
-
+    //Chiudo il "cerchio"
+    double fondoInizio = fondoScala.values().at(0);
+    seriesFirstDay->append(QPointF(360, mediePrimoGiorno.values().at(0)*100/fondoInizio));
+    seriesLastDay->append(QPointF(360, medieUltimoGiorno.values().at(0)*100/fondoInizio));
+    valRiferimento->append(QPointF(360,MASSIMICONSENTITI.values().at(0)*100/fondoInizio));
     QPolarChart *pChart = new QPolarChart();
+
+
+
+    /*QAreaSeries* firstDayArea = new QAreaSeries(seriesFirstDay);
+    firstDayArea->setColor(QColor::fromRgba(qRgba(0,255,0,128)));
+    firstDayArea->setName("Primo giorno");
+
+    QAreaSeries* lastDayArea = new QAreaSeries(seriesLastDay);
+    lastDayArea->setColor(QColor::fromRgba(qRgba(255,0,0,128)));
+    lastDayArea->setName("Ultimo giorno");
+
+    QAreaSeries* rifArea = new QAreaSeries(valRiferimento);
+    rifArea->setColor(QColor::fromRgba(qRgba(0,0,255,128)));
+    rifArea->setName("Valori di riferimento");*/
+
+
     pChart->addSeries(seriesFirstDay);
     pChart->addSeries(seriesLastDay);
     pChart->addSeries(valRiferimento);
@@ -248,13 +249,13 @@ void MyChartView::radarChart(const Dati & data){
 
     seriesFirstDay->attachAxis(componenti);
     seriesFirstDay->attachAxis(ugm3);
+
     seriesLastDay->attachAxis(componenti);
     seriesLastDay->attachAxis(ugm3);
 
     valRiferimento->attachAxis(componenti);
     valRiferimento->attachAxis(ugm3);
 
-    //QChartView *chartView = new QChartView(pChart);
     this->setChart(pChart);
 
 }

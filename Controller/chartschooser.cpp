@@ -71,6 +71,7 @@ void ChartsChooser::displayRadarChart(){
 }
 
 void ChartsChooser::displayAreaChart(){
+    qDebug()<<"te voi ca te odia";
     grafico->areaChart(data, componenti->currentText(), componenti2->currentText());
 }
 

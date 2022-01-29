@@ -14,6 +14,7 @@
 #include <QPolarChart>
 #include <QValueAxis>
 #include <QAreaSeries>
+#include <QColor>
 
 class MyChartView : public QtCharts::QChartView
 {

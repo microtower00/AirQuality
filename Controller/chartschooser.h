@@ -22,6 +22,7 @@ public:
     explicit ChartsChooser(const Dati&, QWidget *parent = nullptr);
 public slots:
     void displayChart();
+    void attivaArea(QString);
 signals:
 private:
     Dati data;

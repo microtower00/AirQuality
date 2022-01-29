@@ -15,7 +15,7 @@ ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(pa
     grafico = new MyChartView();
 
     area = new QCheckBox("Aree");
-    area->setDisabled(true);
+    grafici->currentText()=="A linee" ? area->setDisabled(false) : area->setDisabled(true);
 
     sceltaGrafLayout = new QHBoxLayout();
     sceltaGrafLayout->addWidget(grafici);
@@ -57,51 +57,15 @@ ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(pa
 
     setCentralWidget(finestra);
 
+    connect(grafici,SIGNAL(currentTextChanged(QString)),this,SLOT(attivaArea(QString)));
     connect(conferma,SIGNAL(clicked()),this,SLOT(displayChart()));
+}
 
-    /*testLab = new QLabel("Scegli il tipo di grafico:");
-    bottLinee = new QPushButton("A linee");
-    bottArea = new QPushButton("Ad area");
-    bottIsto = new QPushButton("Istogramma");
-    bottPlot = new QPushButton("Plot");
-    bottRadar = new QPushButton("Radar");
-    grafico = new MyChartView();
-    //scrollA = new QScrollArea();
-
-    QStringList listaComp = data.getChiavi();
-    listaComp.removeFirst();
-    componenti = new QComboBox();
-    componenti->addItems(listaComp);
-
-    gridCharts = new QGridLayout;
-
-    //resize(1000,600);
-
-    testFin = new QWidget();
-    testFin->setLayout(gridCharts);
-
-    gridCharts->addWidget(testLab, 0, 0, 1, 2);
-    gridCharts->addWidget(bottLinee, 1, 0, 1, 1);
-    gridCharts->addWidget(componenti, 1, 1, 1, 1);
-    gridCharts->addWidget(bottArea, 2, 0, 1, 1);
-    gridCharts->addWidget(bottIsto, 2, 1, 1, 1);
-    gridCharts->addWidget(bottPlot, 3, 0, 1, 1);
-    gridCharts->addWidget(bottRadar, 3, 1, 1, 1);
-
-    // abbandono momentaneamente l'idea di rendere scrollabili grafici perchè
-    // gestire sta cosa mi fa bestemmiare
-    grafico->setMinimumSize(1000,800);
-    qDebug()<<grafico->sizeHint();
-    grafico->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
-    //grafico->setMaximumSize(1000000,800);
-    scrollA->setWidget(grafico);
-    gridCharts->addWidget(scrollA);
-
-    setCentralWidget(testFin);
-    connect(bottLinee,SIGNAL(clicked()),this,SLOT(displayLineChart()));
-    connect(bottIsto,SIGNAL(clicked()),this,SLOT(displayBarChart()));
-    connect(bottRadar,SIGNAL(clicked()),this,SLOT(displayRadarChart()));
-    connect(bottArea,SIGNAL(clicked()),this,SLOT(displayAreaChart()));*/
+void ChartsChooser::attivaArea(QString testoCBgrafici) {
+    if(testoCBgrafici=="A linee")
+        area->setEnabled(true);
+    else
+        area->setEnabled(false);
 }
 
 void ChartsChooser::displayChart(){
@@ -111,8 +75,11 @@ void ChartsChooser::displayChart(){
         if(it->isChecked())
             compScelti.push_back(it->text());
 
-    if(grafici->currentText()=="A linee")
-        grafico->lineChart(data, compScelti);
+    if(grafici->currentText()=="A linee") {
+        if(area->isChecked())
+            grafico->areaChart(data, compScelti);
+        else grafico->lineChart(data, compScelti);
+    }
     else if(grafici->currentText()=="Istogramma")
         grafico->barChart(data, compScelti);
     else if(grafici->currentText()=="Radar")

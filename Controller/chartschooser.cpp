@@ -19,8 +19,8 @@ ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(pa
     componenti = new QComboBox();
     componenti->addItems(listaComp);
 
-    componenti2 = new QComboBox();
-    componenti2->addItems(listaComp);
+    //componenti2 = new QComboBox();
+    //componenti2->addItems(listaComp);
     gridCharts = new QGridLayout;
 
     resize(1000,600);
@@ -31,7 +31,7 @@ ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(pa
     gridCharts->addWidget(testLab, 0, 0, 1, 2);
     gridCharts->addWidget(bottLinee, 1, 0, 1, 1);
     gridCharts->addWidget(componenti, 1, 1, 1, 1);
-    gridCharts->addWidget(componenti2, 1, 2, 1, 1);
+    //gridCharts->addWidget(componenti2, 1, 2, 1, 1);
     gridCharts->addWidget(bottArea, 2, 0, 1, 1);
     gridCharts->addWidget(bottIsto, 2, 1, 1, 1);
     gridCharts->addWidget(bottPlot, 3, 0, 1, 1);
@@ -72,7 +72,7 @@ void ChartsChooser::displayRadarChart(){
 
 void ChartsChooser::displayAreaChart(){
     qDebug()<<"te voi ca te odia";
-    grafico->areaChart(data, componenti->currentText(), componenti2->currentText());
+    grafico->areaChart(data);
 }
 
 

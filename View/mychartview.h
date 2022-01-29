@@ -24,7 +24,7 @@ public:
     void lineChart(const Dati&, QString);
     void barChart(const Dati&);
     void radarChart(const Dati&);
-    void areaChart(const Dati&, QString, QString);
+    void areaChart(const Dati&);
 
     void resetView();
 };

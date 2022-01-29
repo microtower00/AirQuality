@@ -59,42 +59,41 @@ void MyChartView::lineChart(const Dati& data, QString comp){
     this->chart()->legend()->setAlignment(Qt::AlignBottom);
 }
 
-void MyChartView::areaChart(const Dati& data, QString comp, QString comp2){
+void MyChartView::areaChart(const Dati& data){
     resetView();
-    QtCharts::QLineSeries* serieComp = new QtCharts::QLineSeries();
-    QtCharts::QLineSeries* serieComp2 = new QtCharts::QLineSeries();
 
     QList<QMap<QString, double>> dati = data.getDati();
-    QMap<QString, QtCharts::QLineSeries*> serie;
+    QList<QString> chiaviDati = dati.begin()->keys();
+    chiaviDati.removeFirst();
+    chiaviDati.removeFirst();
+    QMap<QString, QtCharts::QLineSeries*> series;
 
-    chart()->setTitle("Andamento di "+comp+" e "+comp2+" nel tempo");
-
-    for(auto itDati:dati) {
-        //Stavo provando a fare area per ogni componente, interrotto per mancanza di tempo
-        /*for(auto componente : itDati.keys()){
-            serie.insert(itDati.value("Data"), itDati.value(componente));
-        }*/
-
-        serieComp->append(QPointF(data.getDateFromDouble(itDati.value("Data")).toMSecsSinceEpoch(),itDati.value(comp)));
-        serieComp2->append(QPointF(data.getDateFromDouble(itDati.value("Data")).toMSecsSinceEpoch(),itDati.value(comp2)));
+    for(auto componente:chiaviDati){
+        QtCharts::QLineSeries* serie = new QtCharts::QLineSeries();
+        for(auto itDati:dati) {
+            serie->append(QPointF(data.getDateFromDouble(itDati.value("Data")).toMSecsSinceEpoch(),itDati.value(componente)));
+        }
+        series.insert(componente, serie);
     }
-
-    //QtCharts::QChart* graph = new QtCharts::QChart();
-
-    QAreaSeries *series = new QAreaSeries(serieComp, serieComp2);
-    series->setName("Componenti a confronto");
-    this->chart()->addSeries(series);
 
     QtCharts::QDateTimeAxis* asseX = new QtCharts::QDateTimeAxis;
     asseX->setFormat("dd-MM-yyyy h:mm");
     asseX->setTickCount(12);
+    QtCharts::QValueAxis *asseY = new QtCharts::QValueAxis();
 
     this->chart()->addAxis(asseX, Qt::AlignBottom);
-    //serieComp->attachAxis(asseX);
+    this->chart()->addAxis(asseY, Qt::AlignLeft);
 
-    QtCharts::QValueAxis *axisY = new QtCharts::QValueAxis();
-    this->chart()->addAxis(axisY, Qt::AlignLeft);
-    //serieComp->attachAxis(axisY);
+    QAreaSeries *aSeries;
+
+    for(auto it=series.begin(); it!=series.end(); ++it){
+        aSeries = new QAreaSeries(*it, it!=series.begin() ? *(it-1) : Q_NULLPTR);
+        aSeries->setName(it.key());
+        this->chart()->addSeries(aSeries);
+    }
+
+    aSeries->attachAxis(asseX);
+    aSeries->attachAxis(asseY);
 
     this->chart()->legend()->setVisible(true);
     this->chart()->legend()->setAlignment(Qt::AlignBottom);
@@ -152,21 +151,18 @@ void MyChartView::radarChart(const Dati & data){
     for(auto record:dati){
         //se é del giorno di inizio, itera e fai media
         if(QDateTime::fromTime_t(record.value("Data")).toString("dd-MM-yyyy")==giornoInizio){
-            for(auto componente: record.keys()){
+            for(auto componente: record.keys())
                 mediePrimoGiorno.insert(componente, (mediePrimoGiorno.value(componente)+record.value(componente))/2);
-            }
         }
         //se é l'ultimo giorno, itera e fai la media
-        else if(QDateTime::fromTime_t(record.value("Data")).toString("dd-MM-yyyy")==giornoFine){
-            for(auto componente: record.keys()){
+        else if(QDateTime::fromTime_t(record.value("Data")).toString("dd-MM-yyyy")==giornoFine) {
+            for(auto componente: record.keys())
                 medieUltimoGiorno.insert(componente, (medieUltimoGiorno.value(componente)+record.value(componente))/2);
-            }
         }
     }
 
     QLineSeries *seriesFirstDay = new QLineSeries();
     seriesFirstDay->setName("Giorno iniziale");
-
 
     QLineSeries *seriesLastDay = new QLineSeries();
     seriesLastDay->setName("Giorno finale");
@@ -184,12 +180,11 @@ void MyChartView::radarChart(const Dati & data){
 
     //creo una mappa per i fondo scala di ogni componente
     QMap<QString, double> fondoScala;
-    for(auto componente:MASSIMICONSENTITI.keys()){
+    for(auto componente:MASSIMICONSENTITI.keys())
         fondoScala.insert(componente, mediePrimoGiorno.value(componente) > MASSIMICONSENTITI.value(componente) ? std::max(mediePrimoGiorno.value(componente),medieUltimoGiorno.value(componente)) : std::max(MASSIMICONSENTITI.value(componente),medieUltimoGiorno.value(componente)));
-    }
+
     //inserisco i punti
     for(auto componente:MASSIMICONSENTITI.keys()){
-
         seriesFirstDay->append(QPointF(360/mediePrimoGiorno.values().length()*tickN, mediePrimoGiorno.value(componente)*100/fondoScala.value(componente)));
         valRiferimento->append(QPointF(360/MASSIMICONSENTITI.values().length()*tickN, MASSIMICONSENTITI.value(componente)*100/fondoScala.value(componente)));
         //qDebug()<<360/medieUltimoGiorno.values().length()*tickN;
@@ -205,8 +200,6 @@ void MyChartView::radarChart(const Dati & data){
     valRiferimento->append(QPointF(360,MASSIMICONSENTITI.values().at(0)*100/fondoInizio));
     QPolarChart *pChart = new QPolarChart();
 
-
-
     /*QAreaSeries* firstDayArea = new QAreaSeries(seriesFirstDay);
     firstDayArea->setColor(QColor::fromRgba(qRgba(0,255,0,128)));
     firstDayArea->setName("Primo giorno");
@@ -219,12 +212,9 @@ void MyChartView::radarChart(const Dati & data){
     rifArea->setColor(QColor::fromRgba(qRgba(0,0,255,128)));
     rifArea->setName("Valori di riferimento");*/
 
-
     pChart->addSeries(seriesFirstDay);
     pChart->addSeries(seriesLastDay);
     pChart->addSeries(valRiferimento);
-
-    //qDebug()<<max;
 
     //asse radiale
     QValueAxis *ugm3 = new QValueAxis;

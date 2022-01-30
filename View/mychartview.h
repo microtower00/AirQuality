@@ -20,8 +20,13 @@
 #include <typeinfo>
 
 class MyChartView : public QtCharts::QChartView {
+private:
+    QtCharts::QValueAxis *asseY;
+    QtCharts::QDateTimeAxis *asseX;
 public:
     MyChartView();
+
+    QMap<QString, QtCharts::QLineSeries*> genericLAchart(const Dati&, QStringList);
 
     void lineChart(const Dati&, QStringList);
     void barChart(const Dati&, QStringList);
@@ -29,6 +34,9 @@ public:
     void areaChart(const Dati&, QStringList);
 
     void resetView();
+
+    void sommaY(QtCharts::QLineSeries&, QtCharts::QLineSeries*);
+    double maxValueFromListSeries(QList<QtCharts::QLineSeries*>);
 };
 
 #endif // CHARTCONTROLLER_H

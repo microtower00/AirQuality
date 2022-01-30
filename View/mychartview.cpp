@@ -1,9 +1,4 @@
 #include "mychartview.h"
-#include <QDebug>
-
-#include <QScatterSeries>
-#include <QCategoryAxis>
-#include <typeinfo>
 
 using namespace QtCharts;
 
@@ -30,97 +25,98 @@ MyChartView::MyChartView()
     MASSIMICONSENTITI.insert("pm2_5",MAXPM2_5);
 }
 
-void MyChartView::lineChart(const Dati& data, QString comp){
+QMap<QString, QtCharts::QLineSeries*> MyChartView::genericLAchart(const Dati& data, QStringList comp) {
     resetView();
-    QtCharts::QLineSeries* serieCo = new QtCharts::QLineSeries();
+    MyChartView::show();
 
     QList<QMap<QString, double>> dati = data.getDati();
-
-    chart()->setTitle("Andamento del "+comp+" nel tempo");
-
-    for(auto itDati:dati)
-        serieCo->append(QPointF(data.getDateFromDouble(itDati.value("Data")).toMSecsSinceEpoch(),itDati.value(comp)));
-
-    //QtCharts::QChart* graph = new QtCharts::QChart();
-    this->chart()->addSeries(serieCo);
-
-    QtCharts::QDateTimeAxis* asseX = new QtCharts::QDateTimeAxis;
-    asseX->setFormat("dd-MM-yyyy h:mm");
-    asseX->setTickCount(12);
-
-    this->chart()->addAxis(asseX, Qt::AlignBottom);
-    serieCo->attachAxis(asseX);
-
-    QtCharts::QValueAxis *axisY = new QtCharts::QValueAxis();
-    this->chart()->addAxis(axisY, Qt::AlignLeft);
-    serieCo->attachAxis(axisY);
-
-    this->chart()->legend()->setVisible(true);
-    this->chart()->legend()->setAlignment(Qt::AlignBottom);
-}
-
-void MyChartView::areaChart(const Dati& data){
-    resetView();
-
-    QList<QMap<QString, double>> dati = data.getDati();
-    QList<QString> chiaviDati = dati.begin()->keys();
-    chiaviDati.removeFirst();
-    chiaviDati.removeFirst();
     QMap<QString, QtCharts::QLineSeries*> series;
 
-    for(auto componente:chiaviDati){
-        QtCharts::QLineSeries* serie = new QtCharts::QLineSeries();
+    // creo le serie che poi andranno inserite nella mappa di serie
+    QtCharts::QLineSeries* serie;
+    for(auto componente:comp){
+        serie = new QtCharts::QLineSeries();
         for(auto itDati:dati) {
             serie->append(QPointF(data.getDateFromDouble(itDati.value("Data")).toMSecsSinceEpoch(),itDati.value(componente)));
         }
+        // inserimento nella mappa
         series.insert(componente, serie);
     }
 
-    QtCharts::QDateTimeAxis* asseX = new QtCharts::QDateTimeAxis;
+    // asse X
+    asseX = new QtCharts::QDateTimeAxis;
     asseX->setFormat("dd-MM-yyyy h:mm");
     asseX->setTickCount(12);
-    QtCharts::QValueAxis *asseY = new QtCharts::QValueAxis();
-
     this->chart()->addAxis(asseX, Qt::AlignBottom);
+
+    // asse Y
+    asseY = new QtCharts::QValueAxis();
+    asseY->setMin(0);
     this->chart()->addAxis(asseY, Qt::AlignLeft);
 
-    QAreaSeries *aSeries;
+    return series;
+}
 
+void MyChartView::lineChart(const Dati& data, QStringList comp){
+
+    QMap<QString, QtCharts::QLineSeries*> series = genericLAchart(data, comp);
+
+    // per ogni serie nella mappa assegno il nome del componente e i relativi assi
     for(auto it=series.begin(); it!=series.end(); ++it){
-        aSeries = new QAreaSeries(*it, it!=series.begin() ? *(it-1) : Q_NULLPTR);
-        aSeries->setName(it.key());
-        this->chart()->addSeries(aSeries);
+        this->chart()->addSeries(*it);
+        it.value()->setName(it.key());
+        it.value()->attachAxis(asseX);
+        it.value()->attachAxis(asseY);
     }
 
-    aSeries->attachAxis(asseX);
-    aSeries->attachAxis(asseY);
-
+    //setto il massimo di Y al massimo valore tra tutte le serie
+    asseY->setMax(maxValueFromListSeries(series.values()));
     this->chart()->legend()->setVisible(true);
     this->chart()->legend()->setAlignment(Qt::AlignBottom);
 }
 
-void MyChartView::barChart(const Dati & data){
+void MyChartView::areaChart(const Dati& data, QStringList comp){
+
+    QMap<QString, QtCharts::QLineSeries*> series = genericLAchart(data, comp);
+
+    // shifto tutte le linseries del massimo della precedente per evitare overlapping
+    for(auto it=series.begin()+1; it!=series.end(); ++it)
+        sommaY(**it, *(it-1));
+
+    // per ogni serie nella mappa assegno il nome del componente e i relativi assi
+    // bonus: creo una QAreaSeries tra la lineseries corrente e la precedente
+    QAreaSeries *aSeries;
+    for(auto it=series.begin(); it!=series.end(); ++it){
+        aSeries = new QAreaSeries(*it, it!=series.begin() ? *(it-1) : Q_NULLPTR);
+        this->chart()->addSeries(aSeries);
+        aSeries->setName(it.key());
+        aSeries->attachAxis(asseX);
+        aSeries->attachAxis(asseY);
+    }
+
+    //setto il massimo di Y al massimo valore tra tutte le serie
+    asseY->setMax(maxValueFromListSeries(series.values()));
+    this->chart()->legend()->setVisible(true);
+    this->chart()->legend()->setAlignment(Qt::AlignBottom);
+}
+
+void MyChartView::barChart(const Dati & data, QStringList comp){
     resetView();
-    QList<QString> chiavi = data.getChiavi();
-    //qDebug()<<chiavi;
-    //tolgo data, aqi e co2 (fuori scala)
-    chiavi.removeFirst();
-    chiavi.removeLast();
-    chiavi.removeFirst();
+    MyChartView::show();
 
     // tutto ciò che è stato fatto qua sotto è spiegato abbastanza bene nella doc di QBarSeries (barChartExample) (sicuramente spiegato meglio di quanto potrei fare io che sono cotto)
     QList<QtCharts::QBarSet*> componenti;
-    for(auto it:chiavi)
+    for(auto it:comp)
         componenti.push_back(new QtCharts::QBarSet(it));
 
     QList<QMap<QString, double>> dati = data.getDati();
 
     QtCharts::QBarSeries *serie = new QtCharts::QBarSeries();
 
-    for(auto it=chiavi.begin(); it!=chiavi.end(); ++it) {
+    for(auto it=comp.begin(); it!=comp.end(); ++it) {
         for(auto itDati:dati) {
-            *componenti[(std::distance(chiavi.begin(), it))]<< itDati.value(*it);
-            serie->append(componenti[(std::distance(chiavi.begin(), it))]);
+            *componenti[(std::distance(comp.begin(), it))]<< itDati.value(*it);
+            serie->append(componenti[(std::distance(comp.begin(), it))]);
         }
     }
 
@@ -138,8 +134,10 @@ void MyChartView::barChart(const Dati & data){
     this->chart()->legend()->setAlignment(Qt::AlignBottom);
 }
 
-void MyChartView::radarChart(const Dati & data){
+void MyChartView::radarChart(const Dati & data, QStringList comp){
     resetView();
+    MyChartView::show();
+
     QList<QMap<QString, double>> dati = data.getDati();
     QMap<QString,double> mediePrimoGiorno;
     QMap<QString,double> medieUltimoGiorno;
@@ -151,12 +149,12 @@ void MyChartView::radarChart(const Dati & data){
     for(auto record:dati){
         //se é del giorno di inizio, itera e fai media
         if(QDateTime::fromTime_t(record.value("Data")).toString("dd-MM-yyyy")==giornoInizio){
-            for(auto componente: record.keys())
+            for(auto componente: comp)
                 mediePrimoGiorno.insert(componente, (mediePrimoGiorno.value(componente)+record.value(componente))/2);
         }
         //se é l'ultimo giorno, itera e fai la media
         else if(QDateTime::fromTime_t(record.value("Data")).toString("dd-MM-yyyy")==giornoFine) {
-            for(auto componente: record.keys())
+            for(auto componente: comp)
                 medieUltimoGiorno.insert(componente, (medieUltimoGiorno.value(componente)+record.value(componente))/2);
         }
     }
@@ -180,11 +178,11 @@ void MyChartView::radarChart(const Dati & data){
 
     //creo una mappa per i fondo scala di ogni componente
     QMap<QString, double> fondoScala;
-    for(auto componente:MASSIMICONSENTITI.keys())
+    for(auto componente:comp)
         fondoScala.insert(componente, mediePrimoGiorno.value(componente) > MASSIMICONSENTITI.value(componente) ? std::max(mediePrimoGiorno.value(componente),medieUltimoGiorno.value(componente)) : std::max(MASSIMICONSENTITI.value(componente),medieUltimoGiorno.value(componente)));
 
     //inserisco i punti
-    for(auto componente:MASSIMICONSENTITI.keys()){
+    for(auto componente:comp){
         seriesFirstDay->append(QPointF(360/mediePrimoGiorno.values().length()*tickN, mediePrimoGiorno.value(componente)*100/fondoScala.value(componente)));
         valRiferimento->append(QPointF(360/MASSIMICONSENTITI.values().length()*tickN, MASSIMICONSENTITI.value(componente)*100/fondoScala.value(componente)));
         //qDebug()<<360/medieUltimoGiorno.values().length()*tickN;
@@ -230,11 +228,8 @@ void MyChartView::radarChart(const Dati & data){
     componenti->setLabelsVisible(true);
     pChart->addAxis(componenti, QPolarChart::PolarOrientationAngular);
 
-    QStringList chiavi = data.getChiavi();
-    chiavi.removeFirst();
-    chiavi.removeLast();
-    for(int i=0;i<chiavi.length();i++){
-        componenti->append(chiavi.at(i),360/chiavi.length()*i);
+    for(int i=0;i<comp.size();i++){
+        componenti->append(comp.at(i),360/comp.size()*i);
     }
 
     seriesFirstDay->attachAxis(componenti);
@@ -253,4 +248,29 @@ void MyChartView::radarChart(const Dati & data){
 void MyChartView::resetView(){
     QtCharts::QChart* graf = this->chart();
     this->setChart(new QtCharts::QChart());
-    delete graf;}
+    delete graf;
+}
+
+void MyChartView::sommaY(QLineSeries &serie, QLineSeries *shift) {
+    QList<QLineSeries*> listatemp;
+    listatemp.append(shift);
+
+    double maxShift = maxValueFromListSeries(listatemp);
+
+    for(unsigned int i=0; i<serie.count(); ++i)
+        serie.replace(i, serie.at(i).x(), serie.at(i).y()+maxShift);
+}
+
+double MyChartView::maxValueFromListSeries(QList<QtCharts::QLineSeries*> series) {
+    double max=0;
+
+    for(auto it:series) {
+        for(unsigned int i=0; i<it->count(); ++i) {
+            if(it->at(i).y()>max) {
+                max = it->at(i).y();
+            }
+        }
+    }
+
+    return max;
+}

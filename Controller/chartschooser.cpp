@@ -15,7 +15,7 @@ ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(pa
     grafico = new MyChartView();
 
     area = new QCheckBox("Aree");
-    grafici->currentText()=="A linee" ? area->setDisabled(false) : area->setDisabled(true);
+    area->setDisabled(!(grafici->currentText()=="A linee"));
 
     sceltaGrafLayout = new QHBoxLayout();
     sceltaGrafLayout->addWidget(grafici);
@@ -29,7 +29,7 @@ ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(pa
     listaComp.removeFirst();
     listaComp.removeLast();
 
-    for(auto it:listaComp)
+    for(const auto& it:listaComp)
         cbComponenti.push_back(new QCheckBox(it));
 
     grigliaComp = new QGridLayout();
@@ -61,11 +61,8 @@ ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(pa
     connect(conferma,SIGNAL(clicked()),this,SLOT(displayChart()));
 }
 
-void ChartsChooser::attivaArea(QString testoCBgrafici) {
-    if(testoCBgrafici=="A linee")
-        area->setEnabled(true);
-    else
-        area->setEnabled(false);
+void ChartsChooser::attivaArea(const QString& testoCBgrafici) {
+        area->setEnabled(testoCBgrafici=="A linee");
 }
 
 void ChartsChooser::displayChart(){

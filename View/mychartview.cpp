@@ -51,7 +51,6 @@ QMap<QString, QtCharts::QLineSeries*> MyChartView::genericLAchart(const Dati& da
 
     // asse Y
     asseY = new QtCharts::QValueAxis();
-    asseY->setMin(0);
     this->chart()->addAxis(asseY, Qt::AlignLeft);
 
     return series;
@@ -70,6 +69,7 @@ void MyChartView::lineChart(const Dati& data, QStringList comp){
     }
 
     //setto il massimo di Y al massimo valore tra tutte le serie
+    asseY->setMin(0);
     asseY->setMax(maxValueFromListSeries(series.values()));
     this->chart()->legend()->setVisible(true);
     this->chart()->legend()->setAlignment(Qt::AlignBottom);
@@ -95,6 +95,7 @@ void MyChartView::areaChart(const Dati& data, QStringList comp){
     }
 
     //setto il massimo di Y al massimo valore tra tutte le serie
+    asseY->setMin(0);
     asseY->setMax(maxValueFromListSeries(series.values()));
     this->chart()->legend()->setVisible(true);
     this->chart()->legend()->setAlignment(Qt::AlignBottom);

@@ -38,8 +38,7 @@ QList<QMap<QString, double>> Dati::getDati() const{
     return dati;
 }
 
-QDateTime Dati::getDateFromDouble(double dataDouble) const {
+QDateTime Dati::getDateFromDouble(double dataDouble) {
     QDateTime dataFromDouble = dataFromDouble.fromTime_t(static_cast<int>(dataDouble));
-    //qDebug()<<dataFromDouble;
     return dataFromDouble;
 }

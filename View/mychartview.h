@@ -23,20 +23,27 @@ class MyChartView : public QtCharts::QChartView {
 private:
     QtCharts::QValueAxis *asseY;
     QtCharts::QDateTimeAxis *asseX;
+    const Dati& data;
+    QStringList& comp;
 public:
-    MyChartView();
+    MyChartView(const Dati&);
 
-    QMap<QString, QtCharts::QLineSeries*> genericLAchart(const Dati&, QStringList);
+    void setCompScelti(const QStringList&);
 
-    void lineChart(const Dati&, QStringList);
-    void barChart(const Dati&, QStringList);
-    void radarChart(const Dati&, QStringList);
-    void areaChart(const Dati&, QStringList);
+    QMap<QString, QtCharts::QLineSeries*> genericLAchart(const QStringList&);
+
+    void lineChart();
+    void areaChart();
+    void barChart();
+    void radarChart();
+    void scatterChart();
 
     void resetView();
 
     void sommaY(QtCharts::QLineSeries&, QtCharts::QLineSeries*);
     double maxValueFromListSeries(QList<QtCharts::QLineSeries*>);
+    double maxFromSerie(QtCharts::QXYSeries*);
+
 };
 
 #endif // CHARTCONTROLLER_H

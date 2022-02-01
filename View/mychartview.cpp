@@ -12,8 +12,8 @@ const int MAXPM10 = 50;
 const int MAXPM2_5 = 25;
 
 QMap<QString,double> MASSIMICONSENTITI;
-
-MyChartView::MyChartView()
+                                                    //cosa significa sta roba
+MyChartView::MyChartView(const Dati& d) : data(d), comp(*(new QStringList()))
 {
     MASSIMICONSENTITI.insert("co",MAXCO);
     MASSIMICONSENTITI.insert("so2",MAXSO2);
@@ -23,9 +23,15 @@ MyChartView::MyChartView()
     MASSIMICONSENTITI.insert("o3",MAXO3);
     MASSIMICONSENTITI.insert("pm10",MAXPM10);
     MASSIMICONSENTITI.insert("pm2_5",MAXPM2_5);
+
+    this->setRenderHint(QPainter::Antialiasing);
 }
 
-QMap<QString, QtCharts::QLineSeries*> MyChartView::genericLAchart(const Dati& data, QStringList comp) {
+void MyChartView::setCompScelti(const QStringList& compScelti) {
+    comp = compScelti;
+}
+
+QMap<QString, QtCharts::QLineSeries*> MyChartView::genericLAchart(const QStringList& comp) {
     resetView();
     MyChartView::show();
 
@@ -56,9 +62,9 @@ QMap<QString, QtCharts::QLineSeries*> MyChartView::genericLAchart(const Dati& da
     return series;
 }
 
-void MyChartView::lineChart(const Dati& data, QStringList comp){
+void MyChartView::lineChart(){
 
-    QMap<QString, QtCharts::QLineSeries*> series = genericLAchart(data, comp);
+    QMap<QString, QtCharts::QLineSeries*> series = genericLAchart(comp);
 
     // per ogni serie nella mappa assegno il nome del componente e i relativi assi
     for(auto it=series.begin(); it!=series.end(); ++it){
@@ -75,9 +81,9 @@ void MyChartView::lineChart(const Dati& data, QStringList comp){
     this->chart()->legend()->setAlignment(Qt::AlignBottom);
 }
 
-void MyChartView::areaChart(const Dati& data, QStringList comp){
+void MyChartView::areaChart(){
 
-    QMap<QString, QtCharts::QLineSeries*> series = genericLAchart(data, comp);
+    QMap<QString, QtCharts::QLineSeries*> series = genericLAchart(comp);
 
     // shifto tutte le linseries del massimo della precedente per evitare overlapping
     for(auto it=series.begin()+1; it!=series.end(); ++it)
@@ -101,7 +107,7 @@ void MyChartView::areaChart(const Dati& data, QStringList comp){
     this->chart()->legend()->setAlignment(Qt::AlignBottom);
 }
 
-void MyChartView::barChart(const Dati & data, QStringList comp){
+void MyChartView::barChart(){
     resetView();
     MyChartView::show();
 
@@ -135,7 +141,7 @@ void MyChartView::barChart(const Dati & data, QStringList comp){
     this->chart()->legend()->setAlignment(Qt::AlignBottom);
 }
 
-void MyChartView::radarChart(const Dati & data, QStringList comp){
+void MyChartView::radarChart(){
     resetView();
     MyChartView::show();
 
@@ -246,6 +252,40 @@ void MyChartView::radarChart(const Dati & data, QStringList comp){
 
 }
 
+void MyChartView::scatterChart() {
+    resetView();
+    MyChartView::show();
+
+    QList<QMap<QString, double>> dati = data.getDati();
+    QString singleComp = *comp.begin();
+
+    QScatterSeries* sSerie = new QScatterSeries();
+    sSerie->setMarkerSize(10);
+    sSerie->setName(singleComp);
+
+    for(auto riga:dati) {
+        sSerie->append(QPointF((Dati::getDateFromDouble(riga.value("Data")).time().msecsSinceStartOfDay())/3600000, riga.value(singleComp)));
+    }
+
+    // asse X
+    //asseX = new QtCharts::QDateTimeAxis;
+    //asseX->setFormat("h:mm");
+    QtCharts::QValueAxis* asseX2 = new QtCharts::QValueAxis();
+    asseX2->setTickCount(24);
+    this->chart()->addAxis(asseX2, Qt::AlignBottom);
+
+    // asse Y
+    asseY = new QtCharts::QValueAxis();
+    // lascio spazio sopra l'ultimo pallino
+    asseY->setRange(0, maxFromSerie(sSerie)+(maxFromSerie(sSerie)/sSerie->markerSize()));
+    qDebug()<<maxFromSerie(sSerie);
+    this->chart()->addAxis(asseY, Qt::AlignLeft);
+
+    this->chart()->addSeries(sSerie);
+    sSerie->attachAxis(asseX2);
+    sSerie->attachAxis(asseY);
+}
+
 void MyChartView::resetView(){
     QtCharts::QChart* graf = this->chart();
     this->setChart(new QtCharts::QChart());
@@ -265,11 +305,20 @@ void MyChartView::sommaY(QLineSeries &serie, QLineSeries *shift) {
 double MyChartView::maxValueFromListSeries(QList<QtCharts::QLineSeries*> series) {
     double max=0;
 
-    for(auto it:series) {
-        for(unsigned int i=0; i<it->count(); ++i) {
-            if(it->at(i).y()>max) {
-                max = it->at(i).y();
-            }
+    for(auto serie:series) {
+        if(maxFromSerie(serie)>max)
+            max=maxFromSerie(serie);
+    }
+
+    return max;
+}
+
+double MyChartView::maxFromSerie(QtCharts::QXYSeries* serie) {
+    double max=0;
+
+    for(unsigned int i=0; i<serie->count(); ++i) {
+        if(serie->at(i).y()>max) {
+            max = serie->at(i).y();
         }
     }
 

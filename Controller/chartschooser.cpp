@@ -12,10 +12,8 @@ ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(pa
     grafici->addItem("Plot");
     grafici->addItem("Radar");
 
-    grafico = new MyChartView();
-
     area = new QCheckBox("Aree");
-    grafici->currentText()=="A linee" ? area->setDisabled(false) : area->setDisabled(true);
+    area->setDisabled(!(grafici->currentText()=="A linee"));
 
     sceltaGrafLayout = new QHBoxLayout();
     sceltaGrafLayout->addWidget(grafici);
@@ -57,15 +55,14 @@ ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(pa
 
     setCentralWidget(finestra);
 
+    grafico = new MyChartView(data);
+
     connect(grafici,SIGNAL(currentTextChanged(QString)),this,SLOT(attivaArea(QString)));
     connect(conferma,SIGNAL(clicked()),this,SLOT(displayChart()));
 }
 
 void ChartsChooser::attivaArea(QString testoCBgrafici) {
-    if(testoCBgrafici=="A linee")
-        area->setEnabled(true);
-    else
-        area->setEnabled(false);
+    area->setEnabled(testoCBgrafici=="A linee");
 }
 
 void ChartsChooser::displayChart(){
@@ -75,15 +72,17 @@ void ChartsChooser::displayChart(){
         if(it->isChecked())
             compScelti.push_back(it->text());
 
+    grafico->setCompScelti(compScelti);
+
     if(grafici->currentText()=="A linee") {
-        if(area->isChecked())
-            grafico->areaChart(data, compScelti);
-        else grafico->lineChart(data, compScelti);
+        area->isChecked() ? grafico->areaChart() : grafico->lineChart();
     }
     else if(grafici->currentText()=="Istogramma")
-        grafico->barChart(data, compScelti);
+        grafico->barChart();
     else if(grafici->currentText()=="Radar")
-        grafico->radarChart(data, compScelti);
+        grafico->radarChart();
+    else if(grafici->currentText()=="Plot")
+        grafico->scatterChart();
 }
 
 

@@ -13,7 +13,7 @@ public:
     Dati(QJsonObject);
     QList<QString> getChiavi() const;
     QList<QMap<QString, double>> getDati() const;
-    QDateTime getDateFromDouble(double) const;
+    static QDateTime getDateFromDouble(double);
 private:
     QList<QMap<QString, double>> dati;
     QList<QString> chiavi;

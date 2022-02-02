@@ -15,19 +15,23 @@
 #include <QGroupBox>
 #include <QCheckBox>
 
-class ChartsChooser : public QMainWindow
+class ChartsChooser : public QGroupBox
 {
     Q_OBJECT
 public:
-    explicit ChartsChooser(const Dati&, QWidget *parent = nullptr);
+    explicit ChartsChooser(const Dati&);
+
+    MyChartView* getGrafico() const;
 public slots:
-    void displayChart();
+    void createChart();
     void attivaArea(QString);
+    void selezionaTutti();
+    void deselezionaTutti();
+
 signals:
+
 private:
     Dati data;
-
-    QWidget* finestra;
 
     QVBoxLayout* mainLayout;
     QGroupBox* sceltaGraf;
@@ -42,25 +46,10 @@ private:
     QList<QCheckBox*> cbComponenti;
 
     QPushButton* conferma;
+    QPushButton* selTutti;
+    QPushButton* delTutti;
 
     MyChartView* grafico;
-
-    /*QLabel* testLab;
-    QPushButton* bottLinee;
-    QPushButton* bottArea;
-    QPushButton* bottIsto;
-    QPushButton* bottPlot;
-    QPushButton* bottRadar;
-
-    QWidget* testFin;
-
-    QGridLayout* gridCharts;
-
-    QHBoxLayout *hLayout;
-
-    QPushButton *sceltaArea;
-
-    //QScrollArea* scrollA;*/
 };
 
 #endif // CHARTSCHOOSER_H

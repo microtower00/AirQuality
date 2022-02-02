@@ -13,7 +13,7 @@ const int MAXPM2_5 = 25;
 
 QMap<QString,double> MASSIMICONSENTITI;
                                                     //cosa significa sta roba
-MyChartView::MyChartView(const Dati& d) : data(d), comp(*(new QStringList()))
+MyChartView::MyChartView(const Dati& d) : data(d)
 {
     MASSIMICONSENTITI.insert("co",MAXCO);
     MASSIMICONSENTITI.insert("so2",MAXSO2);
@@ -31,9 +31,11 @@ void MyChartView::setCompScelti(const QStringList& compScelti) {
     comp = compScelti;
 }
 
-QMap<QString, QtCharts::QLineSeries*> MyChartView::genericLAchart(const QStringList& comp) {
+QMap<QString, QtCharts::QLineSeries*> MyChartView::genericLAchart() {
     resetView();
-    MyChartView::show();
+    resize(1250,750);
+    emit chartPronto();
+    //MyChartView::show();
 
     QList<QMap<QString, double>> dati = data.getDati();
     QMap<QString, QtCharts::QLineSeries*> series;
@@ -64,7 +66,7 @@ QMap<QString, QtCharts::QLineSeries*> MyChartView::genericLAchart(const QStringL
 
 void MyChartView::lineChart(){
 
-    QMap<QString, QtCharts::QLineSeries*> series = genericLAchart(comp);
+    QMap<QString, QtCharts::QLineSeries*> series = genericLAchart();
 
     // per ogni serie nella mappa assegno il nome del componente e i relativi assi
     for(auto it=series.begin(); it!=series.end(); ++it){
@@ -83,7 +85,7 @@ void MyChartView::lineChart(){
 
 void MyChartView::areaChart(){
 
-    QMap<QString, QtCharts::QLineSeries*> series = genericLAchart(comp);
+    QMap<QString, QtCharts::QLineSeries*> series = genericLAchart();
 
     // shifto tutte le linseries del massimo della precedente per evitare overlapping
     for(auto it=series.begin()+1; it!=series.end(); ++it)
@@ -109,7 +111,8 @@ void MyChartView::areaChart(){
 
 void MyChartView::barChart(){
     resetView();
-    MyChartView::show();
+    emit chartPronto();
+    //MyChartView::show();
 
     // tutto ciò che è stato fatto qua sotto è spiegato abbastanza bene nella doc di QBarSeries (barChartExample) (sicuramente spiegato meglio di quanto potrei fare io che sono cotto)
     QList<QtCharts::QBarSet*> componenti;
@@ -143,7 +146,8 @@ void MyChartView::barChart(){
 
 void MyChartView::radarChart(){
     resetView();
-    MyChartView::show();
+    emit chartPronto();
+    //MyChartView::show();
 
     QList<QMap<QString, double>> dati = data.getDati();
     QMap<QString,double> mediePrimoGiorno;
@@ -254,7 +258,8 @@ void MyChartView::radarChart(){
 
 void MyChartView::scatterChart() {
     resetView();
-    MyChartView::show();
+    emit chartPronto();
+    //MyChartView::show();
 
     QList<QMap<QString, double>> dati = data.getDati();
     QString singleComp = *comp.begin();

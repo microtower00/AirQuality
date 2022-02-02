@@ -5,6 +5,7 @@
 #include "Model/dati.h"
 #include "View/dataviewer.h"
 #include "chartschooser.h"
+#include "chartsviewer.h"
 
 #include <QMainWindow>
 #include <QMainWindow>
@@ -75,7 +76,7 @@ public slots:
     void ottieniDati(QString, QDate, QDate) const;
     void saveJSonReply(const QJsonDocument* doc) const;
 
-    void apriSelettore(const Dati&);
+    void apriFinestra(const Dati&);
 
 signals:
     void filePronto(const QJsonDocument*);

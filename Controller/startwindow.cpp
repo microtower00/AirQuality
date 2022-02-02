@@ -5,8 +5,6 @@ const QString StartWindow::APIKEY = "7b6bde71c02400af4d2b61da7b315b31";
 StartWindow::StartWindow(QWidget *parent)
     : QMainWindow{parent}
 {
-    qDebug()<<"StartWindow::StartWindow()";
-
     titolo = new QLabel("AirQuality Charts",this);
     oppure = new QLabel("oppure",this);
     inizio = new QLabel("Inizio",this);
@@ -103,7 +101,7 @@ StartWindow::StartWindow(QWidget *parent)
     connect(apriFileButton,SIGNAL(clicked()),this,SLOT(chooseFile()));
     connect(openWeatherButton,SIGNAL(clicked()),this,SLOT(getAirQuality()));
 
-    connect(this, SIGNAL(modelCreato(const Dati&)), this, SLOT(apriSelettore(const Dati&)));
+    connect(this, SIGNAL(modelCreato(const Dati&)), this, SLOT(apriFinestra(const Dati&)));
     //data = new DataViewer;
     //connect(this, SIGNAL(modelCreato(Dati)), data, SLOT(createTable(Dati)));
 }
@@ -231,9 +229,9 @@ void StartWindow::saveJSonReply(const QJsonDocument* doc) const{
     }
 }
 
-void StartWindow::apriSelettore(const Dati& d){
-    selettore = new ChartsChooser(d);
-    selettore->show();
+void StartWindow::apriFinestra(const Dati& d){
+    finestra = new ChartsViewer(d);
+    finestra->show();
 }
 
 

@@ -1,6 +1,6 @@
 #include "chartschooser.h"
 
-ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(parent), data(graf)
+ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
 {
     mainLayout = new QVBoxLayout();
 
@@ -32,6 +32,9 @@ ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(pa
 
     grigliaComp = new QGridLayout();
 
+    selTutti = new QPushButton("Seleziona tutti");
+    delTutti = new QPushButton("Deseleziona tutti");
+
     //non avevo voglia di iterare, che vergogna
     grigliaComp->addWidget(cbComponenti[0], 0, 0);
     grigliaComp->addWidget(cbComponenti[1], 0, 1);
@@ -41,6 +44,8 @@ ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(pa
     grigliaComp->addWidget(cbComponenti[5], 1, 1);
     grigliaComp->addWidget(cbComponenti[6], 1, 2);
     grigliaComp->addWidget(cbComponenti[7], 1, 3);
+    grigliaComp->addWidget(selTutti, 2, 0, 2, 2);
+    grigliaComp->addWidget(delTutti, 2, 2, 2, 2);
 
     sceltaComp->setLayout(grigliaComp);
 
@@ -50,39 +55,64 @@ ChartsChooser::ChartsChooser(const Dati& graf, QWidget* parent) : QMainWindow(pa
     mainLayout->addWidget(sceltaComp);
     mainLayout->addWidget(conferma);
 
-    finestra = new QWidget();
-    finestra->setLayout(mainLayout);
-
-    setCentralWidget(finestra);
+    this->setLayout(mainLayout);
 
     grafico = new MyChartView(data);
 
+    setTitle("Controlli");
+    setMaximumWidth(640);
+    setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+
     connect(grafici,SIGNAL(currentTextChanged(QString)),this,SLOT(attivaArea(QString)));
-    connect(conferma,SIGNAL(clicked()),this,SLOT(displayChart()));
+    connect(selTutti,SIGNAL(clicked()),this,SLOT(selezionaTutti()));
+    connect(delTutti,SIGNAL(clicked()),this,SLOT(deselezionaTutti()));
+    connect(conferma,SIGNAL(clicked()),this,SLOT(createChart()));
 }
 
 void ChartsChooser::attivaArea(QString testoCBgrafici) {
     area->setEnabled(testoCBgrafici=="A linee");
 }
 
-void ChartsChooser::displayChart(){
-    QStringList compScelti;
+void ChartsChooser::createChart(){
 
-    for(auto it:cbComponenti)
-        if(it->isChecked())
-            compScelti.push_back(it->text());
+    QStringList compScelti = QStringList();
 
-    grafico->setCompScelti(compScelti);
+    for(auto cbComp:cbComponenti)
+        if(cbComp->isChecked())
+            compScelti.push_back(cbComp->text());
 
-    if(grafici->currentText()=="A linee") {
-        area->isChecked() ? grafico->areaChart() : grafico->lineChart();
+    if(!compScelti.isEmpty()) {
+        grafico->setCompScelti(compScelti);
+
+        if(grafici->currentText()=="A linee")
+            area->isChecked() ? grafico->areaChart() : grafico->lineChart();
+        else if(grafici->currentText()=="Istogramma")
+            grafico->barChart();
+        else if(grafici->currentText()=="Radar")
+            grafico->radarChart();
+        else if(grafici->currentText()=="Plot")
+            grafico->scatterChart();
+
+        //resize(width()+1250, 750);
+
+        conferma->setText("Aggiorna");
     }
-    else if(grafici->currentText()=="Istogramma")
-        grafico->barChart();
-    else if(grafici->currentText()=="Radar")
-        grafico->radarChart();
-    else if(grafici->currentText()=="Plot")
-        grafico->scatterChart();
 }
+
+void ChartsChooser::selezionaTutti() {
+    for(auto cbComp:cbComponenti)
+        cbComp->setChecked(true);
+}
+
+void ChartsChooser::deselezionaTutti() {
+    for(auto cbComp:cbComponenti)
+        cbComp->setChecked(false);
+}
+
+MyChartView* ChartsChooser::getGrafico() const {
+    return grafico;
+}
+
+
 
 

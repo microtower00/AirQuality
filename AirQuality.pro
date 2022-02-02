@@ -9,6 +9,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Controller/chartsviewer.cpp \
     Model/dati.cpp \
     View/dataviewer.cpp \
     View/mychartview.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
     main.cpp
 
 HEADERS += \
+    Controller/chartsviewer.h \
     Model/dati.h \
     View/dataviewer.h \
     View/mychartview.h \

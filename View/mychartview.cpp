@@ -12,7 +12,7 @@ const int MAXPM10 = 50;
 const int MAXPM2_5 = 25;
 
 QMap<QString,double> MASSIMICONSENTITI;
-                                                    //cosa significa sta roba
+
 MyChartView::MyChartView(const Dati& d) : data(d)
 {
     MASSIMICONSENTITI.insert("co",MAXCO);
@@ -195,9 +195,7 @@ void MyChartView::radarChart(){
     //inserisco i punti
     for(auto componente:comp){
         seriesFirstDay->append(QPointF(360/mediePrimoGiorno.values().length()*tickN, mediePrimoGiorno.value(componente)*100/fondoScala.value(componente)));
-        valRiferimento->append(QPointF(360/MASSIMICONSENTITI.values().length()*tickN, MASSIMICONSENTITI.value(componente)*100/fondoScala.value(componente)));
-        //qDebug()<<360/medieUltimoGiorno.values().length()*tickN;
-        //qDebug()<<medieUltimoGiorno.value(componente)*100/fondoScala.value(componente);
+        valRiferimento->append(QPointF(360/comp.size()*tickN, MASSIMICONSENTITI.value(componente)*100/fondoScala.value(componente)));
         seriesLastDay->append(QPointF(360/medieUltimoGiorno.values().length()*tickN, medieUltimoGiorno.value(componente)*100/fondoScala.value(componente)));
         ++tickN;
     }
@@ -206,7 +204,7 @@ void MyChartView::radarChart(){
     double fondoInizio = fondoScala.values().at(0);
     seriesFirstDay->append(QPointF(360, mediePrimoGiorno.values().at(0)*100/fondoInizio));
     seriesLastDay->append(QPointF(360, medieUltimoGiorno.values().at(0)*100/fondoInizio));
-    valRiferimento->append(QPointF(360,MASSIMICONSENTITI.values().at(0)*100/fondoInizio));
+    valRiferimento->append(QPointF(360, MASSIMICONSENTITI.value(comp.first())*100/fondoInizio));
     QPolarChart *pChart = new QPolarChart();
 
     /*QAreaSeries* firstDayArea = new QAreaSeries(seriesFirstDay);

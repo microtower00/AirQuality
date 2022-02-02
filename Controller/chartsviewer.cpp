@@ -15,7 +15,6 @@ ChartsViewer::ChartsViewer(const Dati& d, QWidget *parent) : QMainWindow{parent}
 
     griglia->addWidget(GBcontrolli, 0, 0);
 
-
     setWindowTitle("Grafici");
 
     finestra = new QWidget();

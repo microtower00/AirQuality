@@ -12,20 +12,24 @@ SOURCES += \
     Controller/chartsviewer.cpp \
     Model/dati.cpp \
     View/dataviewer.cpp \
+    View/mychart.cpp \
     View/mychartview.cpp \
     Controller/airqualityretriever.cpp \
     Controller/chartschooser.cpp \
     Controller/startwindow.cpp\
+    View/mylineseries.cpp \
     main.cpp
 
 HEADERS += \
     Controller/chartsviewer.h \
     Model/dati.h \
     View/dataviewer.h \
+    View/mychart.h \
     View/mychartview.h \
     Controller/airqualityretriever.h \
     Controller/chartschooser.h \
     Controller/startwindow.h \
+    View/mylineseries.h
 
 
 # Default rules for deployment.

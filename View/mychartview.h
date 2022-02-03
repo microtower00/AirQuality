@@ -41,7 +41,7 @@ public:
 
     void resetView();
 
-    void sommaY(QtCharts::QLineSeries&, QtCharts::QLineSeries*);
+    QtCharts::QLineSeries* sommaY (QtCharts::QLineSeries*, QtCharts::QLineSeries*) const;
     double maxValueFromListSeries(QList<QtCharts::QLineSeries*>);
     double maxFromSerie(QtCharts::QXYSeries*);
 

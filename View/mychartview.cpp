@@ -89,7 +89,7 @@ void MyChartView::areaChart(){
 
     // shifto tutte le linseries del massimo della precedente per evitare overlapping
     for(auto it=series.begin()+1; it!=series.end(); ++it)
-        sommaY(**it, *(it-1));
+        *it=sommaY(*it, *(it-1));
 
     // per ogni serie nella mappa assegno il nome del componente e i relativi assi
     // bonus: creo una QAreaSeries tra la lineseries corrente e la precedente
@@ -295,14 +295,15 @@ void MyChartView::resetView(){
     delete graf;
 }
 
-void MyChartView::sommaY(QLineSeries &serie, QLineSeries *shift) {
-    QList<QLineSeries*> listatemp;
-    listatemp.append(shift);
+QLineSeries* MyChartView::sommaY(QLineSeries *upper, QLineSeries *lower) const {
+    QVector<QPointF> puntiLower = lower->pointsVector();
+    QVector<QPointF> puntiUpper = upper->pointsVector();
 
-    double maxShift = maxValueFromListSeries(listatemp);
-
-    for(unsigned int i=0; i<serie.count(); ++i)
-        serie.replace(i, serie.at(i).x(), serie.at(i).y()+maxShift);
+    for(int i=0;i<puntiLower.size();++i){
+        puntiUpper[i].setY(puntiLower.at(i).y()+puntiUpper.at(i).y());
+    }
+    upper->replace(puntiUpper);
+    return upper;
 }
 
 double MyChartView::maxValueFromListSeries(QList<QtCharts::QLineSeries*> series) {

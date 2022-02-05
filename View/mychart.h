@@ -7,6 +7,9 @@
 #include <QValueAxis>
 #include <QAreaSeries>
 #include <QLineSeries>
+#include <QPolarChart>
+#include <QCategoryAxis>
+#include <QValueAxis>
 
 
 #include "mylineseries.h"

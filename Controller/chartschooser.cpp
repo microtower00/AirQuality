@@ -12,12 +12,18 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
     grafici->addItem("Plot");
     grafici->addItem("Radar");
 
-    area = new QCheckBox("Aree");
-    area->setDisabled(!(grafici->currentText()=="A linee"));
+    rbComponenti = new QRadioButton("Componenti");
+    rbComponenti->setChecked(true);
+    rbAqi = new QRadioButton("Qualità dell'aria");
 
-    sceltaGrafLayout = new QHBoxLayout();
-    sceltaGrafLayout->addWidget(grafici);
-    sceltaGrafLayout->addWidget(area);
+    area = new QCheckBox("Aree");
+    area->setEnabled(grafici->currentText()=="A linee" && rbComponenti->isChecked());
+
+    sceltaGrafLayout = new QGridLayout();
+    sceltaGrafLayout->addWidget(grafici, 0, 0);
+    sceltaGrafLayout->addWidget(area, 0, 1);
+    sceltaGrafLayout->addWidget(rbComponenti, 1, 0);
+    sceltaGrafLayout->addWidget(rbAqi, 1, 1);
 
     sceltaGraf->setLayout(sceltaGrafLayout);
 
@@ -48,6 +54,7 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
     grigliaComp->addWidget(delTutti, 2, 2, 2, 2);
 
     sceltaComp->setLayout(grigliaComp);
+    sceltaComp->setVisible(rbComponenti->isChecked());
 
     conferma = new QPushButton("Conferma");
 
@@ -63,6 +70,7 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
     setMaximumWidth(640);
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
+    connect(rbComponenti,SIGNAL(toggled(bool)),this,SLOT(attivaComp(bool)));
     connect(grafici,SIGNAL(currentTextChanged(QString)),this,SLOT(attivaArea(QString)));
     connect(selTutti,SIGNAL(clicked()),this,SLOT(selezionaTutti()));
     connect(delTutti,SIGNAL(clicked()),this,SLOT(deselezionaTutti()));
@@ -111,6 +119,18 @@ void ChartsChooser::deselezionaTutti() {
 
 MyChartView* ChartsChooser::getGrafico() const {
     return grafico;
+}
+
+void ChartsChooser::attivaComp(bool compChecked) {
+    sceltaComp->setEnabled(compChecked);
+    area->setEnabled(compChecked && grafici->currentText()=="A linee");
+
+    if(!compChecked)
+        for(unsigned int i=1; i<4; ++i)
+            grafici->setItemData(i, 0,  Qt::UserRole -1);
+    else
+        for(unsigned int i=1; i<4; ++i)
+            grafici->setItemData(i, 33,  Qt::UserRole -1);
 }
 
 

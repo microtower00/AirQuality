@@ -31,7 +31,7 @@ void ChartsViewer::mostraChart() {
 
     layoutDescr->addWidget(descrizione);
     GBdescrizione->setLayout(layoutDescr);
-    GBdescrizione->setMaximumWidth(GBcontrolli->height());
+    GBdescrizione->setMaximumWidth(GBcontrolli->width());
     GBdescrizione->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding));
 
     griglia->addWidget(GBgrafico, 0, 1, 2, 1);

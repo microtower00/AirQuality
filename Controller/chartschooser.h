@@ -14,6 +14,7 @@
 #include <QSizePolicy>
 #include <QGroupBox>
 #include <QCheckBox>
+#include <QRadioButton>
 
 class ChartsChooser : public QGroupBox
 {
@@ -27,6 +28,7 @@ public slots:
     void attivaArea(QString);
     void selezionaTutti();
     void deselezionaTutti();
+    void attivaComp(bool);
 
 signals:
 
@@ -35,7 +37,7 @@ private:
 
     QVBoxLayout* mainLayout;
     QGroupBox* sceltaGraf;
-    QHBoxLayout* sceltaGrafLayout;
+    QGridLayout* sceltaGrafLayout;
     QGroupBox *sceltaComp;
 
     QComboBox* grafici;
@@ -44,6 +46,9 @@ private:
     QGridLayout* grigliaComp;
 
     QList<QCheckBox*> cbComponenti;
+
+    QRadioButton* rbComponenti;
+    QRadioButton* rbAqi;
 
     QPushButton* conferma;
     QPushButton* selTutti;

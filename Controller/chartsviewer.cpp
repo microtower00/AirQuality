@@ -10,7 +10,7 @@ ChartsViewer::ChartsViewer(const Dati& d, QWidget *parent) : QMainWindow{parent}
     layoutDescr = new QHBoxLayout();
     descrizione = new QTextEdit("ciao");
 
-    GBgrafico = new QGroupBox("Grafico");
+    GBgrafico = new QGroupBox();
     layoutGraf = new QHBoxLayout();
 
     griglia->addWidget(GBcontrolli, 0, 0);
@@ -22,11 +22,19 @@ ChartsViewer::ChartsViewer(const Dati& d, QWidget *parent) : QMainWindow{parent}
 
     setCentralWidget(finestra);
 
-    connect(GBcontrolli->getGrafico(), SIGNAL(chartPronto()), this, SLOT(mostraChart()));
+    grafico = GBcontrolli->getGrafico();
+    tabella = GBcontrolli->getTabella();
+
+    connect(grafico, SIGNAL(chartPronto()), this, SLOT(mostraChart()));
+    connect(tabella, SIGNAL(tablePronta()), this, SLOT(mostraTable()));
 }
 
 void ChartsViewer::mostraChart() {
-    layoutGraf->addWidget(GBcontrolli->getGrafico());
+    tabella->close();
+    layoutGraf->removeWidget(tabella);
+
+    layoutGraf->addWidget(grafico);
+    GBgrafico->setTitle("Grafico");
     GBgrafico->setLayout(layoutGraf);
 
     layoutDescr->addWidget(descrizione);
@@ -37,5 +45,24 @@ void ChartsViewer::mostraChart() {
     griglia->addWidget(GBgrafico, 0, 1, 2, 1);
     griglia->addWidget(GBdescrizione, 1, 0);
 
-    resize(GBcontrolli->width()+1250,750);
+    resize(GBcontrolli->width()+grafico->width(),750);
+}
+
+void ChartsViewer::mostraTable() {
+    grafico->close();
+    layoutGraf->removeWidget(grafico);
+
+    layoutGraf->addWidget(tabella);
+    GBgrafico->setTitle("Tabella");
+    GBgrafico->setLayout(layoutGraf);
+
+    layoutDescr->addWidget(descrizione);
+    GBdescrizione->setLayout(layoutDescr);
+    GBdescrizione->setMaximumWidth(GBcontrolli->width());
+    GBdescrizione->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding));
+
+    griglia->addWidget(GBgrafico, 0, 1, 2, 1);
+    griglia->addWidget(GBdescrizione, 1, 0);
+
+    resize(GBcontrolli->width()+1101,750);
 }

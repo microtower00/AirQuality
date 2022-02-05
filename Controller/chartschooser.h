@@ -3,6 +3,7 @@
 
 #include "Model/dati.h"
 #include "View/mychartview.h"
+#include "View/dataviewer.h"
 
 #include <QMainWindow>
 #include <QLabel>
@@ -15,6 +16,7 @@
 #include <QGroupBox>
 #include <QCheckBox>
 #include <QRadioButton>
+#include <QButtonGroup>
 
 class ChartsChooser : public QGroupBox
 {
@@ -23,9 +25,11 @@ public:
     explicit ChartsChooser(const Dati&);
 
     MyChartView* getGrafico() const;
+    DataViewer* getTabella() const;
 public slots:
     void createChart();
-    void attivaArea(QString);
+    //void createTable();
+    void controlliComboBox(QString);
     void selezionaTutti();
     void deselezionaTutti();
     void attivaComp(bool);
@@ -45,16 +49,18 @@ private:
 
     QGridLayout* grigliaComp;
 
-    QList<QCheckBox*> cbComponenti;
+    QButtonGroup* cbComponenti;
 
     QRadioButton* rbComponenti;
     QRadioButton* rbAqi;
 
-    QPushButton* conferma;
-    QPushButton* selTutti;
-    QPushButton* delTutti;
+    QPushButton* pbConferma;
+    QPushButton* pbTabella;
+    QPushButton* pbSelTutti;
+    QPushButton* pbDelTutti;
 
     MyChartView* grafico;
+    DataViewer* tabella;
 };
 
 #endif // CHARTSCHOOSER_H

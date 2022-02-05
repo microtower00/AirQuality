@@ -16,6 +16,7 @@ public:
 
 public slots:
    void mostraChart();
+   void mostraTable();
 
 signals:
 
@@ -26,6 +27,9 @@ private:
     ChartsChooser* GBcontrolli;
     QGroupBox* GBdescrizione;
     QGroupBox* GBgrafico;
+
+    DataViewer* tabella;
+    MyChartView* grafico;
 
     QGridLayout* griglia;
 

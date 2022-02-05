@@ -14,20 +14,17 @@
 #include <QLabel>
 #include "Model/dati.h"
 
-class DataViewer : public QMainWindow
+class DataViewer : public QTableWidget
 {
     Q_OBJECT
 public slots:
-    //funzione che crea la tabella e mostra la finestra
-    void createTable(Dati);
+
 public:
-    //costruttore che non fa assolutamente niente
-    DataViewer(QWidget *parent = nullptr);
+    DataViewer(Dati);
 private:
-    QTableWidget* tableJS;
-    QWidget* mainW;
-    QVBoxLayout* layout;
+
 signals:
+    void tablePronta();
 
 };
 

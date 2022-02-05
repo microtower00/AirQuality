@@ -29,6 +29,7 @@ MyChartView::MyChartView(const Dati& d) : data(d)
 
 void MyChartView::setCompScelti(const QStringList& compScelti) {
     comp = compScelti;
+    resize(1250,750);
 }
 
 QMap<QString, QtCharts::QLineSeries*> MyChartView::genericLAchart() {
@@ -78,7 +79,7 @@ void MyChartView::lineChart(){
 
     //setto il massimo di Y al massimo valore tra tutte le serie
     asseY->setMin(0);
-    asseY->setMax(maxValueFromListSeries(series.values()));
+    asseY->setMax(comp.first()!="aqi" ? maxValueFromListSeries(series.values()) : maxValueFromListSeries(series.values())+10);
     this->chart()->legend()->setVisible(true);
     this->chart()->legend()->setAlignment(Qt::AlignBottom);
 }

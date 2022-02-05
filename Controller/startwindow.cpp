@@ -101,7 +101,7 @@ StartWindow::StartWindow(QWidget *parent)
     connect(apriFileButton,SIGNAL(clicked()),this,SLOT(chooseFile()));
     connect(openWeatherButton,SIGNAL(clicked()),this,SLOT(getAirQuality()));
 
-    connect(this, SIGNAL(modelCreato(const Dati&)), this, SLOT(apriFinestra(const Dati&)));
+    connect(this, SIGNAL(modelCreato(Dati)), this, SLOT(apriFinestra(Dati)));
     //data = new DataViewer;
     //connect(this, SIGNAL(modelCreato(Dati)), data, SLOT(createTable(Dati)));
 }

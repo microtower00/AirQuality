@@ -33,87 +33,105 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
     listaComp.removeFirst();
     listaComp.removeLast();
 
+    cbComponenti = new QButtonGroup();
+    cbComponenti->setExclusive(false);
+
     for(auto it:listaComp)
-        cbComponenti.push_back(new QCheckBox(it));
+        cbComponenti->addButton(new QCheckBox(it));
 
     grigliaComp = new QGridLayout();
 
-    selTutti = new QPushButton("Seleziona tutti");
-    delTutti = new QPushButton("Deseleziona tutti");
+    pbSelTutti = new QPushButton("Seleziona tutti");
+    pbDelTutti = new QPushButton("Deseleziona tutti");
 
     //non avevo voglia di iterare, che vergogna
-    grigliaComp->addWidget(cbComponenti[0], 0, 0);
-    grigliaComp->addWidget(cbComponenti[1], 0, 1);
-    grigliaComp->addWidget(cbComponenti[2], 0, 2);
-    grigliaComp->addWidget(cbComponenti[3], 0, 3);
-    grigliaComp->addWidget(cbComponenti[4], 1, 0);
-    grigliaComp->addWidget(cbComponenti[5], 1, 1);
-    grigliaComp->addWidget(cbComponenti[6], 1, 2);
-    grigliaComp->addWidget(cbComponenti[7], 1, 3);
-    grigliaComp->addWidget(selTutti, 2, 0, 2, 2);
-    grigliaComp->addWidget(delTutti, 2, 2, 2, 2);
+    grigliaComp->addWidget(cbComponenti->buttons().at(0), 0, 0);
+    grigliaComp->addWidget(cbComponenti->buttons().at(1), 0, 1);
+    grigliaComp->addWidget(cbComponenti->buttons().at(2), 0, 2);
+    grigliaComp->addWidget(cbComponenti->buttons().at(3), 0, 3);
+    grigliaComp->addWidget(cbComponenti->buttons().at(4), 1, 0);
+    grigliaComp->addWidget(cbComponenti->buttons().at(5), 1, 1);
+    grigliaComp->addWidget(cbComponenti->buttons().at(6), 1, 2);
+    grigliaComp->addWidget(cbComponenti->buttons().at(7), 1, 3);
+    grigliaComp->addWidget(pbSelTutti, 2, 0, 2, 2);
+    grigliaComp->addWidget(pbDelTutti, 2, 2, 2, 2);
 
     sceltaComp->setLayout(grigliaComp);
     sceltaComp->setVisible(rbComponenti->isChecked());
 
-    conferma = new QPushButton("Conferma");
+    pbConferma = new QPushButton("Visualizza grafico");
+    pbTabella = new QPushButton("Visualizza tabella con tutti i dati");
 
     mainLayout->addWidget(sceltaGraf);
     mainLayout->addWidget(sceltaComp);
-    mainLayout->addWidget(conferma);
+    mainLayout->addWidget(pbConferma);
+    mainLayout->addWidget(pbTabella);
 
     this->setLayout(mainLayout);
 
     grafico = new MyChartView(data);
+    tabella = new DataViewer(data);
 
     setTitle("Controlli");
     setMaximumWidth(640);
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
     connect(rbComponenti,SIGNAL(toggled(bool)),this,SLOT(attivaComp(bool)));
-    connect(grafici,SIGNAL(currentTextChanged(QString)),this,SLOT(attivaArea(QString)));
-    connect(selTutti,SIGNAL(clicked()),this,SLOT(selezionaTutti()));
-    connect(delTutti,SIGNAL(clicked()),this,SLOT(deselezionaTutti()));
-    connect(conferma,SIGNAL(clicked()),this,SLOT(createChart()));
+    connect(grafici,SIGNAL(currentTextChanged(QString)),this,SLOT(controlliComboBox(QString)));
+    connect(pbSelTutti,SIGNAL(clicked()),this,SLOT(selezionaTutti()));
+    connect(pbDelTutti,SIGNAL(clicked()),this,SLOT(deselezionaTutti()));
+    connect(pbConferma,SIGNAL(clicked()),this,SLOT(createChart()));
+    connect(pbTabella,SIGNAL(clicked()),tabella,SIGNAL(tablePronta()));
 }
 
-void ChartsChooser::attivaArea(QString testoCBgrafici) {
-    area->setEnabled(testoCBgrafici=="A linee");
+void ChartsChooser::controlliComboBox(QString testoCBgrafici) {
+    area->setEnabled(testoCBgrafici=="A linee" && rbComponenti->isChecked());
+    cbComponenti->setExclusive(testoCBgrafici=="Plot");
+    pbSelTutti->setDisabled(testoCBgrafici=="Plot");
 }
 
 void ChartsChooser::createChart(){
-
     QStringList compScelti = QStringList();
 
-    for(auto cbComp:cbComponenti)
-        if(cbComp->isChecked())
-            compScelti.push_back(cbComp->text());
+    if(rbComponenti->isChecked()) {
+        for(auto cbComp:cbComponenti->buttons())
+            if(cbComp->isChecked())
+                compScelti.push_back(cbComp->text());
 
-    if(!compScelti.isEmpty()) {
+        if(!compScelti.isEmpty()) {
+            grafico->setCompScelti(compScelti);
+
+            if(grafici->currentText()=="A linee")
+                area->isChecked() ? grafico->areaChart() : grafico->lineChart();
+            else if(grafici->currentText()=="Istogramma")
+                grafico->barChart();
+            else if(grafici->currentText()=="Radar" && compScelti.size()>=3)
+                grafico->radarChart();
+            else if(grafici->currentText()=="Plot")
+                grafico->scatterChart();
+
+            pbConferma->setText("Aggiorna grafico");
+        }
+    } else if(rbAqi->isChecked()) {
+        compScelti.push_back("aqi");
         grafico->setCompScelti(compScelti);
+        grafico->lineChart();
 
-        if(grafici->currentText()=="A linee")
-            area->isChecked() ? grafico->areaChart() : grafico->lineChart();
-        else if(grafici->currentText()=="Istogramma")
-            grafico->barChart();
-        else if(grafici->currentText()=="Radar")
-            grafico->radarChart();
-        else if(grafici->currentText()=="Plot")
-            grafico->scatterChart();
-
-        //resize(width()+1250, 750);
-
-        conferma->setText("Aggiorna");
+        pbConferma->setText("Aggiorna grafico");
     }
 }
 
+DataViewer* ChartsChooser::getTabella() const{
+    return tabella;
+}
+
 void ChartsChooser::selezionaTutti() {
-    for(auto cbComp:cbComponenti)
+    for(auto cbComp:cbComponenti->buttons())
         cbComp->setChecked(true);
 }
 
 void ChartsChooser::deselezionaTutti() {
-    for(auto cbComp:cbComponenti)
+    for(auto cbComp:cbComponenti->buttons())
         cbComp->setChecked(false);
 }
 
@@ -125,12 +143,14 @@ void ChartsChooser::attivaComp(bool compChecked) {
     sceltaComp->setEnabled(compChecked);
     area->setEnabled(compChecked && grafici->currentText()=="A linee");
 
-    if(!compChecked)
+    if(!compChecked) {
+        grafici->setCurrentIndex(0);
         for(unsigned int i=1; i<4; ++i)
             grafici->setItemData(i, 0,  Qt::UserRole -1);
-    else
+    } else {
         for(unsigned int i=1; i<4; ++i)
             grafici->setItemData(i, 33,  Qt::UserRole -1);
+    }
 }
 
 

@@ -18,6 +18,7 @@ SOURCES += \
     Controller/chartschooser.cpp \
     Controller/startwindow.cpp\
     View/mylineseries.cpp \
+    View/mypolarseries.cpp \
     main.cpp
 
 HEADERS += \
@@ -29,7 +30,8 @@ HEADERS += \
     Controller/airqualityretriever.h \
     Controller/chartschooser.h \
     Controller/startwindow.h \
-    View/mylineseries.h
+    View/mylineseries.h \
+    View/mypolarseries.h
 
 
 # Default rules for deployment.

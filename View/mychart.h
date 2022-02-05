@@ -10,7 +10,6 @@
 
 
 #include "mylineseries.h"
-#include "myareaseries.h"
 
 
 

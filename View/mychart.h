@@ -10,6 +10,7 @@
 #include <QPolarChart>
 #include <QCategoryAxis>
 #include <QValueAxis>
+#include <QScatterSeries>
 
 
 #include "mylineseries.h"

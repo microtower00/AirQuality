@@ -73,7 +73,26 @@ void MyChart::buildAreaChart(QMap<QString, QtCharts::QAbstractSeries *> series){
     legend()->setVisible(true);
     legend()->setAlignment(Qt::AlignBottom);
 }
-void MyChart::buildScatterChart(QMap<QString, QtCharts::QAbstractSeries*> serie){}
+void MyChart::buildScatterChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
+
+    QtCharts::QScatterSeries* sSerie = static_cast<QtCharts::QScatterSeries*>(serie.first());
+    // asse X
+    //asseX = new QtCharts::QDateTimeAxis;
+    //asseX->setFormat("h:mm");
+    QtCharts::QValueAxis* asseX2 = new QtCharts::QValueAxis();
+    asseX2->setTickCount(24);
+    addAxis(asseX2, Qt::AlignBottom);
+
+    // asse Y
+    QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();
+    // lascio spazio sopra l'ultimo pallino
+    asseY->setRange(0, maxFromSerie(sSerie)+(maxFromSerie(sSerie)/sSerie->markerSize()));
+    addAxis(asseY, Qt::AlignLeft);
+
+    addSeries(sSerie);
+    sSerie->attachAxis(asseX2);
+    sSerie->attachAxis(asseY);
+}
 
 void MyChart::buildPolarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
     //Per ogni serie setto il nome, e aggiungo al grafico

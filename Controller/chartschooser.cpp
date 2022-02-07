@@ -67,7 +67,7 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
     this->setLayout(mainLayout);
 
     grafico = new MyChartView(data);
-    tabella = new DataViewer(data);
+    tabella = new MyTableView(data);
 
     setTitle("Controlli");
     setMaximumWidth(640);
@@ -121,7 +121,7 @@ void ChartsChooser::createChart(){
     }
 }
 
-DataViewer* ChartsChooser::getTabella() const{
+MyTableView* ChartsChooser::getTabella() const{
     return tabella;
 }
 

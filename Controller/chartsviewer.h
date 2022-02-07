@@ -28,7 +28,7 @@ private:
     QGroupBox* GBdescrizione;
     QGroupBox* GBgrafico;
 
-    DataViewer* tabella;
+    MyTableView* tabella;
     MyChartView* grafico;
 
     QGridLayout* griglia;

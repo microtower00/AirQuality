@@ -3,7 +3,7 @@
 
 #include "Model/dati.h"
 #include "View/mychartview.h"
-#include "View/dataviewer.h"
+#include "View/mytableview.h"
 
 #include <QMainWindow>
 #include <QLabel>
@@ -25,7 +25,7 @@ public:
     explicit ChartsChooser(const Dati&);
 
     MyChartView* getGrafico() const;
-    DataViewer* getTabella() const;
+    MyTableView* getTabella() const;
 public slots:
     void createChart();
     //void createTable();
@@ -59,7 +59,7 @@ private:
     QPushButton* pbDelTutti;
 
     MyChartView* grafico;
-    DataViewer* tabella;
+    MyTableView* tabella;
 };
 
 #endif // CHARTSCHOOSER_H

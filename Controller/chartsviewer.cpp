@@ -32,6 +32,7 @@ ChartsViewer::ChartsViewer(const Dati& d, QWidget *parent) : QMainWindow{parent}
 void ChartsViewer::mostraChart() {
     tabella->close();
     layoutGraf->removeWidget(tabella);
+    grafico->show();
 
     layoutGraf->addWidget(grafico);
     GBgrafico->setTitle("Grafico");
@@ -51,6 +52,7 @@ void ChartsViewer::mostraChart() {
 void ChartsViewer::mostraTable() {
     grafico->close();
     layoutGraf->removeWidget(grafico);
+    tabella->show();
 
     layoutGraf->addWidget(tabella);
     GBgrafico->setTitle("Tabella");

@@ -8,6 +8,7 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
 
     grafici = new QComboBox();
     grafici->addItem("A linee");
+    grafici->addItem("Ad aree");
     grafici->addItem("Istogramma");
     grafici->addItem("Plot");
     grafici->addItem("Radar");
@@ -16,12 +17,8 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
     rbComponenti->setChecked(true);
     rbAqi = new QRadioButton("Qualità dell'aria");
 
-    area = new QCheckBox("Aree");
-    area->setEnabled(grafici->currentText()=="A linee" && rbComponenti->isChecked());
-
     sceltaGrafLayout = new QGridLayout();
     sceltaGrafLayout->addWidget(grafici, 0, 0);
-    sceltaGrafLayout->addWidget(area, 0, 1);
     sceltaGrafLayout->addWidget(rbComponenti, 1, 0);
     sceltaGrafLayout->addWidget(rbAqi, 1, 1);
 
@@ -85,9 +82,10 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
 }
 
 void ChartsChooser::controlliComboBox(QString testoCBgrafici) {
-    area->setEnabled(testoCBgrafici=="A linee" && rbComponenti->isChecked());
     cbComponenti->setExclusive(testoCBgrafici=="Plot");
     pbSelTutti->setDisabled(testoCBgrafici=="Plot");
+
+    if(testoCBgrafici=="Plot") pbDelTutti->click();
 }
 
 void ChartsChooser::createChart(){
@@ -102,7 +100,9 @@ void ChartsChooser::createChart(){
             grafico->setCompScelti(compScelti);
 
             if(grafici->currentText()=="A linee")
-                area->isChecked() ? grafico->areaChart() : grafico->lineChart();
+                grafico->lineChart();
+            else if(grafici->currentText()=="Ad aree")
+                grafico->areaChart();
             else if(grafici->currentText()=="Istogramma")
                 grafico->barChart();
             else if(grafici->currentText()=="Radar" && compScelti.size()>=3)
@@ -141,14 +141,13 @@ MyChartView* ChartsChooser::getGrafico() const {
 
 void ChartsChooser::attivaComp(bool compChecked) {
     sceltaComp->setEnabled(compChecked);
-    area->setEnabled(compChecked && grafici->currentText()=="A linee");
 
     if(!compChecked) {
         grafici->setCurrentIndex(0);
-        for(unsigned int i=1; i<4; ++i)
+        for(unsigned int i=1; i<grafici->count(); ++i)
             grafici->setItemData(i, 0,  Qt::UserRole -1);
     } else {
-        for(unsigned int i=1; i<4; ++i)
+        for(unsigned int i=1; i<grafici->count(); ++i)
             grafici->setItemData(i, 33,  Qt::UserRole -1);
     }
 }

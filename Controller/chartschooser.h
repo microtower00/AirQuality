@@ -45,7 +45,6 @@ private:
     QGroupBox *sceltaComp;
 
     QComboBox* grafici;
-    QCheckBox* area;
 
     QGridLayout* grigliaComp;
 

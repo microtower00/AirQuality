@@ -12,6 +12,7 @@
 #include <QValueAxis>
 #include <QScatterSeries>
 #include <QBarCategoryAxis>
+#include <QDebug>
 
 
 #include "mylineseries.h"

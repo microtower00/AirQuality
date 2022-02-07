@@ -29,7 +29,9 @@ void AirQualityRetriever::retrieveHistorical(double lat, double lon, QDate start
     QString *stringaRichiesta = new QString("http://api.openweathermap.org/data/2.5/air_pollution/history?lat=" + QString::number(lat) + "&lon=" + QString::number(lon) + "&start=" + QString::number((new QDateTime(start))->toTime_t()) + "&end=" + QString::number((new QDateTime(end))->toTime_t()) + "&appid=" + apikey);
     QUrl urlRichiesta(*stringaRichiesta);
 
-    qDebug()<<"AQR::retrieveHistorical(double,double,QDate,QDate)";
+    //qDebug()<<"Url: "+*stringaRichiesta;
+
+    //qDebug()<<"AQR::retrieveHistorical(double,double,QDate,QDate)";
 
     //Creo l'oggetto richiesta
     QNetworkRequest *richiesta = new QNetworkRequest(urlRichiesta);

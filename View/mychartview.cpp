@@ -32,105 +32,38 @@ void MyChartView::setCompScelti(const QStringList& compScelti) {
     resize(1250,750);
 }
 
-QMap<QString, QtCharts::QLineSeries*> MyChartView::genericLAchart() {
-    resetView();
-    resize(1250,750);
-    emit chartPronto();
-    //MyChartView::show();
-
-    QList<QMap<QString, double>> dati = data.getDati();
-    QMap<QString, QtCharts::QLineSeries*> series;
-
-    // creo le serie che poi andranno inserite nella mappa di serie
-    QtCharts::QLineSeries* serie;
-    for(auto componente:comp){
-        serie = new QtCharts::QLineSeries();
-        for(auto itDati:dati) {
-            serie->append(QPointF(data.getDateFromDouble(itDati.value("Data")).toMSecsSinceEpoch(),itDati.value(componente)));
-        }
-        // inserimento nella mappa
-        series.insert(componente, serie);
-    }
-
-    // asse X
-    asseX = new QtCharts::QDateTimeAxis;
-    asseX->setFormat("dd-MM-yyyy h:mm");
-    asseX->setTickCount(12);
-    this->chart()->addAxis(asseX, Qt::AlignBottom);
-
-    // asse Y
-    asseY = new QtCharts::QValueAxis();
-    this->chart()->addAxis(asseY, Qt::AlignLeft);
-
-    return series;
-}
+QMap<QString, QtCharts::QLineSeries*> MyChartView::genericLAchart() {}
 
 void MyChartView::lineChart(){
-
-    QMap<QString, QtCharts::QLineSeries*> series = genericLAchart();
-
-    // per ogni serie nella mappa assegno il nome del componente e i relativi assi
-    for(auto it=series.begin(); it!=series.end(); ++it){
-        this->chart()->addSeries(*it);
-        it.value()->setName(it.key());
-        it.value()->attachAxis(asseX);
-        it.value()->attachAxis(asseY);
+    resetView();
+    emit chartPronto();
+    QMap<QString, QtCharts::QAbstractSeries*> series;
+    //Creo la lineSeries per ogni componente
+    for(QString chiave : comp){
+        series.insert(chiave, new MyLineSeries(data,chiave));
     }
 
-    //setto il massimo di Y al massimo valore tra tutte le serie
-    asseY->setMin(0);
-    asseY->setMax(comp.first()!="aqi" ? maxValueFromListSeries(series.values()) : maxValueFromListSeries(series.values())+10);
-    this->chart()->legend()->setVisible(true);
-    this->chart()->legend()->setAlignment(Qt::AlignBottom);
+    this->setChart(new MyChart(series,MyChart::GraphType::LineG));
 }
 
 void MyChartView::areaChart(){
-
-    QMap<QString, QtCharts::QLineSeries*> series = genericLAchart();
-
-    // shifto tutte le linseries del massimo della precedente per evitare overlapping
-    for(auto it=series.begin()+1; it!=series.end(); ++it)
-        *it=sommaY(*it, *(it-1));
-
-    // per ogni serie nella mappa assegno il nome del componente e i relativi assi
-    // bonus: creo una QAreaSeries tra la lineseries corrente e la precedente
-    QAreaSeries *aSeries;
-    for(auto it=series.begin(); it!=series.end(); ++it){
-        aSeries = new QAreaSeries(*it, it!=series.begin() ? *(it-1) : Q_NULLPTR);
-        this->chart()->addSeries(aSeries);
-        aSeries->setName(it.key());
-        aSeries->attachAxis(asseX);
-        aSeries->attachAxis(asseY);
+    resetView();
+    emit chartPronto();
+    QMap<QString, QtCharts::QAbstractSeries*> series;
+    //Creo la lineSeries per ogni componente
+    for(QString chiave : comp){
+        series.insert(chiave, new MyLineSeries(data,chiave));
     }
 
-    //setto il massimo di Y al massimo valore tra tutte le serie
-    asseY->setMin(0);
-    asseY->setMax(maxValueFromListSeries(series.values()));
-    this->chart()->legend()->setVisible(true);
-    this->chart()->legend()->setAlignment(Qt::AlignBottom);
+    this->setChart(new MyChart(series,MyChart::GraphType::AreaG));
 }
 
 void MyChartView::barChart(){
     resetView();
     emit chartPronto();
-    //MyChartView::show();
-
-    // tutto ciò che è stato fatto qua sotto è spiegato abbastanza bene nella doc di QBarSeries (barChartExample) (sicuramente spiegato meglio di quanto potrei fare io che sono cotto)
-    QList<QtCharts::QBarSet*> componenti;
-    for(auto it:comp)
-        componenti.push_back(new QtCharts::QBarSet(it));
-
     QList<QMap<QString, double>> dati = data.getDati();
 
-    QtCharts::QBarSeries *serie = new QtCharts::QBarSeries();
-
-    for(auto it=comp.begin(); it!=comp.end(); ++it) {
-        for(auto itDati:dati) {
-            *componenti[(std::distance(comp.begin(), it))]<< itDati.value(*it);
-            serie->append(componenti[(std::distance(comp.begin(), it))]);
-        }
-    }
-
+    MyBarSeries *serie = new MyBarSeries(data, comp);
     this->chart()->addSeries(serie);
     QtCharts::QBarCategoryAxis* asse = new QtCharts::QBarCategoryAxis();
 
@@ -259,35 +192,17 @@ void MyChartView::scatterChart() {
     resetView();
     emit chartPronto();
     //MyChartView::show();
+    QString singleComp = comp.first();
 
-    QList<QMap<QString, double>> dati = data.getDati();
-    QString singleComp = *comp.begin();
-
-    QScatterSeries* sSerie = new QScatterSeries();
+    MyScatterSerie* sSerie = new MyScatterSerie(data, singleComp);
     sSerie->setMarkerSize(10);
     sSerie->setName(singleComp);
 
-    for(auto riga:dati) {
-        sSerie->append(QPointF((Dati::getDateFromDouble(riga.value("Data")).time().msecsSinceStartOfDay())/3600000, riga.value(singleComp)));
-    }
+    //mi pare strano
+    QMap<QString, QAbstractSeries*> param;
+    param.insert(singleComp, sSerie);
+    setChart(new MyChart(param, MyChart::GraphType::ScatterG));
 
-    // asse X
-    //asseX = new QtCharts::QDateTimeAxis;
-    //asseX->setFormat("h:mm");
-    QtCharts::QValueAxis* asseX2 = new QtCharts::QValueAxis();
-    asseX2->setTickCount(24);
-    this->chart()->addAxis(asseX2, Qt::AlignBottom);
-
-    // asse Y
-    asseY = new QtCharts::QValueAxis();
-    // lascio spazio sopra l'ultimo pallino
-    asseY->setRange(0, maxFromSerie(sSerie)+(maxFromSerie(sSerie)/sSerie->markerSize()));
-    qDebug()<<maxFromSerie(sSerie);
-    this->chart()->addAxis(asseY, Qt::AlignLeft);
-
-    this->chart()->addSeries(sSerie);
-    sSerie->attachAxis(asseX2);
-    sSerie->attachAxis(asseY);
 }
 
 void MyChartView::resetView(){

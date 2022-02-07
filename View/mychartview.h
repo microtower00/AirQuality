@@ -2,6 +2,9 @@
 #define CHARTCONTROLLER_H
 
 #include "Model/dati.h"
+#include "mychart.h"
+#include "mybarseries.h"
+#include "myscatterserie.h"
 
 #include <QMainWindow>
 #include <QChartView>

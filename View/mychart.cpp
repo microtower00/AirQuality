@@ -118,7 +118,11 @@ void MyChart::buildPolarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
     //addAxis(componenti, QtCharts::QPolarChart::PolarOrientationAngular);
 }
 
-void MyChart::buildBarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){}
+void MyChart::buildBarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
+    //Posso perch`prevedo di passargli una sola serie, con tutti i barset
+    addSeries(serie.first());
+    QtCharts::QBarCategoryAxis* asse = new QtCharts::QBarCategoryAxis();
+}
 
 QtCharts::QLineSeries* MyChart::sommaY(QtCharts::QLineSeries *upper, QtCharts::QLineSeries *lower) {
     QVector<QPointF> puntiLower = lower->pointsVector();

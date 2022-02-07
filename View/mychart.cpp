@@ -3,7 +3,6 @@
 MyChart::MyChart(QMap<QString,QtCharts::QAbstractSeries*> serie, MyChart::GraphType gt)
 {
 
-    qDebug()<<"Me la crasho addosso";
     switch(gt){
     case MyChart::GraphType::LineG :
         buildLineChart(serie);
@@ -14,9 +13,6 @@ MyChart::MyChart(QMap<QString,QtCharts::QAbstractSeries*> serie, MyChart::GraphT
     case MyChart::GraphType::ScatterG :
         buildScatterChart(serie);
         qDebug()<<"Costruisco un ScatterG";break;
-    case MyChart::GraphType::PolarG :
-        buildPolarChart(serie);
-        qDebug()<<"Costruisco un PolarG";break;
     case MyChart::GraphType::BarG :
         buildBarChart(serie);
         qDebug()<<"Costruisco un BarG";break;

@@ -18,6 +18,7 @@ SOURCES += \
     Controller/chartschooser.cpp \
     Controller/startwindow.cpp\
     View/mylineseries.cpp \
+    View/mypolarchart.cpp \
     View/mypolarseries.cpp \
     View/myscatterserie.cpp \
     main.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
     Controller/chartschooser.h \
     Controller/startwindow.h \
     View/mylineseries.h \
+    View/mypolarchart.h \
     View/mypolarseries.h \
     View/myscatterserie.h \
     View/mybarseries.h

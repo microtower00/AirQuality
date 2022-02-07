@@ -11,7 +11,6 @@ const int MAXNH3 = 18;
 const int MAXPM10 = 50;
 const int MAXPM2_5 = 25;
 
-QMap<QString,double> MASSIMICONSENTITI;
 
 MyChartView::MyChartView(const Dati& d) : data(d)
 {
@@ -81,108 +80,15 @@ void MyChartView::barChart(){
 void MyChartView::radarChart(){
     resetView();
     emit chartPronto();
-    //MyChartView::show();
-
-    QList<QMap<QString, double>> dati = data.getDati();
-    QMap<QString,double> mediePrimoGiorno;
-    QMap<QString,double> medieUltimoGiorno;
-
-    //prendo la media di tutti i componenti nel primo giorno e nell'ultimo
-    QString giornoInizio = QDateTime::fromTime_t(dati.at(0).value("Data")).toString("dd-MM-yyyy");
-    QString giornoFine = QDateTime::fromTime_t(dati.at(dati.length()-1).value("Data")).toString("dd-MM-yyyy");
-
-    for(auto record:dati){
-        //se é del giorno di inizio, itera e fai media
-        if(QDateTime::fromTime_t(record.value("Data")).toString("dd-MM-yyyy")==giornoInizio){
-            for(auto componente: comp)
-                mediePrimoGiorno.insert(componente, (mediePrimoGiorno.value(componente)+record.value(componente))/2);
-        }
-        //se é l'ultimo giorno, itera e fai la media
-        else if(QDateTime::fromTime_t(record.value("Data")).toString("dd-MM-yyyy")==giornoFine) {
-            for(auto componente: comp)
-                medieUltimoGiorno.insert(componente, (medieUltimoGiorno.value(componente)+record.value(componente))/2);
-        }
+    QMap<QString,QAbstractSeries*> serieDati;
+    QList<QMap<QString,double>> datiDaUsare = data.getDati();
+    datiDaUsare.append(MASSIMICONSENTITI);
+    for(QString chiave : comp){
+        serieDati.insert(chiave, new MyPolarSeries(datiDaUsare,MyPolarSeries::calcolaFondoScala(datiDaUsare), comp));
     }
+    QMap<QString,QAbstractSeries*> fondoScala;
 
-    QLineSeries *seriesFirstDay = new QLineSeries();
-    seriesFirstDay->setName("Giorno iniziale");
-
-    QLineSeries *seriesLastDay = new QLineSeries();
-    seriesLastDay->setName("Giorno finale");
-
-    QLineSeries *valRiferimento = new QLineSeries();
-    valRiferimento->setName("Valori massimi consentiti");
-
-    mediePrimoGiorno.remove("Data");
-    mediePrimoGiorno.remove("aqi");
-
-    medieUltimoGiorno.remove("Data");
-    medieUltimoGiorno.remove("aqi");
-
-    int tickN=0;
-
-    //creo una mappa per i fondo scala di ogni componente
-    QMap<QString, double> fondoScala;
-    for(auto componente:comp)
-        fondoScala.insert(componente, mediePrimoGiorno.value(componente) > MASSIMICONSENTITI.value(componente) ? std::max(mediePrimoGiorno.value(componente),medieUltimoGiorno.value(componente)) : std::max(MASSIMICONSENTITI.value(componente),medieUltimoGiorno.value(componente)));
-
-    //inserisco i punti
-    for(auto componente:comp){
-        seriesFirstDay->append(QPointF(360/mediePrimoGiorno.values().length()*tickN, mediePrimoGiorno.value(componente)*100/fondoScala.value(componente)));
-        valRiferimento->append(QPointF(360/comp.size()*tickN, MASSIMICONSENTITI.value(componente)*100/fondoScala.value(componente)));
-        seriesLastDay->append(QPointF(360/medieUltimoGiorno.values().length()*tickN, medieUltimoGiorno.value(componente)*100/fondoScala.value(componente)));
-        ++tickN;
-    }
-
-    //Chiudo il "cerchio"
-    double fondoInizio = fondoScala.values().at(0);
-    seriesFirstDay->append(QPointF(360, mediePrimoGiorno.values().at(0)*100/fondoInizio));
-    seriesLastDay->append(QPointF(360, medieUltimoGiorno.values().at(0)*100/fondoInizio));
-    valRiferimento->append(QPointF(360, MASSIMICONSENTITI.value(comp.first())*100/fondoInizio));
-    QPolarChart *pChart = new QPolarChart();
-
-    /*QAreaSeries* firstDayArea = new QAreaSeries(seriesFirstDay);
-    firstDayArea->setColor(QColor::fromRgba(qRgba(0,255,0,128)));
-    firstDayArea->setName("Primo giorno");
-
-    QAreaSeries* lastDayArea = new QAreaSeries(seriesLastDay);
-    lastDayArea->setColor(QColor::fromRgba(qRgba(255,0,0,128)));
-    lastDayArea->setName("Ultimo giorno");
-
-    QAreaSeries* rifArea = new QAreaSeries(valRiferimento);
-    rifArea->setColor(QColor::fromRgba(qRgba(0,0,255,128)));
-    rifArea->setName("Valori di riferimento");*/
-
-    pChart->addSeries(seriesFirstDay);
-    pChart->addSeries(seriesLastDay);
-    pChart->addSeries(valRiferimento);
-
-    //asse radiale
-    QValueAxis *ugm3 = new QValueAxis;
-    ugm3->setRange(0, 100);
-    ugm3->setTickCount(7);
-    ugm3->setLabelsVisible(false);
-    pChart->addAxis(ugm3, QPolarChart::PolarOrientationRadial);
-
-    // asse azimutale
-    QCategoryAxis *componenti = new QCategoryAxis();
-    componenti->setLabelsPosition(QCategoryAxis::AxisLabelsPositionOnValue);
-    componenti->setRange(0, 360);
-    componenti->setLabelsVisible(true);
-    pChart->addAxis(componenti, QPolarChart::PolarOrientationAngular);
-
-    for(int i=0;i<comp.size();i++){
-        componenti->append(comp.at(i),360/comp.size()*i);
-    }
-
-    seriesFirstDay->attachAxis(componenti);
-    seriesFirstDay->attachAxis(ugm3);
-
-    seriesLastDay->attachAxis(componenti);
-    seriesLastDay->attachAxis(ugm3);
-
-    valRiferimento->attachAxis(componenti);
-    valRiferimento->attachAxis(ugm3);
+    MyPolarChart* pChart = new MyPolarChart(serieDati);
 
     this->setChart(pChart);
 

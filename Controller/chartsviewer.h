@@ -17,6 +17,7 @@ public:
 public slots:
    void mostraChart();
    void mostraTable();
+   void setDescr(const MyChart::GraphType&);
 
 signals:
 
@@ -33,7 +34,7 @@ private:
 
     QGridLayout* griglia;
 
-    QTextEdit* descrizione;
+    QLabel* descrizione;
 
     QWidget* finestra;
 };

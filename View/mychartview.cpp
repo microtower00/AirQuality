@@ -34,6 +34,7 @@ void MyChartView::setCompScelti(const QStringList& compScelti) {
 void MyChartView::lineChart(){
     resetView();
     emit chartPronto();
+    emit tipoChartPronto(MyChart::GraphType::LineG);
     QMap<QString, QtCharts::QAbstractSeries*> series;
     //Creo la lineSeries per ogni componente
     for(QString chiave : comp){
@@ -46,6 +47,7 @@ void MyChartView::lineChart(){
 void MyChartView::areaChart(){
     resetView();
     emit chartPronto();
+    emit tipoChartPronto(MyChart::GraphType::AreaG);
     QMap<QString, QtCharts::QAbstractSeries*> series;
     //Creo la lineSeries per ogni componente
     for(QString chiave : comp){
@@ -57,18 +59,19 @@ void MyChartView::areaChart(){
 
 void MyChartView::barChart(){
     resetView();
-    emit chartPronto();
 
     MyBarSeries *serie = new MyBarSeries(data, comp);
     QMap<QString,QAbstractSeries*> param;
     param.insert("Serie di barre",serie);
     MyChart* barChart = new MyChart(param,MyChart::GraphType::BarG);
     setChart(barChart);
+
+    emit chartPronto();
+    emit tipoChartPronto(MyChart::GraphType::BarG);
 }
 
 void MyChartView::radarChart(){
     resetView();
-    emit chartPronto();
 
     QMap<QString,QAbstractSeries*> series;
     QList<QMap<QString,double>> datiElab, datiGrezzi = data.getDati();
@@ -120,14 +123,15 @@ void MyChartView::radarChart(){
             componenti->append(comp.at(i),360/comp.size()*i);
     }
 
-    this->setChart(pChart);
+    setChart(pChart);
 
+    emit chartPronto();
+    emit tipoChartPronto(MyChart::GraphType::RadarG);
 }
 
 void MyChartView::scatterChart() {
     resetView();
-    emit chartPronto();
-    //MyChartView::show();
+
     QString singleComp = comp.first();
 
     MyScatterSerie* sSerie = new MyScatterSerie(data, singleComp);
@@ -139,6 +143,8 @@ void MyChartView::scatterChart() {
     param.insert(singleComp, sSerie);
     setChart(new MyChart(param, MyChart::GraphType::ScatterG));
 
+    emit chartPronto();
+    emit tipoChartPronto(MyChart::GraphType::ScatterG);
 }
 
 void MyChartView::resetView(){

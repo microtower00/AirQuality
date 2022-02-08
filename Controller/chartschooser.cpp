@@ -69,8 +69,12 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
     grafico = new MyChartView(data);
     tabella = new MyTableView(data);
 
+    //qDebug()<<nativeParentWidget()->width();
+
     setTitle("Controlli");
-    setMaximumWidth(640);
+    //setMaximumWidth(640);
+    setFixedWidth(300);
+    setFixedHeight(350);
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
     connect(rbComponenti,SIGNAL(toggled(bool)),this,SLOT(attivaComp(bool)));

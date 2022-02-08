@@ -26,7 +26,8 @@ public:
         LineG,
         AreaG,
         BarG,
-        ScatterG
+        ScatterG,
+        RadarG //anche se non è il posto perfetto
     };
 
     MyChart(QMap<QString,QtCharts::QAbstractSeries*>, MyChart::GraphType);

@@ -1,15 +1,17 @@
 #include "mybarseries.h"
 
-MyBarSeries::MyBarSeries(const Dati& dati, QList<QString> comp, QObject *parent)  : QtCharts::QBarSeries{parent}{
+MyBarSeries::MyBarSeries(const Dati& data, QList<QString> comp, QObject *parent)  : QtCharts::QBarSeries{parent}{
     QList<QtCharts::QBarSet*> barreComp;
     QtCharts::QBarSet* temp;
 
+    QList<QMap<QString, double>> dati = data.getDati();
+
     QVector<QMap<QString,double>> medieIntervallo = QVector<QMap<QString,double>>(10);
-    double secondiInizio = dati.getDati().first().value("Data");
-    double decimoIntervallo = (dati.getDati().last().value("Data")-secondiInizio)/10;
+    double secondiInizio = dati.first().value("Data");
+    double decimoIntervallo = (dati.last().value("Data")-secondiInizio)/10;
 
     for(int i = 0; i<10; ++i){
-        for(auto record:dati.getDati()){
+        for(auto record:data.getDati()){
             if(record.value("Data")<secondiInizio+decimoIntervallo*(i+1) && record.value("Data")>=secondiInizio+decimoIntervallo*i){
                 for(QString c : comp){
                     medieIntervallo[i].insert(c,(medieIntervallo[i].value(c)+record.value(c))/2);

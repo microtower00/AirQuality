@@ -11,7 +11,8 @@
 #ifndef AIRQUALITYRETRIEVER_H
 #define AIRQUALITYRETRIEVER_H
 
-class AirQualityRetriever: public QObject {
+class AirQualityRetriever : public QObject
+{
     Q_OBJECT
 
 private:

@@ -1,11 +1,11 @@
 #include "mypolarchart.h"
 
-MyPolarChart::MyPolarChart(QMap<QString,QtCharts::QAbstractSeries*> serie){
+MyPolarChart::MyPolarChart(QMap<QString,QtCharts::QAbstractSeries*> mapSerie){
 
     QtCharts::QValueAxis *ugm3 = new QtCharts::QValueAxis;
     ugm3->setRange(0, 100);
     //Setto il numero di ticks uguale al numero di punti in una serie (Cioè il numero di componenti)
-    ugm3->setTickCount(dynamic_cast<QtCharts::QLineSeries*>(serie.first())->points().size());
+    ugm3->setTickCount(dynamic_cast<QtCharts::QLineSeries*>(mapSerie.first())->points().size());
     ugm3->setLabelsVisible(false);
     addAxis(ugm3, QtCharts::QPolarChart::PolarOrientationRadial);
 
@@ -17,11 +17,11 @@ MyPolarChart::MyPolarChart(QMap<QString,QtCharts::QAbstractSeries*> serie){
     addAxis(componenti, QtCharts::QPolarChart::PolarOrientationAngular);
 
     //Per ogni serie setto il nome, e aggiungo al grafico
-    for(auto chiave : serie.keys()){
-        addSeries(serie.value(chiave));
-        serie.value(chiave)->setName(chiave);
-        serie.value(chiave)->attachAxis(ugm3);
-        serie.value(chiave)->attachAxis(componenti);
+    for(auto serie : mapSerie){
+        addSeries(serie);
+        serie->setName(mapSerie.key(serie));
+        serie->attachAxis(ugm3);
+        serie->attachAxis(componenti);
 
     }
 }

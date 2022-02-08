@@ -17,7 +17,7 @@ MyPolarSeries::MyPolarSeries(const QMap<QString, double>& mediaPrimoGiorno,  con
 //fornisce metodo di utility per calcolare quali saranno i valori di fondoScala a partire da una lista di mappe
 QMap<QString,double>& MyPolarSeries::calcolaFondoScala(const QList<QMap<QString,double>>& mappe){
     QMap<QString,double>* massimi = new QMap<QString,double>();
-    for(QString comp: mappe.at(0).keys())
+    for(auto comp: mappe.at(0).keys())
         massimi->insert(comp,MyPolarSeries::maxValueForComp(mappe,comp));
     return *massimi;
 }

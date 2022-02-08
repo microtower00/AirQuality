@@ -100,17 +100,17 @@ void MyChart::buildScatterChart(QMap<QString, QtCharts::QAbstractSeries*> serie)
     sSerie->attachAxis(asseY);
 }
 
-void MyChart::buildPolarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
+void MyChart::buildPolarChart(QMap<QString, QtCharts::QAbstractSeries*> mapSerie){
     //Per ogni serie setto il nome, e aggiungo al grafico
-    for(auto chiave : serie.keys()){
-        addSeries(serie.value(chiave));
-        serie.value(chiave)->setName(chiave);
+    for(auto serie : mapSerie){
+        addSeries(serie);
+        serie->setName(mapSerie.key(serie));
     }
 
     QtCharts::QValueAxis *ugm3 = new QtCharts::QValueAxis;
     ugm3->setRange(0, 100);
     //Setto il numero di ticks uguale al numero di punti in una serie (Cioè il numero di componenti)
-    ugm3->setTickCount(dynamic_cast<QtCharts::QLineSeries*>(serie.first())->points().size());
+    ugm3->setTickCount(dynamic_cast<QtCharts::QLineSeries*>(mapSerie.first())->points().size());
     ugm3->setLabelsVisible(false);
     //GROSSI SPONI CON L'AFFERMAZIONE SOTTOSTANTE DIOM
     //addAxis(ugm3, QtCharts::QPolarChart::PolarOrientationRadial);
@@ -149,8 +149,8 @@ QtCharts::QLineSeries* MyChart::sommaY(QtCharts::QLineSeries *upper, QtCharts::Q
     QVector<QPointF> puntiUpper = upper->pointsVector();
 
     qDebug()<<"Si può morire per aver trattenuto un crash per così tanto tempo";
-    for(int i=0;i<puntiLower.size();++i){
-        puntiUpper[i].setY(puntiLower.at(i).y()+puntiUpper.at(i).y());
+    for(auto puntoL:puntiLower){
+        puntiUpper[puntiLower.indexOf(puntoL)].setY(puntiLower.at(puntiLower.indexOf(puntoL)).y()+puntiUpper.at(puntiLower.indexOf(puntoL)).y());
     }
     upper->replace(puntiUpper);
     return upper;

@@ -53,6 +53,7 @@ public:
 
 signals:
     void chartPronto();
+    void tipoChartPronto(const MyChart::GraphType&);
 };
 
 #endif // CHARTCONTROLLER_H

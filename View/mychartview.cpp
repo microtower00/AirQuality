@@ -58,7 +58,6 @@ void MyChartView::areaChart(){
 void MyChartView::barChart(){
     resetView();
     emit chartPronto();
-    QList<QMap<QString, double>> dati = data.getDati();
 
     MyBarSeries *serie = new MyBarSeries(data, comp);
     QMap<QString,QAbstractSeries*> param;

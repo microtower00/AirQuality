@@ -66,6 +66,7 @@ void MyChart::buildAreaChart(QMap<QString, QtCharts::QAbstractSeries *> series){
     for(auto it=series.begin(); it!=series.end(); ++it){
         lowerSerie = it!=series.begin() ? dynamic_cast<QtCharts::QLineSeries*>(*(it-1)) : Q_NULLPTR;
         aSeries = new QtCharts::QAreaSeries(dynamic_cast<QtCharts::QLineSeries*>(*it),lowerSerie);
+        aSeries->setBorderColor(QColor::fromRgba64(0,0,0,0));
         addSeries(aSeries);
         aSeries->setName(it.key());
         aSeries->attachAxis(asseX);
@@ -126,6 +127,13 @@ void MyChart::buildPolarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
 void MyChart::buildBarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
     //Posso perch`prevedo di passargli una sola serie, con tutti i barset
     addSeries(serie.first());
+
+    //QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();
+    //asseY->setMax(MyChart::maxFromSerie(dynamic_cast<QtCharts::QXYSeries*>(serie.first())));
+    //addAxis(asseY,Qt::AlignBottom);
+    //serie.first()->attachAxis(asseY);
+
+
     QtCharts::QBarCategoryAxis* asse = new QtCharts::QBarCategoryAxis();
     asse->setRange(QDateTime::currentDateTime().addMonths(-1).toString(),QDateTime::currentDateTime().toString());
     addAxis(asse,Qt::AlignBottom);

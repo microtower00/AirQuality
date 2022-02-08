@@ -1,11 +1,11 @@
 #include "mytableview.h"
 
 MyTableView::MyTableView(Dati& datiModel) : QTableView() {
+    QStringList chiavi = datiModel.getChiavi();
+    for(auto chiave:chiavi)
+        datiModel.setHeaderData(chiavi.indexOf(chiave), Qt::Horizontal, chiave, Qt::DisplayRole);
+
     setModel(&datiModel);
-    //rip header non si vuole mostrare
-    horHeader = new QHeaderView(Qt::Horizontal);
-    horHeader->setModel(&datiModel);
-    qDebug()<<horHeader;
-    setHorizontalHeader(horHeader);
-    horizontalHeader()->setVisible(true);
+
+    resizeColumnToContents(0);
 }

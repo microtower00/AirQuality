@@ -54,6 +54,12 @@ void ChartsViewer::mostraTable() {
     layoutGraf->removeWidget(grafico);
     tabella->show();
 
+    //prova header qua ma non va
+    tabella->horizontalHeader()->show();
+    qDebug()<<tabella->horizontalHeader()->count();
+    //tabella->horizontalHeader()->setVisible(true);
+    tabella->verticalHeader()->setVisible(true);
+
     layoutGraf->addWidget(tabella);
     GBgrafico->setTitle("Tabella");
     GBgrafico->setLayout(layoutGraf);

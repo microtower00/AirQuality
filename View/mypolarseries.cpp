@@ -9,7 +9,7 @@ MyPolarSeries::MyPolarSeries(const QMap<QString, double>& mediaPrimoGiorno,  con
     }
 
     //Chiudo il cerchio
-    append(QPointF(360, mediaPrimoGiorno.value(componenti.first())*100/fondoScala.value(componenti.first()s)));
+    append(QPointF(360, mediaPrimoGiorno.value(componenti.first())*100/fondoScala.value(componenti.first())));
     qDebug()<<"Inserisco punto a "+QString::number(360)+" gradi e al "+QString::number(mediaPrimoGiorno.value(componenti.first())*100/fondoScala.values().at(0))+"%, comp: "+ componenti.first();
 }
 

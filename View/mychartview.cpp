@@ -31,8 +31,6 @@ void MyChartView::setCompScelti(const QStringList& compScelti) {
     //resize(1250,750);
 }
 
-QMap<QString, QtCharts::QLineSeries*> MyChartView::genericLAchart() {}
-
 void MyChartView::lineChart(){
     resetView();
     emit chartPronto();
@@ -63,18 +61,10 @@ void MyChartView::barChart(){
     QList<QMap<QString, double>> dati = data.getDati();
 
     MyBarSeries *serie = new MyBarSeries(data, comp);
-    this->chart()->addSeries(serie);
-    QtCharts::QBarCategoryAxis* asse = new QtCharts::QBarCategoryAxis();
-
-    for(auto itDati:dati) {
-        asse->append(data.getDateFromDouble(itDati.value("Data")).toString(Qt::ISODate));
-    }
-    asse->setRange(QDateTime::currentDateTime().addMonths(-1).toString(),QDateTime::currentDateTime().toString());
-    this->chart()->createDefaultAxes();
-    this->chart()->setAxisX(asse, serie);
-
-    this->chart()->legend()->setVisible(true);
-    this->chart()->legend()->setAlignment(Qt::AlignBottom);
+    QMap<QString,QAbstractSeries*> param;
+    param.insert("Serie di barre",serie);
+    MyChart* barChart = new MyChart(param,MyChart::GraphType::BarG);
+    setChart(barChart);
 }
 
 void MyChartView::radarChart(){

@@ -126,7 +126,13 @@ void MyChart::buildPolarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
 void MyChart::buildBarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
     //Posso perch`prevedo di passargli una sola serie, con tutti i barset
     addSeries(serie.first());
-    //QtCharts::QBarCategoryAxis* asse = new QtCharts::QBarCategoryAxis();
+    QtCharts::QBarCategoryAxis* asse = new QtCharts::QBarCategoryAxis();
+    asse->setRange(QDateTime::currentDateTime().addMonths(-1).toString(),QDateTime::currentDateTime().toString());
+    addAxis(asse,Qt::AlignBottom);
+    serie.first()->attachAxis(asse);
+
+    legend()->setVisible(true);
+    legend()->setAlignment(Qt::AlignBottom);
 }
 
 QtCharts::QLineSeries* MyChart::sommaY(QtCharts::QLineSeries *upper, QtCharts::QLineSeries *lower) {

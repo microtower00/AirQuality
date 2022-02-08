@@ -22,7 +22,7 @@ SOURCES += \
     View/myscatterserie.cpp \
     View/mytableview.cpp \
     main.cpp \
-    View/mybarseries.cpp
+    View/mybarseries.cpp \
 
 HEADERS += \
     Controller/chartsviewer.h \
@@ -36,7 +36,8 @@ HEADERS += \
     View/mypolarchart.h \
     View/mypolarseries.h \
     View/myscatterserie.h \
-    View/mybarseries.h
+    View/mybarseries.h \
+    View/mytableview.h \
 
 
 # Default rules for deployment.

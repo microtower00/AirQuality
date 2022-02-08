@@ -8,7 +8,7 @@
 class MyPolarSeries : public QtCharts::QLineSeries
 {
 public:
-    MyPolarSeries(const QList<QMap<QString, double>>&, QMap<QString, double>, QList<QString>, QObject *parent = nullptr);
+    MyPolarSeries(const QMap<QString, double>&,  const QMap<QString, double>&, const QList<QString>&, QObject *parent = nullptr);
     static QMap<QString, double>& calcolaFondoScala(const QList<QMap<QString,double>>&);
 
 private:

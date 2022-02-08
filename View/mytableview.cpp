@@ -2,7 +2,6 @@
 
 MyTableView::MyTableView(Dati& datiModel) : QTableView() {
     setModel(&datiModel);
-
     //rip header non si vuole mostrare
     horHeader = new QHeaderView(Qt::Horizontal);
     horHeader->setModel(&datiModel);

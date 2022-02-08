@@ -80,15 +80,56 @@ void MyChartView::barChart(){
 void MyChartView::radarChart(){
     resetView();
     emit chartPronto();
-    QMap<QString,QAbstractSeries*> serieDati;
-    QList<QMap<QString,double>> datiDaUsare = data.getDati();
-    datiDaUsare.append(MASSIMICONSENTITI);
-    for(QString chiave : comp){
-        serieDati.insert(chiave, new MyPolarSeries(datiDaUsare,MyPolarSeries::calcolaFondoScala(datiDaUsare), comp));
-    }
-    QMap<QString,QAbstractSeries*> fondoScala;
 
-    MyPolarChart* pChart = new MyPolarChart(serieDati);
+    QMap<QString,QAbstractSeries*> series;
+    QList<QMap<QString,double>> datiElab, datiGrezzi = data.getDati();
+    QList<QMap<QString,double>> datiFirstDay, datiLastDay;
+    QMap<QString,double> mediaFirstDay, mediaLastDay;
+
+    datiElab.push_back(MASSIMICONSENTITI);
+    //Per ogni record, determino se è del primo o ultimo giorno e lo inserisco acco
+    for(auto record : datiGrezzi){
+        if(record.value("Data")==datiGrezzi.first().value("Data"))
+            datiFirstDay.push_back(record);
+        if(record.value("Data")==datiGrezzi.last().value("Data"))
+            datiLastDay.push_back(record);
+    }
+
+    //calcolo le medie
+    for(auto record : datiFirstDay){
+        for(QString componente : comp){
+            mediaFirstDay.insert(componente, mediaFirstDay.value(componente)+record.value(componente)/2);
+        }
+    }
+
+    for(auto record : datiLastDay){
+        for(QString componente : comp){
+            mediaLastDay.insert(componente, mediaLastDay.value(componente)+record.value(componente)/2);
+        }
+    }
+
+    datiElab.push_back(mediaFirstDay);
+    datiElab.push_back(mediaLastDay);
+
+    //Creo le serie
+    QMap<QString,double> fondoScala = MyPolarSeries::calcolaFondoScala(datiElab);
+    qDebug()<<fondoScala;
+    qDebug()<<MASSIMICONSENTITI;
+    qDebug()<<mediaFirstDay;
+    qDebug()<<mediaLastDay;
+    QString nomeserie;
+    for(QMap<QString,double> entry : datiElab){
+        nomeserie = entry == mediaFirstDay ? "Primo giorno" : entry == mediaLastDay ? "Ultimo giorno" : "Val. di riferimento";
+        qDebug()<<nomeserie;
+        series.insert(nomeserie, new MyPolarSeries(entry, fondoScala, comp));
+    }
+
+    MyPolarChart* pChart = new MyPolarChart(series);
+    QtCharts::QCategoryAxis* componenti =dynamic_cast<QCategoryAxis*>(pChart->axes(QtCharts::QPolarChart::PolarOrientationAngular).at(0));
+
+    for(int i=0;i<comp.size();i++){
+            componenti->append(comp.at(i),360/comp.size()*i);
+    }
 
     this->setChart(pChart);
 

@@ -11,7 +11,6 @@ CONFIG += c++11
 SOURCES += \
     Controller/chartsviewer.cpp \
     Model/dati.cpp \
-    View/dataviewer.cpp \
     View/mychart.cpp \
     View/mychartview.cpp \
     Controller/airqualityretriever.cpp \
@@ -21,13 +20,13 @@ SOURCES += \
     View/mypolarchart.cpp \
     View/mypolarseries.cpp \
     View/myscatterserie.cpp \
+    View/mytableview.cpp \
     main.cpp \
     View/mybarseries.cpp
 
 HEADERS += \
     Controller/chartsviewer.h \
     Model/dati.h \
-    View/dataviewer.h \
     View/mychart.h \
     View/mychartview.h \
     Controller/airqualityretriever.h \

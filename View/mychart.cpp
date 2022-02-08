@@ -41,7 +41,7 @@ void MyChart::buildLineChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
 
     //setto il massimo di Y al massimo valore tra tutte le serie
     asseY->setMin(0);
-    asseY->setMax(serie.firstKey()!="aqi" ? maxValueFromListSeries(serie.values()) : maxValueFromListSeries(serie.values())+10);
+    asseY->setMax(serie.firstKey()!="aqi" ? maxValueFromListSeries(serie.values()) : maxValueFromListSeries(serie.values())+1);
     legend()->setVisible(true);
     legend()->setAlignment(Qt::AlignBottom);
 }

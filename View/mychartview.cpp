@@ -28,7 +28,7 @@ MyChartView::MyChartView(const Dati& d) : data(d)
 
 void MyChartView::setCompScelti(const QStringList& compScelti) {
     comp = compScelti;
-    resize(1250,750);
+    //resize(1250,750);
 }
 
 QMap<QString, QtCharts::QLineSeries*> MyChartView::genericLAchart() {}
@@ -115,6 +115,7 @@ void MyChartView::resetView(){
     QtCharts::QChart* graf = this->chart();
     this->setChart(new QtCharts::QChart());
     delete graf;
+    resize(1250,750);
 }
 
 QLineSeries* MyChartView::sommaY(QLineSeries *upper, QLineSeries *lower) const {

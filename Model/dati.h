@@ -6,14 +6,22 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDateTime>
+#include <QAbstractTableModel>
+#include <QDebug>
 
-class Dati
+class Dati : public QAbstractTableModel
 {
+    Q_OBJECT
 public:
-    Dati(QJsonObject);
+    Dati(const QJsonObject&);
+    Dati(const Dati&);
     QList<QString> getChiavi() const;
     QList<QMap<QString, double>> getDati() const;
-    static QDateTime getDateFromDouble(double);
+    static QDateTime getDateFromDouble(const double&);
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 private:
     QList<QMap<QString, double>> dati;
     QList<QString> chiavi;

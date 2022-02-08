@@ -3,7 +3,7 @@
 
 #include "airqualityretriever.h"
 #include "Model/dati.h"
-#include "View/dataviewer.h"
+#include "View/mytableview.h"
 #include "chartschooser.h"
 #include "chartsviewer.h"
 
@@ -86,7 +86,7 @@ private:
     const static QString APIKEY;
 
     AirQualityRetriever aqr;
-    DataViewer* data;
+    MyTableView* data;
     ChartsChooser* selettore;
 
     QLabel *jsLabel;

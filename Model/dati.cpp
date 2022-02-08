@@ -1,7 +1,6 @@
 #include "dati.h"
 
-Dati::Dati(QJsonObject retrievedObj)
-{
+Dati::Dati(const QJsonObject& retrievedObj) {
     QJsonArray listArray = retrievedObj.value("list").toArray();
     QStringList componentsNames = listArray.at(1).toObject().value("components").toObject().keys();
 
@@ -30,6 +29,11 @@ Dati::Dati(QJsonObject retrievedObj)
     }
 }
 
+Dati::Dati(const Dati& d2) {
+    dati=d2.dati;
+    chiavi=d2.chiavi;
+}
+
 QList<QString> Dati::getChiavi() const{
     return chiavi;
 }
@@ -38,6 +42,32 @@ QList<QMap<QString, double>> Dati::getDati() const{
     return dati;
 }
 
-QDateTime Dati::getDateFromDouble(double dataDouble) {
+QDateTime Dati::getDateFromDouble(const double& dataDouble) {
     return QDateTime::fromTime_t(static_cast<int>(dataDouble));
+}
+
+int Dati::rowCount(const QModelIndex &parent) const {
+    if(parent.isValid()) return 0;
+
+    return dati.size();
+}
+
+int Dati::columnCount(const QModelIndex &parent) const {
+    if(parent.isValid()) return 0;
+
+    return chiavi.size();
+}
+
+QVariant Dati::data(const QModelIndex &index, int role) const {
+    return dati.at(index.row()).values().at(index.column());
+}
+
+QVariant Dati::headerData(int section, Qt::Orientation orientation, int role) const {
+    if(orientation==Qt::Horizontal) {
+        //qDebug()<<dati.first().keys().at(section);
+        return dati.first().keys().at(section);
+    }
+
+    if(orientation==Qt::Vertical)
+            return section;
 }

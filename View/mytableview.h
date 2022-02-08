@@ -1,5 +1,5 @@
-#ifndef DATAVIEWER_H
-#define DATAVIEWER_H
+#ifndef MYTABLEVIEW_H
+#define MYTABLEVIEW_H
 
 #include <QMainWindow>
 #include <QObject>
@@ -12,20 +12,21 @@
 #include <QVBoxLayout>
 #include <QDateTime>
 #include <QLabel>
+#include<QHeaderView>
 #include "Model/dati.h"
 
-class DataViewer : public QTableWidget
+class MyTableView : public QTableView
 {
     Q_OBJECT
 public slots:
 
 public:
-    DataViewer(Dati);
+    MyTableView(Dati&);
 private:
-
+    QHeaderView* horHeader;
 signals:
     void tablePronta();
 
 };
 
-#endif // DATAVIEWER_H
+#endif // MYTABLEVIEW_H

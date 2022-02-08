@@ -17,11 +17,12 @@ SOURCES += \
     Controller/chartschooser.cpp \
     Controller/startwindow.cpp\
     View/mylineseries.cpp \
+    View/mypolarchart.cpp \
     View/mypolarseries.cpp \
     View/myscatterserie.cpp \
     View/mytableview.cpp \
     main.cpp \
-    mybarseries.cpp
+    View/mybarseries.cpp
 
 HEADERS += \
     Controller/chartsviewer.h \
@@ -32,10 +33,10 @@ HEADERS += \
     Controller/chartschooser.h \
     Controller/startwindow.h \
     View/mylineseries.h \
+    View/mypolarchart.h \
     View/mypolarseries.h \
     View/myscatterserie.h \
-    View/mytableview.h \
-    mybarseries.h
+    View/mybarseries.h
 
 
 # Default rules for deployment.

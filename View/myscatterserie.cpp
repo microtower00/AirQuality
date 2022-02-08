@@ -1,6 +1,6 @@
 #include "myscatterserie.h"
 
-MyScatterSerie::MyScatterSerie(const Dati& dati, QString comp,QObject *) : QtCharts::QScatterSeries{/*parent*/}{
+MyScatterSerie::MyScatterSerie(const Dati& dati, QString comp, QObject *) : QtCharts::QScatterSeries{/*parent*/}{
 
     setMarkerSize(10);
     setName(comp);

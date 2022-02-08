@@ -9,9 +9,9 @@
 #include <QLineSeries>
 #include <QPolarChart>
 #include <QCategoryAxis>
-#include <QValueAxis>
 #include <QScatterSeries>
 #include <QBarCategoryAxis>
+#include <QDebug>
 
 
 #include "mylineseries.h"
@@ -26,21 +26,20 @@ public:
         LineG,
         AreaG,
         BarG,
-        ScatterG,
-        PolarG
+        ScatterG
     };
 
     MyChart(QMap<QString,QtCharts::QAbstractSeries*>, MyChart::GraphType);
 
+    static double maxValueFromListSeries(QList<QtCharts::QAbstractSeries*>);
+    static double maxFromSerie(QtCharts::QXYSeries*);
+    static QtCharts::QLineSeries* sommaY(QtCharts::QLineSeries *, QtCharts::QLineSeries *);
+private:
     void buildLineChart(QMap<QString,QtCharts::QAbstractSeries*>);
     void buildScatterChart(QMap<QString,QtCharts::QAbstractSeries*>);
     void buildPolarChart(QMap<QString,QtCharts::QAbstractSeries*>);
     void buildBarChart(QMap<QString,QtCharts::QAbstractSeries*>);
     void buildAreaChart(QMap<QString,QtCharts::QAbstractSeries*>);
-
-    static double maxValueFromListSeries(QList<QtCharts::QAbstractSeries*>);
-    static double maxFromSerie(QtCharts::QXYSeries*);
-    static QtCharts::QLineSeries* sommaY(QtCharts::QLineSeries *, QtCharts::QLineSeries *);
 
 
 

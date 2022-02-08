@@ -2,17 +2,20 @@
 
 MyChart::MyChart(QMap<QString,QtCharts::QAbstractSeries*> serie, MyChart::GraphType gt)
 {
+
     switch(gt){
     case MyChart::GraphType::LineG :
-        buildLineChart(serie);break;
+        buildLineChart(serie);
+        qDebug()<<"Costruisco un LineG";break;
     case MyChart::GraphType::AreaG :
-        buildAreaChart(serie);break;
+        buildAreaChart(serie);
+        qDebug()<<"Costruisco un AreaG";break;
     case MyChart::GraphType::ScatterG :
-        buildScatterChart(serie);break;
-    case MyChart::GraphType::PolarG :
-        buildPolarChart(serie);break;
+        buildScatterChart(serie);
+        qDebug()<<"Costruisco un ScatterG";break;
     case MyChart::GraphType::BarG :
-        buildBarChart(serie);break;
+        buildBarChart(serie);
+        qDebug()<<"Costruisco un BarG";break;
     }
 
 }
@@ -53,14 +56,16 @@ void MyChart::buildAreaChart(QMap<QString, QtCharts::QAbstractSeries *> series){
     // asse Y
     QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();
     addAxis(asseY, Qt::AlignLeft);
+    //Sistemo le Y per stacked area chart
+    for(auto it=series.begin()+1; it!=series.end(); ++it)
+            *it=sommaY(dynamic_cast<QtCharts::QLineSeries*>(*it), dynamic_cast<QtCharts::QLineSeries*>(*(it-1)));
 
     //per ogni serie nella mappa assegno il nome del componente e i relativi assi
-    //bonus: creo una QAreaSeries tra la lineseries corrente e la precedente
     QtCharts::QAreaSeries *aSeries;
     QtCharts::QLineSeries* lowerSerie;
     for(auto it=series.begin(); it!=series.end(); ++it){
         lowerSerie = it!=series.begin() ? dynamic_cast<QtCharts::QLineSeries*>(*(it-1)) : Q_NULLPTR;
-        aSeries = new QtCharts::QAreaSeries(sommaY(dynamic_cast<QtCharts::QLineSeries*>(*it),lowerSerie),lowerSerie);
+        aSeries = new QtCharts::QAreaSeries(dynamic_cast<QtCharts::QLineSeries*>(*it),lowerSerie);
         addSeries(aSeries);
         aSeries->setName(it.key());
         aSeries->attachAxis(asseX);
@@ -121,13 +126,15 @@ void MyChart::buildPolarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
 void MyChart::buildBarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
     //Posso perch`prevedo di passargli una sola serie, con tutti i barset
     addSeries(serie.first());
-    QtCharts::QBarCategoryAxis* asse = new QtCharts::QBarCategoryAxis();
+    //QtCharts::QBarCategoryAxis* asse = new QtCharts::QBarCategoryAxis();
 }
 
 QtCharts::QLineSeries* MyChart::sommaY(QtCharts::QLineSeries *upper, QtCharts::QLineSeries *lower) {
+
     QVector<QPointF> puntiLower = lower->pointsVector();
     QVector<QPointF> puntiUpper = upper->pointsVector();
 
+    qDebug()<<"Si può morire per aver trattenuto un crash per così tanto tempo";
     for(int i=0;i<puntiLower.size();++i){
         puntiUpper[i].setY(puntiLower.at(i).y()+puntiUpper.at(i).y());
     }

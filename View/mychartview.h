@@ -2,6 +2,11 @@
 #define CHARTCONTROLLER_H
 
 #include "Model/dati.h"
+#include "mychart.h"
+#include "mybarseries.h"
+#include "myscatterserie.h"
+#include "mypolarseries.h"
+#include "mypolarchart.h"
 
 #include <QMainWindow>
 #include <QChartView>
@@ -22,6 +27,7 @@
 class MyChartView : public QtCharts::QChartView {
     Q_OBJECT
 private:
+    QMap<QString,double> MASSIMICONSENTITI;
     QtCharts::QValueAxis *asseY;
     QtCharts::QDateTimeAxis *asseX;
     const Dati& data;

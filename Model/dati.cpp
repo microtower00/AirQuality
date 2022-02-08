@@ -10,8 +10,8 @@ Dati::Dati(const QJsonObject& retrievedObj) {
     //Riempio la lista di chiavi con data e aqi oltre ai componenti
     chiavi.push_back("Data");
 
-    for(auto it:componentsNames)
-        chiavi.push_back(it);
+    for(auto comp:componentsNames)
+        chiavi.push_back(comp);
 
     chiavi.push_back("aqi");
 
@@ -20,19 +20,19 @@ Dati::Dati(const QJsonObject& retrievedObj) {
 
     //riempio le singole righe e l'insieme di righe
     for(unsigned int i=0; i<rowsSize; ++i) {
-        for(auto it:chiavi) {
-            if(it=="Data") singleRow.insert(it, listArray.at(i).toObject().value("dt").toDouble());
-            else if(it=="aqi") singleRow.insert(it, listArray.at(i).toObject().value("main").toObject().value("aqi").toDouble());
-            else singleRow.insert(it, listArray.at(i).toObject().value("components").toObject().value(it).toDouble());
+        for(auto chiave:chiavi) {
+            if(chiave=="Data") singleRow.insert(chiave, listArray.at(i).toObject().value("dt").toDouble());
+            else if(chiave=="aqi") singleRow.insert(chiave, listArray.at(i).toObject().value("main").toObject().value("aqi").toDouble());
+            else singleRow.insert(chiave, listArray.at(i).toObject().value("components").toObject().value(chiave).toDouble());
         }
         dati.push_back(singleRow);
     }
+
+    qDebug()<<flags(createIndex(1,2));
+
 }
 
-Dati::Dati(const Dati& d2) {
-    dati=d2.dati;
-    chiavi=d2.chiavi;
-}
+Dati::Dati(const Dati& d2) : dati(d2.dati), chiavi(d2.chiavi) {}
 
 QList<QString> Dati::getChiavi() const{
     return chiavi;
@@ -59,7 +59,12 @@ int Dati::columnCount(const QModelIndex &parent) const {
 }
 
 QVariant Dati::data(const QModelIndex &index, int role) const {
-    return dati.at(index.row()).values().at(index.column());
+    if(index.isValid() && role==Qt::DisplayRole) {
+        if(index.column()!=0)
+            return dati.at(index.row()).values().at(index.column());
+        else return getDateFromDouble(dati.at(index.row()).values().at(index.column()));
+    }
+    else return QVariant();
 }
 
 QVariant Dati::headerData(int section, Qt::Orientation orientation, int role) const {

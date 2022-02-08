@@ -3,24 +3,27 @@
 ChartsViewer::ChartsViewer(const Dati& d, QWidget *parent) : QMainWindow{parent}
 {
     griglia = new QGridLayout();
-
-    GBcontrolli = new ChartsChooser(d);
-
-    GBdescrizione = new QGroupBox("Descrizione");
     layoutDescr = new QHBoxLayout();
-    descrizione = new QTextEdit("ciao");
-
-    GBgrafico = new QGroupBox();
     layoutGraf = new QHBoxLayout();
 
-    griglia->addWidget(GBcontrolli, 0, 0);
+    GBcontrolli = new ChartsChooser(d);
+    GBdescrizione = new QGroupBox("Descrizione");
+    GBgrafico = new QGroupBox();
 
-    setWindowTitle("Grafici");
+    descrizione = new QTextEdit("ciao");
+
+    layoutDescr->addWidget(descrizione);
+    GBdescrizione->setLayout(layoutDescr);
+    GBdescrizione->setMaximumWidth(GBcontrolli->width());
+    GBdescrizione->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding));
+
+    griglia->addWidget(GBcontrolli, 0, 0);
 
     finestra = new QWidget();
     finestra->setLayout(griglia);
 
     setCentralWidget(finestra);
+    setWindowTitle("Grafici");
 
     grafico = GBcontrolli->getGrafico();
     tabella = GBcontrolli->getTabella();
@@ -31,46 +34,44 @@ ChartsViewer::ChartsViewer(const Dati& d, QWidget *parent) : QMainWindow{parent}
 
 void ChartsViewer::mostraChart() {
     tabella->close();
+
+    if(layoutGraf->count()!=1) {
+        resize(GBcontrolli->width()+1250, 750);
+    }
+
     layoutGraf->removeWidget(tabella);
+    layoutGraf->addWidget(grafico);
+
     grafico->show();
 
-    layoutGraf->addWidget(grafico);
     GBgrafico->setTitle("Grafico");
     GBgrafico->setLayout(layoutGraf);
 
-    layoutDescr->addWidget(descrizione);
-    GBdescrizione->setLayout(layoutDescr);
-    GBdescrizione->setMaximumWidth(GBcontrolli->width());
-    GBdescrizione->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding));
-
     griglia->addWidget(GBgrafico, 0, 1, 2, 1);
     griglia->addWidget(GBdescrizione, 1, 0);
-
-    resize(GBcontrolli->width()+grafico->width(),750);
 }
 
 void ChartsViewer::mostraTable() {
     grafico->close();
+
+    if(layoutGraf->count()!=1) {
+        resize(GBcontrolli->width()+1101, 750);
+    }
+
     layoutGraf->removeWidget(grafico);
+    layoutGraf->addWidget(tabella);
+
     tabella->show();
 
-    //prova header qua ma non va
+    /*prova header qua ma non va
     tabella->horizontalHeader()->show();
     qDebug()<<tabella->horizontalHeader()->count();
     //tabella->horizontalHeader()->setVisible(true);
-    tabella->verticalHeader()->setVisible(true);
+    tabella->verticalHeader()->setVisible(true);*/
 
-    layoutGraf->addWidget(tabella);
     GBgrafico->setTitle("Tabella");
     GBgrafico->setLayout(layoutGraf);
 
-    layoutDescr->addWidget(descrizione);
-    GBdescrizione->setLayout(layoutDescr);
-    GBdescrizione->setMaximumWidth(GBcontrolli->width());
-    GBdescrizione->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding));
-
     griglia->addWidget(GBgrafico, 0, 1, 2, 1);
     griglia->addWidget(GBdescrizione, 1, 0);
-
-    resize(GBcontrolli->width()+1101,750);
 }

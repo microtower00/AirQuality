@@ -7,5 +7,6 @@ MyTableView::MyTableView(Dati& datiModel) : QTableView() {
 
     setModel(&datiModel);
 
+    resize(1101,750);
     resizeColumnToContents(0);
 }

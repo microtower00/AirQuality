@@ -7,6 +7,8 @@
 #include <QValueAxis>
 #include <QAreaSeries>
 #include <QLineSeries>
+#include <QBarSeries>
+#include <QBarSet>
 #include <QPolarChart>
 #include <QCategoryAxis>
 #include <QScatterSeries>
@@ -34,7 +36,9 @@ public:
 
     static double maxValueFromListSeries(QList<QtCharts::QAbstractSeries*>);
     static double maxFromSerie(QtCharts::QXYSeries*);
+    static double maxFromBarSets(QtCharts::QBarSeries*);
     static QtCharts::QLineSeries* sommaY(QtCharts::QLineSeries *, QtCharts::QLineSeries *);
+
 private:
     void buildLineChart(QMap<QString,QtCharts::QAbstractSeries*>);
     void buildScatterChart(QMap<QString,QtCharts::QAbstractSeries*>);

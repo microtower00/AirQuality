@@ -100,38 +100,16 @@ void MyChart::buildScatterChart(QMap<QString, QtCharts::QAbstractSeries*> serie)
     sSerie->attachAxis(asseY);
 }
 
-void MyChart::buildPolarChart(QMap<QString, QtCharts::QAbstractSeries*> mapSerie){
-    //Per ogni serie setto il nome, e aggiungo al grafico
-    for(auto serie : mapSerie){
-        addSeries(serie);
-        serie->setName(mapSerie.key(serie));
-    }
-
-    QtCharts::QValueAxis *ugm3 = new QtCharts::QValueAxis;
-    ugm3->setRange(0, 100);
-    //Setto il numero di ticks uguale al numero di punti in una serie (Cioè il numero di componenti)
-    ugm3->setTickCount(dynamic_cast<QtCharts::QLineSeries*>(mapSerie.first())->points().size());
-    ugm3->setLabelsVisible(false);
-    //GROSSI SPONI CON L'AFFERMAZIONE SOTTOSTANTE DIOM
-    //addAxis(ugm3, QtCharts::QPolarChart::PolarOrientationRadial);
-
-    // asse azimutale
-    QtCharts::QCategoryAxis *componenti = new QtCharts::QCategoryAxis();
-    componenti->setLabelsPosition(QtCharts::QCategoryAxis::AxisLabelsPositionOnValue);
-    componenti->setRange(0, 360);
-    componenti->setLabelsVisible(true);
-    //GROSSI SPONI CON L'AFFERMAZIONE SOTTOSTANTE DIOM
-    //addAxis(componenti, QtCharts::QPolarChart::PolarOrientationAngular);
-}
-
 void MyChart::buildBarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
     //Posso perch`prevedo di passargli una sola serie, con tutti i barset
     addSeries(serie.first());
 
-    //QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();
-    //asseY->setMax(MyChart::maxFromSerie(dynamic_cast<QtCharts::QXYSeries*>(serie.first())));
-    //addAxis(asseY,Qt::AlignBottom);
-    //serie.first()->attachAxis(asseY);
+    QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();
+    QList<QtCharts::QAbstractSeries*> param;
+    param.push_back(serie.first());
+    asseY->setMax(MyChart::maxValueFromListSeries(param));
+    addAxis(asseY,Qt::AlignLeft);
+    serie.first()->attachAxis(asseY);
 
 
     QtCharts::QBarCategoryAxis* asse = new QtCharts::QBarCategoryAxis();
@@ -155,14 +133,21 @@ QtCharts::QLineSeries* MyChart::sommaY(QtCharts::QLineSeries *upper, QtCharts::Q
     upper->replace(puntiUpper);
     return upper;
 }
+
 double MyChart::maxValueFromListSeries(QList<QtCharts::QAbstractSeries*> series) {
     double max=0;
 
-    for(auto serie:series) {
-        QtCharts::QXYSeries* seriexy = dynamic_cast<QtCharts::QXYSeries*>(serie);
-        if(seriexy){
-            if(maxFromSerie(seriexy)>max)
-                max=maxFromSerie(seriexy);
+    if(dynamic_cast<QtCharts::QLineSeries*>(series.first())){
+        for(auto serie:series) {
+            QtCharts::QLineSeries* lSerie = dynamic_cast<QtCharts::QLineSeries*>(serie);
+            if(MyChart::maxFromSerie(lSerie)>max)
+                max=MyChart::maxFromSerie(lSerie);
+        }
+    }else if(dynamic_cast<QtCharts::QBarSeries*>(series.first())){
+        for(auto serie:series) {
+            QtCharts::QBarSeries* barSerie = dynamic_cast<QtCharts::QBarSeries*>(serie);
+            if(MyChart::maxFromBarSets(barSerie)>max)
+                max=MyChart::maxFromBarSets(barSerie);
         }
     }
 
@@ -178,5 +163,16 @@ double MyChart::maxFromSerie(QtCharts::QXYSeries* serie) {
         }
     }
 
+    return max;
+}
+
+double MyChart::maxFromBarSets(QtCharts::QBarSeries* barre){
+    double max=0;
+    for(auto barSet:barre->barSets()){
+        for(int i=0;i<barSet->count();++i){
+            if(barSet->at(i)>max)
+                max = barSet->at(i);
+        }
+    }
     return max;
 }

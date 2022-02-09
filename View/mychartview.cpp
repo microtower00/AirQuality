@@ -153,37 +153,3 @@ void MyChartView::resetView(){
     delete graf;
     resize(1250,750);
 }
-
-QLineSeries* MyChartView::sommaY(QLineSeries *upper, QLineSeries *lower) const {
-    QVector<QPointF> puntiLower = lower->pointsVector();
-    QVector<QPointF> puntiUpper = upper->pointsVector();
-
-    for(int i=0;i<puntiLower.size();++i){
-        puntiUpper[i].setY(puntiLower.at(i).y()+puntiUpper.at(i).y());
-    }
-    upper->replace(puntiUpper);
-    return upper;
-}
-
-double MyChartView::maxValueFromListSeries(QList<QtCharts::QLineSeries*> series) {
-    double max=0;
-
-    for(auto serie:series) {
-        if(maxFromSerie(serie)>max)
-            max=maxFromSerie(serie);
-    }
-
-    return max;
-}
-
-double MyChartView::maxFromSerie(QtCharts::QXYSeries* serie) {
-    double max=0;
-
-    for(unsigned int i=0; i<serie->count(); ++i) {
-        if(serie->at(i).y()>max) {
-            max = serie->at(i).y();
-        }
-    }
-
-    return max;
-}

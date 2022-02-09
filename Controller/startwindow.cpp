@@ -183,7 +183,6 @@ QCompleter* StartWindow::createCompleter() const{
 
 void StartWindow::creoModel(const QJsonDocument* datiDoc) {
     Dati dati(datiDoc->object());
-    qDebug()<<"StartWindow::creoModel(const QJsonDocument*)";
     emit modelCreato(dati);
 }
 

@@ -48,8 +48,9 @@ public:
     void resetView();
 
     QtCharts::QLineSeries* sommaY (QtCharts::QLineSeries*, QtCharts::QLineSeries*) const;
-    double maxValueFromListSeries(QList<QtCharts::QLineSeries*>);
-    double maxFromSerie(QtCharts::QXYSeries*);
+    static double maxValueFromListSeries(QList<QtCharts::QAbstractSeries*>);
+    static double maxFromSerie(QtCharts::QXYSeries*);
+    static double maxFromBarSets(QtCharts::QBarSeries*);
 
 signals:
     void chartPronto();

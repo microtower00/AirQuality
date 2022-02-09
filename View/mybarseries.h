@@ -10,6 +10,6 @@ class MyBarSeries : public QtCharts::QBarSeries
 {
 public:
     MyBarSeries(const Dati&, QList<QString>, QObject *parent = nullptr);
-};//Commit di prova prima di fottere tutto
+};
 
 #endif // MYBARSERIES_H

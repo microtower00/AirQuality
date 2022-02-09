@@ -51,7 +51,6 @@ QJsonDocument AirQualityRetriever::replyEnded(QNetworkReply* response){
 
     //emetto un sengale prendibile da chi vuole leggere il file json
     QJsonDocument dati = QJsonDocument::fromJson(ba);
-    qDebug()<<"emit readReady(QNetworkReply*)";
     emit readReady(&dati);
 
     //Non serve a nulla, a meno che lo slot non venga usato come metodo

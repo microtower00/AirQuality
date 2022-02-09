@@ -17,6 +17,7 @@
 #include <QCheckBox>
 #include <QRadioButton>
 #include <QButtonGroup>
+#include <QFileDialog>
 
 class ChartsChooser : public QGroupBox
 {
@@ -27,6 +28,7 @@ public:
     MyChartView* getGrafico() const;
     MyTableView* getTabella() const;
 public slots:
+    void iniziaSalvataggio();
     void createChart();
     //void createTable();
     void controlliComboBox(QString);
@@ -57,6 +59,7 @@ private:
     QPushButton* pbTabella;
     QPushButton* pbSelTutti;
     QPushButton* pbDelTutti;
+    QPushButton* salvaFile;
 
     MyChartView* grafico;
     MyTableView* tabella;

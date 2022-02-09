@@ -40,6 +40,7 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
 
     pbSelTutti = new QPushButton("Seleziona tutti");
     pbDelTutti = new QPushButton("Deseleziona tutti");
+    salvaFile = new QPushButton("Salva il file attualmente aperto");
 
     //non avevo voglia di iterare, che vergogna
     grigliaComp->addWidget(cbComponenti->buttons().at(0), 0, 0);
@@ -63,6 +64,7 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
     mainLayout->addWidget(sceltaComp);
     mainLayout->addWidget(pbConferma);
     mainLayout->addWidget(pbTabella);
+    mainLayout->addWidget(salvaFile);
 
     this->setLayout(mainLayout);
 
@@ -83,6 +85,7 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
     connect(pbDelTutti,SIGNAL(clicked()),this,SLOT(deselezionaTutti()));
     connect(pbConferma,SIGNAL(clicked()),this,SLOT(createChart()));
     connect(pbTabella,SIGNAL(clicked()),tabella,SIGNAL(tablePronta()));
+    connect(salvaFile,SIGNAL(clicked()),this,SLOT(iniziaSalvataggio()));
 }
 
 void ChartsChooser::controlliComboBox(QString testoCBgrafici) {
@@ -153,6 +156,13 @@ void ChartsChooser::attivaComp(bool compChecked) {
     } else {
         for(unsigned int i=1; i<grafici->count(); ++i)
             grafici->setItemData(i, 33,  Qt::UserRole -1);
+    }
+}
+
+void ChartsChooser::iniziaSalvataggio(){
+    QString path = QFileDialog::getSaveFileName(this, tr("Salva il file"),"/home",tr("JSON (*.json)"));
+    if(path!=""){
+            data.salvaJsonDati(path.append(".json"));
     }
 }
 

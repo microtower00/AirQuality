@@ -17,18 +17,22 @@ class Dati : public QAbstractTableModel
 public:
     Dati(const QJsonObject&);
     Dati(const Dati&);
+
     QList<QString> getChiavi() const;
     QList<QMap<QString, double>> getDati() const;
-    static QDateTime getDateFromDouble(const double&);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     bool salvaJsonDati(const QString& path) const;
 
+    static QDateTime getDateFromDouble(const double&);
+    static bool isDati(const QJsonDocument&);
+
 private:
     QList<QMap<QString, double>> dati;
     QList<QString> chiavi;
+    static QStringList expectedKeys;
 };
 
 #endif // DATI_H

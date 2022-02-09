@@ -77,19 +77,23 @@ public slots:
     void saveJSonReply(const QJsonDocument* doc) const;
 
     void apriFinestra(const Dati&);
+    void updateErrorLabel(const QString&);
 
 signals:
     void filePronto(const QJsonDocument*);
+    void mostraErrore(const QString&);
     void modelCreato(const Dati&);
 
 private:
     const static QString APIKEY;
+    static QString fileNonValido;
+    static QString cittaNonPresente;
+    static QString dateNonCorrette;
 
     AirQualityRetriever aqr;
     MyTableView* data;
     ChartsChooser* selettore;
 
-    QLabel *jsLabel;
     QLabel *titolo;
     QLabel *oppure;
     QLabel *inizio;
@@ -121,8 +125,7 @@ private:
 
     QPushButton *bottoneCambio;
 
-    QLabel *erroreCityLab;
-    QLabel *erroreDateLab;
+    QLabel *labelErrore;
 };
 
 #endif // STARTWINDOW_H

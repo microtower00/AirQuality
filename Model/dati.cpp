@@ -1,5 +1,5 @@
 #include "dati.h"
-
+QStringList Dati::expectedKeys = {"co","nh3","no","no2","o3","pm10","pm2_5","so2"};
 Dati::Dati(const QJsonObject& retrievedObj) {
     QJsonArray listArray = retrievedObj.value("list").toArray();
     QStringList componentsNames = listArray.at(1).toObject().value("components").toObject().keys();
@@ -116,4 +116,35 @@ QVariant Dati::headerData(int section, Qt::Orientation orientation, int role) co
 
     if(orientation==Qt::Vertical)
             return section;
+}
+
+bool Dati::isDati(const QJsonDocument& doc){
+    if(!(doc.isNull()||doc.isEmpty())){
+        //contiene coords e list
+        if(doc.object().contains("coord") && doc.object().contains("list")){
+            QJsonArray listArray = doc.object().value("list").toArray();
+
+            //per ogni elemento di list controllo che abbia components, main e dt
+            for(int i = 0; i < listArray.size(); ++i){
+                //qDebug()<<"Controllo la lista";
+                if(!(listArray.at(i).toObject().contains("components") && listArray.at(i).toObject().contains("dt") && listArray.at(i).toObject().contains("main"))){
+                    //qDebug()<<"Non contiene main, components e dt";
+                    return false;
+                }else{
+                    QJsonObject componenti = listArray.at(i).toObject().value("components").toObject();
+                    for(QString componente:expectedKeys){
+                        if(!componenti.contains(componente)){
+                            //qDebug()<<"Non ha tutta la robba";
+                            return false;
+                        }
+                    }
+                   return true;
+                }
+            }
+        }else
+        //qDebug()<<"Non contiene list";
+        return false;
+    }
+    //qDebug()<<"è nullo o empty";
+    return false;
 }

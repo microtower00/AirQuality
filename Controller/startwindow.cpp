@@ -1,6 +1,9 @@
 #include "startwindow.h"
 
 const QString StartWindow::APIKEY = "7b6bde71c02400af4d2b61da7b315b31";
+QString StartWindow::fileNonValido = "Sembra che il file che stai cercando di aprire non sia supportato.";
+QString StartWindow::cittaNonPresente = "La città inserita non è riconosciuta";
+QString StartWindow::dateNonCorrette = "Le date non risultano valide";
 
 StartWindow::StartWindow(QWidget *parent)
     : QMainWindow{parent}
@@ -9,8 +12,7 @@ StartWindow::StartWindow(QWidget *parent)
     oppure = new QLabel("oppure",this);
     inizio = new QLabel("Inizio",this);
     fine = new QLabel("Fine",this);
-    erroreDateLab = new QLabel();
-    erroreCityLab = new QLabel();
+    labelErrore = new QLabel();
 
     mainCol = new QVBoxLayout();
 
@@ -76,15 +78,9 @@ StartWindow::StartWindow(QWidget *parent)
     rigaAzioni->addWidget(openWeather);
     mainCol->addLayout(rigaAzioni);
 
-    erroreDateLab->setVisible(false);
-    openWeatherVbox->addWidget(erroreDateLab);
+    labelErrore->setVisible(false);
 
-    erroreCityLab->setVisible(false);
-    openWeatherVbox->addWidget(erroreCityLab);
-
-    jsLabel = new QLabel("");
-    mainCol->addWidget(jsLabel);
-
+    mainCol->addWidget(labelErrore);
     finestra = new QWidget();
     finestra->setLayout(mainCol);
 
@@ -102,30 +98,44 @@ StartWindow::StartWindow(QWidget *parent)
     connect(openWeatherButton,SIGNAL(clicked()),this,SLOT(getAirQuality()));
 
     connect(this, SIGNAL(modelCreato(Dati)), this, SLOT(apriFinestra(Dati)));
+    connect(this,SIGNAL(mostraErrore(QString)),this,SLOT(updateErrorLabel(QString)));
     //data = new DataViewer;
     //connect(this, SIGNAL(modelCreato(Dati)), data, SLOT(createTable(Dati)));
 }
 
 //decidere che fare se file scelto é nullo
 void StartWindow::chooseFile(){
+    labelErrore->setVisible(false);
     QString fileName = QFileDialog::getOpenFileName(this, "Scegli un file grafico","","File JSON (*.json)");
-    if(fileName!=NULL)
+    if(fileName!=NULL){
         //creare il modello
-        emit filePronto(&openJson(fileName));
+        if(Dati::isDati(openJson(fileName)))
+            emit filePronto(&openJson(fileName));
+        else{
+            emit mostraErrore(fileNonValido);
+        }
+    }
 }
 
 void StartWindow::getAirQuality(){
-    cityText->text().isNull() ? qDebug()<<"null" : qDebug()<<"OK";
+    labelErrore->setVisible(false);
+
     QDate fine = dataFine->date();
     QDate inizio = dataInizio->date();
-    QGeoCoordinate coords_citta = coordsResolver(cityText->text());
-    qDebug() << "FPickerController::getAirQuality()";
+    try{
+        QGeoCoordinate coords_citta = coordsResolver(cityText->text());
+        QDate primadataDisp = primadataDisp.fromString("2020-11-27", Qt::ISODate);
 
-    QDate primadataDisp = primadataDisp.fromString("2020-11-27", Qt::ISODate);
-
-    if(inizio>=primadataDisp && fine<=QDate::currentDate() && fine>inizio)
-        aqr.retrieveHistorical(coords_citta.latitude(), coords_citta.longitude(), inizio, fine);
-    else throw std::invalid_argument("Date non valide");
+        if(inizio>=primadataDisp && fine<=QDate::currentDate() && fine>inizio)
+            aqr.retrieveHistorical(coords_citta.latitude(), coords_citta.longitude(), inizio, fine);
+        else throw std::invalid_argument("Date non valide");
+    }catch(std::domain_error a){
+        qDebug()<<a.what();
+        emit mostraErrore(cittaNonPresente);
+    }catch(std::invalid_argument b){
+        qDebug()<<b.what();
+        emit mostraErrore(dateNonCorrette);
+    }
 }
 
 QGeoCoordinate StartWindow::coordsResolver(QString citta) const{
@@ -194,8 +204,7 @@ QJsonDocument& StartWindow::openJson(QString relativePath) const{
 
 //Fa la chiamata al retriever. Non ritorna nulla perché i valori di ritorno vengono gestiti dal segnale readReady, connesso a saveJSonReply
 void StartWindow::ottieniDati(QString citta, QDate inizio, QDate fine) const{
-    //senza la riga sottostante crasha se non viene messa la città, non ha nessun senso
-    citta.isNull() ? qDebug()<<"null" : qDebug()<<"OK";
+
     QGeoCoordinate coords_citta = coordsResolver(citta);
     qDebug() << "Model::ottieniDati(QString,QDate,QDate)";
 
@@ -232,6 +241,11 @@ void StartWindow::saveJSonReply(const QJsonDocument* doc) const{
 void StartWindow::apriFinestra(const Dati& d){
     finestra = new ChartsViewer(d);
     finestra->show();
+}
+
+void StartWindow::updateErrorLabel(const QString& param){
+    labelErrore->setVisible(true);
+    labelErrore->setText(param);
 }
 
 

@@ -1,6 +1,6 @@
 #include "chartschooser.h"
 
-ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
+ChartsChooser::ChartsChooser(const Dati& dati) :  data(dati)
 {
     mainLayout = new QVBoxLayout();
 
@@ -40,7 +40,6 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
 
     pbSelTutti = new QPushButton("Seleziona tutti");
     pbDelTutti = new QPushButton("Deseleziona tutti");
-    salvaFile = new QPushButton("Salva il file attualmente aperto");
 
     //non avevo voglia di iterare, che vergogna
     grigliaComp->addWidget(cbComponenti->buttons().at(0), 0, 0);
@@ -58,22 +57,21 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
     sceltaComp->setVisible(rbComponenti->isChecked());
 
     pbConferma = new QPushButton("Visualizza grafico");
-    pbTabella = new QPushButton("Visualizza tabella con tutti i dati");
 
     mainLayout->addWidget(sceltaGraf);
     mainLayout->addWidget(sceltaComp);
     mainLayout->addWidget(pbConferma);
-    mainLayout->addWidget(pbTabella);
-    mainLayout->addWidget(salvaFile);
+    //mainLayout->addWidget(pbTabella);
+    //mainLayout->addWidget(salvaFile);
 
     this->setLayout(mainLayout);
 
     grafico = new MyChartView(data);
-    tabella = new MyTableView(data);
+    //tabella = new MyTableView(data);
 
     //qDebug()<<nativeParentWidget()->width();
 
-    setTitle("Controlli");
+    setTitle("Controlli grafici");
     //setMaximumWidth(640);
     setFixedWidth(300);
     setFixedHeight(350);
@@ -84,8 +82,6 @@ ChartsChooser::ChartsChooser(const Dati& graf) :  data(graf)
     connect(pbSelTutti,SIGNAL(clicked()),this,SLOT(selezionaTutti()));
     connect(pbDelTutti,SIGNAL(clicked()),this,SLOT(deselezionaTutti()));
     connect(pbConferma,SIGNAL(clicked()),this,SLOT(createChart()));
-    connect(pbTabella,SIGNAL(clicked()),tabella,SIGNAL(tablePronta()));
-    connect(salvaFile,SIGNAL(clicked()),this,SLOT(iniziaSalvataggio()));
 }
 
 void ChartsChooser::controlliComboBox(QString testoCBgrafici) {
@@ -128,9 +124,9 @@ void ChartsChooser::createChart(){
     }
 }
 
-MyTableView* ChartsChooser::getTabella() const{
+/*MyTableView* ChartsChooser::getTabella() const{
     return tabella;
-}
+}*/
 
 void ChartsChooser::selezionaTutti() {
     for(auto cbComp:cbComponenti->buttons())
@@ -158,14 +154,3 @@ void ChartsChooser::attivaComp(bool compChecked) {
             grafici->setItemData(i, 33,  Qt::UserRole -1);
     }
 }
-
-void ChartsChooser::iniziaSalvataggio(){
-    QString path = QFileDialog::getSaveFileName(this, tr("Salva il file"),"/home",tr("JSON (*.json)"));
-    if(path!=""){
-            data.salvaJsonDati(path.append(".json"));
-    }
-}
-
-
-
-

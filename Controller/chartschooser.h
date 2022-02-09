@@ -26,11 +26,9 @@ public:
     explicit ChartsChooser(const Dati&);
 
     MyChartView* getGrafico() const;
-    MyTableView* getTabella() const;
+    //MyTableView* getTabella() const;
 public slots:
-    void iniziaSalvataggio();
     void createChart();
-    //void createTable();
     void controlliComboBox(QString);
     void selezionaTutti();
     void deselezionaTutti();
@@ -56,13 +54,13 @@ private:
     QRadioButton* rbAqi;
 
     QPushButton* pbConferma;
-    QPushButton* pbTabella;
+    //QPushButton* pbTabella;
     QPushButton* pbSelTutti;
     QPushButton* pbDelTutti;
-    QPushButton* salvaFile;
+    //QPushButton* salvaFile;
 
     MyChartView* grafico;
-    MyTableView* tabella;
+    //MyTableView* tabella;
 };
 
 #endif // CHARTSCHOOSER_H

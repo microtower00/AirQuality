@@ -20,14 +20,19 @@ public:
 
     QList<QString> getChiavi() const;
     QList<QMap<QString, double>> getDati() const;
+    static QDateTime getDateFromDouble(const double&);
+    static bool isDati(const QJsonDocument&);
+    bool salvaJsonDati(const QString& path) const;
+
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-    bool salvaJsonDati(const QString& path) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
-    static QDateTime getDateFromDouble(const double&);
-    static bool isDati(const QJsonDocument&);
+public slots:
+    bool appendRows(unsigned int count=1);
 
 private:
     QList<QMap<QString, double>> dati;

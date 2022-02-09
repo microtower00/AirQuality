@@ -27,10 +27,8 @@ Dati::Dati(const QJsonObject& retrievedObj) {
         }
         dati.push_back(singleRow);
     }
-
-    qDebug()<<flags(createIndex(1,2));
-
 }
+
 bool Dati::salvaJsonDati(const QString& path) const{
     QJsonArray listArray;
 
@@ -100,7 +98,7 @@ int Dati::columnCount(const QModelIndex &parent) const {
 }
 
 QVariant Dati::data(const QModelIndex &index, int role) const {
-    if(index.isValid() && role==Qt::DisplayRole) {
+    if(index.isValid() && (role==Qt::DisplayRole || role==Qt::EditRole)) {
         if(index.column()!=0)
             return dati.at(index.row()).values().at(index.column());
         else return getDateFromDouble(dati.at(index.row()).values().at(index.column()));
@@ -109,13 +107,13 @@ QVariant Dati::data(const QModelIndex &index, int role) const {
 }
 
 QVariant Dati::headerData(int section, Qt::Orientation orientation, int role) const {
-    if(orientation==Qt::Horizontal) {
-        //qDebug()<<dati.first().keys().at(section);
-        return dati.first().keys().at(section);
-    }
+    if (role != Qt::DisplayRole) return QVariant();
 
-    if(orientation==Qt::Vertical)
-            return section;
+    if(orientation==Qt::Horizontal) return dati.first().keys().at(section);
+
+    if(orientation==Qt::Vertical) return section;
+
+    return QVariant();
 }
 
 bool Dati::isDati(const QJsonDocument& doc){
@@ -130,7 +128,7 @@ bool Dati::isDati(const QJsonDocument& doc){
                 if(!(listArray.at(i).toObject().contains("components") && listArray.at(i).toObject().contains("dt") && listArray.at(i).toObject().contains("main"))){
                     //qDebug()<<"Non contiene main, components e dt";
                     return false;
-                }else{
+                } else {
                     QJsonObject componenti = listArray.at(i).toObject().value("components").toObject();
                     for(QString componente:expectedKeys){
                         if(!componenti.contains(componente)){
@@ -148,3 +146,42 @@ bool Dati::isDati(const QJsonDocument& doc){
     //qDebug()<<"è nullo o empty";
     return false;
 }
+
+Qt::ItemFlags Dati::flags(const QModelIndex &index) const {
+    //Q_UNUSED(index);
+    if(index.column()>0)
+        return {Qt::ItemIsEnabled, Qt::ItemIsEditable};
+    else return {Qt::ItemIsEnabled};
+}
+
+bool Dati::setData(const QModelIndex &index, const QVariant &value, int role) {
+    if(role==Qt::EditRole) {
+        if(index.column()>1 || (index.column()==1 && value<=5 && value>=0)) {
+            dati[index.row()].insert(dati[index.row()].keys().at(index.column()), value.toDouble());
+            emit dataChanged(index, index, {Qt::EditRole});
+            return true;
+        }
+    } else {
+        return false;
+    }
+}
+
+bool Dati::appendRows(unsigned int count) {
+    QMap<QString, double> nuovaRiga;
+
+    beginInsertRows(QModelIndex(), dati.size(), dati.size());
+
+    for(unsigned int i=0; i<count; ++i) {
+        //qDebug()<<"Size: "<<dati.size()<<" Riga-1+i: "<<dati.size()-1+i;
+        nuovaRiga.insert("Data", dati.at(dati.size()-1).value("Data")+3600);
+
+        for(auto it=chiavi.begin()+1; it!=chiavi.end(); ++it) {
+            nuovaRiga.insert(*it, 0);
+        }
+        dati.insert(dati.size(), nuovaRiga);
+    }
+
+    endInsertRows();
+    return true;
+}
+

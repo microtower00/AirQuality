@@ -23,9 +23,10 @@ public slots:
 public:
     MyTableView(Dati&);
 private:
-    QHeaderView* horHeader;
+
 signals:
     void tablePronta();
+    void richiestaAggiunta();
 
 };
 

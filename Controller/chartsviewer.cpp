@@ -2,33 +2,39 @@
 
 ChartsViewer::ChartsViewer(const Dati& d, QWidget *parent) : QMainWindow{parent}
 {
+
     griglia = new QGridLayout();
     layoutDescr = new QHBoxLayout();
     layoutGraf = new QHBoxLayout();
 
-    GBcontrolli = new ChartsChooser(d);
+    GBcontrolliG = new ChartsChooser(d);
+    GBcontrolliT = new TableChooser(d);
     GBdescrizione = new QGroupBox("Descrizione");
-    GBgrafico = new QGroupBox();
+    GBmostraDati = new QGroupBox();
+
+    GBcontrolliT->setMaximumWidth(GBcontrolliG->width());
+    GBcontrolliT->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding));
 
     descrizione = new QLabel();
-    descrizione->setMaximumWidth(GBcontrolli->width());
+    descrizione->setMaximumWidth(GBcontrolliG->width());
     descrizione->setWordWrap(true);
 
     layoutDescr->addWidget(descrizione);
     GBdescrizione->setLayout(layoutDescr);
-    GBdescrizione->setMaximumWidth(GBcontrolli->width());
+    GBdescrizione->setMaximumWidth(GBcontrolliG->width());
     GBdescrizione->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding));
 
-    griglia->addWidget(GBcontrolli, 0, 0);
+    griglia->addWidget(GBcontrolliG, 0, 0);
+    griglia->addWidget(GBcontrolliT, 1, 0);
 
     finestra = new QWidget();
     finestra->setLayout(griglia);
 
     setCentralWidget(finestra);
-    setWindowTitle("Grafici");
+    setWindowTitle("Visualizzazione dati");
 
-    grafico = GBcontrolli->getGrafico();
-    tabella = GBcontrolli->getTabella();
+    grafico = GBcontrolliG->getGrafico();
+    tabella = GBcontrolliT->getTabella();
 
     connect(grafico, SIGNAL(chartPronto()), this, SLOT(mostraChart()));
     connect(grafico, SIGNAL(tipoChartPronto(MyChart::GraphType)), this, SLOT(setDescr(MyChart::GraphType)));
@@ -39,7 +45,7 @@ void ChartsViewer::mostraChart() {
     tabella->close();
 
     if(layoutGraf->count()!=1) {
-        resize(GBcontrolli->width()+1250, 750);
+        resize(GBcontrolliG->width()+1250, 750);
     }
 
     layoutGraf->removeWidget(tabella);
@@ -47,18 +53,18 @@ void ChartsViewer::mostraChart() {
 
     grafico->show();
 
-    GBgrafico->setTitle("Grafico");
-    GBgrafico->setLayout(layoutGraf);
+    GBmostraDati->setTitle("Grafico");
+    GBmostraDati->setLayout(layoutGraf);
 
-    griglia->addWidget(GBgrafico, 0, 1, 2, 1);
-    griglia->addWidget(GBdescrizione, 1, 0);
+    griglia->addWidget(GBmostraDati, 0, 1, 2, 1);
+    griglia->addWidget(GBdescrizione, 2, 0);
 }
 
 void ChartsViewer::mostraTable() {
     grafico->close();
 
     if(layoutGraf->count()!=1) {
-        resize(GBcontrolli->width()+1101, 750);
+        resize(GBcontrolliG->width()+1101, 750);
     }
 
     layoutGraf->removeWidget(grafico);
@@ -66,19 +72,13 @@ void ChartsViewer::mostraTable() {
 
     tabella->show();
 
-    /*prova header qua ma non va
-    tabella->horizontalHeader()->show();
-    qDebug()<<tabella->horizontalHeader()->count();
-    //tabella->horizontalHeader()->setVisible(true);
-    tabella->verticalHeader()->setVisible(true);*/
+    GBmostraDati->setTitle("Tabella");
+    GBmostraDati->setLayout(layoutGraf);
 
-    GBgrafico->setTitle("Tabella");
-    GBgrafico->setLayout(layoutGraf);
+    descrizione->setText("Visualizzazione dei dati in forma tabellare. È possibile modificare e salvare i dati aggiornati in un file JSON.");
 
-    descrizione->setText("Visualizzazione dei dati in forma tabellare. È possibile modificare e salvare i dati aggiornati in un fil JSON.");
-
-    griglia->addWidget(GBgrafico, 0, 1, 2, 1);
-    griglia->addWidget(GBdescrizione, 1, 0);
+    griglia->addWidget(GBmostraDati, 0, 1, 2, 1);
+    griglia->addWidget(GBdescrizione, 2, 0);
 }
 
 void ChartsViewer::setDescr(const MyChart::GraphType& tipoChart) {
@@ -96,5 +96,3 @@ void ChartsViewer::setDescr(const MyChart::GraphType& tipoChart) {
         default : descrizione->setText("nessun grafico");
     }
 }
-
-

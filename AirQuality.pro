@@ -12,6 +12,7 @@ CONFIG += c++11
 #CONFIG(release, debug|release): DEFINES += QT_NO_WARNING_OUTPUT
 SOURCES += \
     Controller/chartsviewer.cpp \
+    Controller/tablechooser.cpp \
     Model/dati.cpp \
     View/mychart.cpp \
     View/mychartview.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
 
 HEADERS += \
     Controller/chartsviewer.h \
+    Controller/tablechooser.h \
     Model/dati.h \
     View/mychart.h \
     View/mychartview.h \

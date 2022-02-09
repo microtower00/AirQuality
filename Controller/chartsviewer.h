@@ -2,6 +2,7 @@
 #define CHARTSVIEWER_H
 
 #include "chartschooser.h"
+#include "tablechooser.h"
 
 #include <QMainWindow>
 #include <QGroupBox>
@@ -18,23 +19,24 @@ public slots:
    void mostraChart();
    void mostraTable();
    void setDescr(const MyChart::GraphType&);
+   //void iniziaSalvataggio();
 
 signals:
 
 private:
     QHBoxLayout* layoutGraf;
     QHBoxLayout* layoutDescr;
+    QGridLayout* griglia;
 
-    ChartsChooser* GBcontrolli;
+    ChartsChooser* GBcontrolliG;
+    TableChooser* GBcontrolliT;
     QGroupBox* GBdescrizione;
-    QGroupBox* GBgrafico;
+    QGroupBox* GBmostraDati;
+
+    QLabel* descrizione;
 
     MyTableView* tabella;
     MyChartView* grafico;
-
-    QGridLayout* griglia;
-
-    QLabel* descrizione;
 
     QWidget* finestra;
 };

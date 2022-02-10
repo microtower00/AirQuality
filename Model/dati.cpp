@@ -156,7 +156,7 @@ Qt::ItemFlags Dati::flags(const QModelIndex &index) const {
 
 bool Dati::setData(const QModelIndex &index, const QVariant &value, int role) {
     if(role==Qt::EditRole) {
-        if(index.column()>1 || (index.column()==1 && value<=5 && value>=0)) {
+        if(index.column()>1 || (index.column()==1 && value==int(value.toUInt()) && value<=5 && value>=0)) {
             dati[index.row()].insert(dati[index.row()].keys().at(index.column()), value.toDouble());
             emit dataChanged(index, index, {Qt::EditRole});
             return true;

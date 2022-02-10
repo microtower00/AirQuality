@@ -1,7 +1,7 @@
 #ifndef CHARTCONTROLLER_H
 #define CHARTCONTROLLER_H
 
-#include "Model/dati.h"
+#include "dati.h"
 #include "mychart.h"
 #include "mybarseries.h"
 #include "myscatterserie.h"

@@ -1,8 +1,8 @@
 #ifndef TABLECHOOSER_H
 #define TABLECHOOSER_H
 
-#include "Model/dati.h"
-#include "View/mytableview.h"
+#include "dati.h"
+#include "mytableview.h"
 
 #include <QGroupBox>
 #include <QPushButton>

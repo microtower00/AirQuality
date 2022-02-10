@@ -2,7 +2,7 @@
 #define STARTWINDOW_H
 
 #include "airqualityretriever.h"
-#include "Model/dati.h"
+#include "dati.h"
 #include "chartsviewer.h"
 #include "datedialog.h"
 

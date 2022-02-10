@@ -3,7 +3,7 @@
 
 #include <QScatterSeries>
 
-#include "Model/dati.h"
+#include "dati.h"
 
 class MyScatterSerie : public QtCharts::QScatterSeries
 {

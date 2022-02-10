@@ -13,7 +13,7 @@
 #include <QDateTime>
 #include <QLabel>
 #include<QHeaderView>
-#include "Model/dati.h"
+#include "dati.h"
 
 class MyTableView : public QTableView
 {

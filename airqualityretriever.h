@@ -1,4 +1,6 @@
-#include <QString>
+#ifndef AIRQUALITYRETRIEVER_H
+#define AIRQUALITYRETRIEVER_H
+
 #include <QJsonDocument>
 #include <QNetworkAccessManager>
 #include <QJsonObject>
@@ -6,10 +8,6 @@
 #include <QNetworkReply>
 #include <QUrl>
 #include <QObject>
-
-
-#ifndef AIRQUALITYRETRIEVER_H
-#define AIRQUALITYRETRIEVER_H
 
 class AirQualityRetriever : public QObject
 {
@@ -21,9 +19,7 @@ private:
 
 public:
     AirQualityRetriever(QString="7b6bde71c02400af4d2b61da7b315b31");
-    void retrieve(double,double)const;
-    void retrieveHistorical(double,double,QDate,QDate)const;
-    ~AirQualityRetriever();
+    void retrieveHistorical(const double&, const double&, const QDate&, const QDate&)const;
 
 public slots:
     QJsonDocument replyEnded(QNetworkReply*);
@@ -31,6 +27,5 @@ public slots:
 signals:
     void readReady(const QJsonDocument*);
 };
-
 
 #endif // AIRQUALITYRETRIEVER_H

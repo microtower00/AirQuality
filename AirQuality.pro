@@ -11,40 +11,39 @@ CONFIG += c++11
 #CONFIG(release, debug|release): DEFINES += QT_NO_INFO_OUTPUT
 #CONFIG(release, debug|release): DEFINES += QT_NO_WARNING_OUTPUT
 SOURCES += \
-    Controller/chartsviewer.cpp \
-    Controller/datedialog.cpp \
-    Controller/tablechooser.cpp \
-    Model/dati.cpp \
-    View/mychart.cpp \
-    View/mychartview.cpp \
-    Controller/airqualityretriever.cpp \
-    Controller/chartschooser.cpp \
-    Controller/startwindow.cpp\
-    View/mylineseries.cpp \
-    View/mypolarchart.cpp \
-    View/mypolarseries.cpp \
-    View/myscatterserie.cpp \
-    View/mytableview.cpp \
+    chartsviewer.cpp \
+    datedialog.cpp \
+    tablechooser.cpp \
+    dati.cpp \
+    mychart.cpp \
+    mychartview.cpp \
+    airqualityretriever.cpp \
+    chartschooser.cpp \
+    startwindow.cpp\
+    mylineseries.cpp \
+    mypolarchart.cpp \
+    mypolarseries.cpp \
+    myscatterserie.cpp \
+    mytableview.cpp \
     main.cpp \
-    View/mybarseries.cpp \
+    mybarseries.cpp \
 
 HEADERS += \
-    Controller/chartsviewer.h \
-    Controller/datedialog.h \
-    Controller/tablechooser.h \
-    Model/dati.h \
-    View/mychart.h \
-    View/mychartview.h \
-    Controller/airqualityretriever.h \
-    Controller/chartschooser.h \
-    Controller/startwindow.h \
-    View/mylineseries.h \
-    View/mypolarchart.h \
-    View/mypolarseries.h \
-    View/myscatterserie.h \
-    View/mybarseries.h \
-    View/mytableview.h \
-
+    chartsviewer.h \
+    datedialog.h \
+    tablechooser.h \
+    dati.h \
+    mychart.h \
+    mychartview.h \
+    airqualityretriever.h \
+    chartschooser.h \
+    startwindow.h \
+    mylineseries.h \
+    mypolarchart.h \
+    mypolarseries.h \
+    myscatterserie.h \
+    mybarseries.h \
+    mytableview.h \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

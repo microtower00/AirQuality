@@ -144,7 +144,7 @@ bool Dati::isDati(const QJsonDocument& doc){
                         }
                     }
                     qDebug()<<"Tutto apposto maresciao";
-                   return true;
+                    return true;
                 }
             }
         }else

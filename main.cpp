@@ -1,4 +1,4 @@
-#include "Controller/startwindow.h"
+#include "startwindow.h"
 
 #include <iostream>
 #include <QApplication>

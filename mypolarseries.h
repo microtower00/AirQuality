@@ -3,7 +3,7 @@
 
 #include <QLineSeries>
 
-#include "Model/dati.h"
+#include "dati.h"
 
 class MyPolarSeries : public QtCharts::QLineSeries
 {

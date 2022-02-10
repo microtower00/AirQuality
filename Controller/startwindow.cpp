@@ -30,6 +30,7 @@ StartWindow::StartWindow(QWidget *parent)
 
     apriFileButton = new QPushButton("Importa");
     openWeatherButton = new QPushButton("Ottieni");
+    creaVuoto = new QPushButton("Inserisci manualmente");
     bottoneCambio = new QPushButton("Cambia finestra");
     cityText = new QLineEdit();
     dataInizio = new QDateEdit();
@@ -79,7 +80,7 @@ StartWindow::StartWindow(QWidget *parent)
     mainCol->addLayout(rigaAzioni);
 
     labelErrore->setVisible(false);
-
+    mainCol->addWidget(creaVuoto);
     mainCol->addWidget(labelErrore);
     finestra = new QWidget();
     finestra->setLayout(mainCol);
@@ -96,10 +97,10 @@ StartWindow::StartWindow(QWidget *parent)
     connect(&aqr,SIGNAL(readReady(const QJsonDocument*)),this,SLOT(creoModel(const QJsonDocument*)));
     connect(apriFileButton,SIGNAL(clicked()),this,SLOT(chooseFile()));
     connect(openWeatherButton,SIGNAL(clicked()),this,SLOT(getAirQuality()));
+    connect(creaVuoto,SIGNAL(clicked()),this,SLOT(apriFileVuoto()));
 
     connect(this, SIGNAL(modelCreato(Dati)), this, SLOT(apriFinestra(Dati)));
     connect(this,SIGNAL(mostraErrore(QString)),this,SLOT(updateErrorLabel(QString)));
-    //data = new DataViewer;
     //connect(this, SIGNAL(modelCreato(Dati)), data, SLOT(createTable(Dati)));
 }
 
@@ -155,7 +156,7 @@ QGeoCoordinate StartWindow::coordsResolver(QString citta) const{
 
 QJsonDocument& StartWindow::getCitiesJson() const {
 
-    QJsonDocument* json = new QJsonDocument(openJson("worldcities.json"));
+    QJsonDocument* json = new QJsonDocument(openJson(":/worldcities.json"));
 
     if(!json->isArray())
         throw std::invalid_argument("Il file che si sta cercando di aprire non contiene un JSON");
@@ -186,11 +187,11 @@ void StartWindow::creoModel(const QJsonDocument* datiDoc) {
     emit modelCreato(dati);
 }
 
-QJsonDocument& StartWindow::openJson(QString relativePath) const{
+QJsonDocument& StartWindow::openJson(QString path) const{
     QString val;
     QFile file;
 
-    file.setFileName(relativePath);
+    file.setFileName(path);
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     val = file.readAll();
     file.close();
@@ -238,7 +239,7 @@ void StartWindow::saveJSonReply(const QJsonDocument* doc) const{
 }
 
 void StartWindow::apriFinestra(const Dati& d){
-    finestra = new ChartsViewer(d);
+    finestra = new ChartsViewer(d, this);
     finestra->show();
 }
 
@@ -247,4 +248,16 @@ void StartWindow::updateErrorLabel(const QString& param){
     labelErrore->setText(param);
 }
 
+void StartWindow::apriFileVuoto(){
+    QJsonDocument *doc = &openJson(":/fileVuoto.json");
+    bool confirm = false;
+    double dataInizio = DateDialog::getDateTime(this, &confirm).toSecsSinceEpoch();
+    if(confirm){
+        qDebug()<<dataInizio;
+        doc->object().value("list").toArray().at(0).toObject().insert("dt",dataInizio);
+        //qDebug()<<doc->object().value("list").toArray().at(0).toObject();
+        qDebug()<<*doc;
+        creoModel(doc);
+    }
 
+}

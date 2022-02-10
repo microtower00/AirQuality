@@ -2,6 +2,7 @@
 
 ChartsChooser::ChartsChooser(const Dati& dati) :  data(dati)
 {
+
     mainLayout = new QVBoxLayout();
 
     sceltaGraf = new QGroupBox("Scegli il tipo di grafico");
@@ -27,6 +28,7 @@ ChartsChooser::ChartsChooser(const Dati& dati) :  data(dati)
     sceltaComp = new QGroupBox("Scegli i componenti");
 
     QStringList listaComp = data.getChiavi();
+
     listaComp.removeFirst();
     listaComp.removeLast();
 
@@ -64,8 +66,8 @@ ChartsChooser::ChartsChooser(const Dati& dati) :  data(dati)
     //mainLayout->addWidget(pbTabella);
     //mainLayout->addWidget(salvaFile);
 
-    this->setLayout(mainLayout);
 
+    this->setLayout(mainLayout);
     grafico = new MyChartView(data);
     //tabella = new MyTableView(data);
 

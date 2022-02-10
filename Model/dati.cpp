@@ -2,7 +2,7 @@
 QStringList Dati::expectedKeys = {"co","nh3","no","no2","o3","pm10","pm2_5","so2"};
 Dati::Dati(const QJsonObject& retrievedObj) {
     QJsonArray listArray = retrievedObj.value("list").toArray();
-    QStringList componentsNames = listArray.at(1).toObject().value("components").toObject().keys();
+    QStringList componentsNames = listArray.at(0).toObject().value("components").toObject().keys();
 
     //singola riga, una mappa con coppie chiave:valore
     QMap<QString, double> singleRow;
@@ -10,8 +10,9 @@ Dati::Dati(const QJsonObject& retrievedObj) {
     //Riempio la lista di chiavi con data e aqi oltre ai componenti
     chiavi.push_back("Data");
 
-    for(auto comp:componentsNames)
+    for(auto comp:componentsNames){
         chiavi.push_back(comp);
+    }
 
     chiavi.push_back("aqi");
 
@@ -136,6 +137,7 @@ bool Dati::isDati(const QJsonDocument& doc){
                             return false;
                         }
                     }
+                    qDebug()<<"Tutto apposto maresciao";
                    return true;
                 }
             }

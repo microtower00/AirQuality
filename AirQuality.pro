@@ -12,6 +12,7 @@ CONFIG += c++11
 #CONFIG(release, debug|release): DEFINES += QT_NO_WARNING_OUTPUT
 SOURCES += \
     Controller/chartsviewer.cpp \
+    Controller/datedialog.cpp \
     Controller/tablechooser.cpp \
     Model/dati.cpp \
     View/mychart.cpp \
@@ -29,6 +30,7 @@ SOURCES += \
 
 HEADERS += \
     Controller/chartsviewer.h \
+    Controller/datedialog.h \
     Controller/tablechooser.h \
     Model/dati.h \
     View/mychart.h \
@@ -48,3 +50,6 @@ HEADERS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    resources.qrc

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>worldcities.json</file>
+        <file>fileVuoto.json</file>
+    </qresource>
+</RCC>

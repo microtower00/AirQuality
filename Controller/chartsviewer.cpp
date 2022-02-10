@@ -2,7 +2,6 @@
 
 ChartsViewer::ChartsViewer(const Dati& d, QWidget *parent) : QMainWindow{parent}
 {
-
     griglia = new QGridLayout();
     layoutDescr = new QHBoxLayout();
     layoutGraf = new QHBoxLayout();
@@ -32,7 +31,6 @@ ChartsViewer::ChartsViewer(const Dati& d, QWidget *parent) : QMainWindow{parent}
 
     setCentralWidget(finestra);
     setWindowTitle("Visualizzazione dati");
-
     grafico = GBcontrolliG->getGrafico();
     tabella = GBcontrolliT->getTabella();
 

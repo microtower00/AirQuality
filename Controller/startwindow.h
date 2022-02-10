@@ -6,6 +6,7 @@
 #include "View/mytableview.h"
 #include "chartschooser.h"
 #include "chartsviewer.h"
+#include "datedialog.h"
 
 #include <QMainWindow>
 #include <QMainWindow>
@@ -69,12 +70,15 @@ public:
      */
     QJsonDocument& openJson(QString relativePath) const;
 
+
 public slots:
     void chooseFile();
     void getAirQuality();
     void creoModel(const QJsonDocument*);
     void ottieniDati(QString, QDate, QDate) const;
     void saveJSonReply(const QJsonDocument* doc) const;
+
+    void apriFileVuoto();
 
     void apriFinestra(const Dati&);
     void updateErrorLabel(const QString&);
@@ -114,6 +118,7 @@ private:
 
     QPushButton *apriFileButton;
     QPushButton *openWeatherButton;
+    QPushButton *creaVuoto;
     QLineEdit *cityText;
     QDateEdit *dataInizio;
     QDateEdit *dataFine;

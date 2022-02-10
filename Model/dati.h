@@ -15,7 +15,7 @@ class Dati : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    Dati(const QJsonObject&);
+    Dati(const QJsonObject&, const QDateTime& = QDateTime());
     Dati(const Dati&);
 
     QList<QString> getChiavi() const;
@@ -33,6 +33,7 @@ public:
 
 public slots:
     bool appendRows(unsigned int count=1);
+    bool removeRows(unsigned int count=1);
 
 private:
     QList<QMap<QString, double>> dati;

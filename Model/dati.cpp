@@ -1,6 +1,8 @@
 #include "dati.h"
+
 QStringList Dati::expectedKeys = {"co","nh3","no","no2","o3","pm10","pm2_5","so2"};
-Dati::Dati(const QJsonObject& retrievedObj) {
+
+Dati::Dati(const QJsonObject& retrievedObj, const QDateTime& dataInizio) {
     QJsonArray listArray = retrievedObj.value("list").toArray();
     QStringList componentsNames = listArray.at(0).toObject().value("components").toObject().keys();
 
@@ -28,6 +30,10 @@ Dati::Dati(const QJsonObject& retrievedObj) {
         }
         dati.push_back(singleRow);
     }
+
+    if(dataInizio!=QDateTime())
+        dati[0].insert("Data", dataInizio.toSecsSinceEpoch());
+
 }
 
 bool Dati::salvaJsonDati(const QString& path) const{
@@ -170,20 +176,32 @@ bool Dati::setData(const QModelIndex &index, const QVariant &value, int role) {
 
 bool Dati::appendRows(unsigned int count) {
     QMap<QString, double> nuovaRiga;
+    for(auto it=chiavi.begin()+1; it!=chiavi.end(); ++it)
+        nuovaRiga.insert(*it, 0);
 
-    beginInsertRows(QModelIndex(), dati.size(), dati.size());
 
     for(unsigned int i=0; i<count; ++i) {
-        //qDebug()<<"Size: "<<dati.size()<<" Riga-1+i: "<<dati.size()-1+i;
-        nuovaRiga.insert("Data", dati.at(dati.size()-1).value("Data")+3600);
+        beginInsertRows(QModelIndex(), dati.size(), dati.size());        nuovaRiga.insert("Data", dati.at(dati.size()-1).value("Data")+3600);
 
-        for(auto it=chiavi.begin()+1; it!=chiavi.end(); ++it) {
-            nuovaRiga.insert(*it, 0);
-        }
         dati.insert(dati.size(), nuovaRiga);
+
+        endInsertRows();
     }
 
-    endInsertRows();
+    return true;
+}
+
+bool Dati::removeRows(unsigned int count) {
+
+    for(unsigned int i=0; i<count; ++i) {
+        beginRemoveRows(QModelIndex(), dati.size()-1, dati.size()-1);
+
+        if(dati.size()-1!=0)
+            dati.removeLast();
+
+        endRemoveRows();
+    }
+
     return true;
 }
 

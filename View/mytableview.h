@@ -27,7 +27,7 @@ private:
 signals:
     void tablePronta();
     void richiestaAggiunta();
-
+    void richiestaRimossa();
 };
 
 #endif // MYTABLEVIEW_H

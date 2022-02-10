@@ -5,11 +5,13 @@ TableChooser::TableChooser(const Dati& dati) :  data(dati)
     mainLayout = new QVBoxLayout();
 
     pbTabella = new QPushButton("Visualizza tabella con tutti i dati");
-    pbAddRiga = new QPushButton("Aggiungi una riga");
+    pbAddRiga = new QPushButton("Aggiungi una riga in coda");
+    pbRemRiga = new QPushButton("Rimuovi l'ultima riga");
     pbSalvaFile = new QPushButton("Salva i dati correnti");
 
     mainLayout->addWidget(pbTabella);
     mainLayout->addWidget(pbAddRiga);
+    mainLayout->addWidget(pbRemRiga);
     mainLayout->addWidget(pbSalvaFile);
 
     setLayout(mainLayout);
@@ -22,6 +24,7 @@ TableChooser::TableChooser(const Dati& dati) :  data(dati)
 
     connect(pbTabella,SIGNAL(clicked()),tabella,SIGNAL(tablePronta()));
     connect(pbAddRiga, SIGNAL(clicked()), tabella, SIGNAL(richiestaAggiunta()));
+    connect(pbRemRiga, SIGNAL(clicked()), tabella, SIGNAL(richiestaRimossa()));
     connect(pbSalvaFile,SIGNAL(clicked()),this,SLOT(iniziaSalvataggio()));
 }
 

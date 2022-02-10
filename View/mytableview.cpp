@@ -10,4 +10,5 @@ MyTableView::MyTableView(Dati& datiModel) : QTableView() {
     resizeColumnToContents(0);
 
     connect(this, SIGNAL(richiestaAggiunta()), dynamic_cast<Dati*>(this->model()), SLOT(appendRows()));
+    connect(this, SIGNAL(richiestaRimossa()), dynamic_cast<Dati*>(this->model()), SLOT(removeRows()));
 }

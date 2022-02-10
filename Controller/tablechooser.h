@@ -19,6 +19,7 @@ private:
     QPushButton* pbTabella;
     QPushButton* pbSalvaFile;
     QPushButton* pbAddRiga;
+    QPushButton* pbRemRiga;
 
     MyTableView* tabella;
 

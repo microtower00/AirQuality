@@ -5,6 +5,7 @@
 #include "dati.h"
 #include "chartsviewer.h"
 #include "datedialog.h"
+#include "coordinate.h"
 
 #include <QMainWindow>
 #include <QLabel>
@@ -14,7 +15,6 @@
 #include <QLineEdit>
 #include <QDateEdit>
 #include <QFileDialog>
-#include <QGeoCoordinate>
 #include <QCompleter>
 
 /*!
@@ -74,9 +74,9 @@ public:
     /*!
      * @brief coordsResolver    Ritorna le coordinate della cittá passata come parametro
      * @param citta             Cittá della quale ottenere le coordinate, deve essere presente nel file worldcities.json
-     * @return                  Oggetto QGeoCoordinate con le coordinate richieste
+     * @return                  Oggetto Coordinate con le coordinate richieste
      */
-    QGeoCoordinate coordsResolver(const QString& citta) const;
+    Coordinate coordsResolver(const QString& citta) const;
 
     /*!
      * @brief validCity Verifica se la cittá inserita è presente nell'elenco worldcities.json

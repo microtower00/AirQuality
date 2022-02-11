@@ -118,7 +118,7 @@ void StartWindow::getAirQuality()
     QDate inizio = dtInizio->date();
 
     try {
-        QGeoCoordinate coords_citta = coordsResolver(leCity->text());
+        Coordinate coords_citta = coordsResolver(leCity->text());
         QDate primadataDisp = primadataDisp.fromString("2020-11-27", Qt::ISODate);
 
         if(inizio>=primadataDisp && fine<=QDate::currentDate() && fine>inizio)
@@ -132,7 +132,7 @@ void StartWindow::getAirQuality()
     }
 }
 
-QGeoCoordinate StartWindow::coordsResolver(const QString& citta) const
+Coordinate StartWindow::coordsResolver(const QString& citta) const
 {
     QJsonObject json_obj;
     QJsonArray json_array = getCitiesJson().array();
@@ -140,7 +140,7 @@ QGeoCoordinate StartWindow::coordsResolver(const QString& citta) const
     for(int i=0; i<json_array.count(); ++i) {
         json_obj = json_array.at(i).toObject();
         if(json_obj["city_ascii"]==citta){
-            return QGeoCoordinate(json_obj.value("lat").toDouble(), json_obj.value("lng").toDouble());
+            return Coordinate(json_obj.value("lat").toDouble(), json_obj.value("lng").toDouble());
         }
     }
     throw std::domain_error("La città inserita non è disponibile");
@@ -193,7 +193,7 @@ QJsonDocument& StartWindow::openJson(const QString& path) const
 
 void StartWindow::ottieniDati(const QString& citta, const QDate& inizio, const QDate& fine) const
 {
-    QGeoCoordinate coords_citta = coordsResolver(citta);
+    Coordinate coords_citta = coordsResolver(citta);
     QDate inizioAPI = inizioAPI.fromString("2020-11-27", Qt::ISODate);
 
     if(inizio>=inizioAPI && fine<=QDate::currentDate() && fine>inizio)

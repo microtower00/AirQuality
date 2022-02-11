@@ -1,4 +1,4 @@
-QT       += core gui network positioning charts
+QT       += core gui network charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,6 +12,7 @@ CONFIG += c++11
 #CONFIG(release, debug|release): DEFINES += QT_NO_WARNING_OUTPUT
 SOURCES += \
     chartsviewer.cpp \
+    coordinate.cpp \
     datedialog.cpp \
     tablechooser.cpp \
     dati.cpp \
@@ -30,6 +31,7 @@ SOURCES += \
 
 HEADERS += \
     chartsviewer.h \
+    coordinate.h \
     datedialog.h \
     tablechooser.h \
     dati.h \

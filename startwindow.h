@@ -3,7 +3,7 @@
 
 #include "airqualityretriever.h"
 #include "dati.h"
-#include "chartsviewer.h"
+#include "dataviewer.h"
 #include "datedialog.h"
 #include "coordinate.h"
 #include "cittaedit.h"
@@ -17,6 +17,7 @@
 #include <QDateEdit>
 #include <QFileDialog>
 #include <QCompleter>
+#include <QErrorMessage>
 
 /*!
  * @brief   La classe FPickerController si occupa della interazione inizale con l'utente all'interno dell'app AirQuality
@@ -50,7 +51,6 @@ private:
     QLabel *lbInizio;
     QLabel *lbFine;
     QLabel *lbDescr;
-    QLabel *lbErrore;
 
     CittaEdit *leCity;
     QDateEdit *dtInizio;
@@ -62,6 +62,8 @@ private:
 
     QStringList wordList;
     QCompleter *completer;
+
+    QErrorMessage* error;
 
     QWidget *finestra;
 

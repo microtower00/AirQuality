@@ -76,6 +76,8 @@ void ChartsChooser::controlliComboBox(const QString& testoCBgrafici)
 
     if(testoCBgrafici=="Plot")
         pbDelTutti->click();
+
+    emit comboChanged(MyChart::stringToEnum(testoCBgrafici));
 }
 
 void ChartsChooser::createChart()
@@ -100,12 +102,17 @@ void ChartsChooser::createChart()
                 grafico->radarChart();
             else if(cbGrafici->currentText()=="Plot")
                 grafico->scatterChart();
+
+            emit chartCreated();
+
         }
 
     } else if(rbAqi->isChecked()) {
         compScelti.push_back("aqi");
         grafico->setCompScelti(compScelti);
         grafico->lineChart();
+        emit chartCreated();
+
     }
 }
 

@@ -9,6 +9,9 @@ TableChooser::TableChooser(Dati* dati) :  data(dati)
     pbRemRiga = new QPushButton("Rimuovi l'ultima riga");
     pbSalvaFile = new QPushButton("Salva i dati correnti");
 
+    pbAddRiga->setEnabled(false);
+    pbRemRiga->setEnabled(false);
+
     mainLayout->addWidget(pbTabella);
     mainLayout->addWidget(pbAddRiga);
     mainLayout->addWidget(pbRemRiga);
@@ -23,10 +26,9 @@ TableChooser::TableChooser(Dati* dati) :  data(dati)
     setTitle("Controlli tabella");
 
     connect(pbTabella,SIGNAL(clicked()),tabella,SIGNAL(tablePronta()));
+    connect(pbTabella, SIGNAL(clicked()), this, SLOT(enableTabella()));
     connect(pbAddRiga, SIGNAL(clicked()), tabella, SIGNAL(richiestaAggiunta()));
-    connect(pbAddRiga, SIGNAL(clicked()), this, SLOT(datiChanged()));
     connect(pbRemRiga, SIGNAL(clicked()), tabella, SIGNAL(richiestaRimossa()));
-    connect(pbRemRiga, SIGNAL(clicked()), this, SLOT(datiChanged()));
     connect(pbSalvaFile,SIGNAL(clicked()),this,SLOT(iniziaSalvataggio()));
 }
 
@@ -43,4 +45,14 @@ MyTableView* TableChooser::getTabella() const {
 
 Dati* TableChooser::getDati() const{
     return data;
+}
+
+void TableChooser::enableTabella() {
+    pbAddRiga->setEnabled(true);
+    pbRemRiga->setEnabled(true);
+}
+
+void TableChooser::disableTabella() {
+    pbAddRiga->setEnabled(false);
+    pbRemRiga->setEnabled(false);
 }

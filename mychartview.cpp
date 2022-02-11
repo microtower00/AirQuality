@@ -152,5 +152,5 @@ void MyChartView::resetView(){
     QtCharts::QChart* graf = this->chart();
     this->setChart(new QtCharts::QChart());
     delete graf;
-    resize(1250,750);
+    //resize(1250,900);
 }

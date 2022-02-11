@@ -26,10 +26,11 @@ private:
 public:
     TableChooser(Dati*);
     MyTableView* getTabella() const;
-    Dati* getDati()const;
+    Dati* getDati() const;
 
 public slots:
-    //void createTable();
+    void enableTabella();
+    void disableTabella();
     void iniziaSalvataggio();
 };
 

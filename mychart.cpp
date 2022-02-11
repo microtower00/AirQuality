@@ -152,7 +152,7 @@ double MyChart::maxValueFromListSeries(QList<QtCharts::QAbstractSeries*> series)
 double MyChart::maxFromSerie(QtCharts::QXYSeries* serie) {
     double max=0;
 
-    for(unsigned int i=0; i<serie->count(); ++i) {
+    for(int i=0; i<serie->count(); ++i) {
         if(serie->at(i).y()>max) {
             max = serie->at(i).y();
         }
@@ -171,3 +171,17 @@ double MyChart::maxFromBarSets(QtCharts::QBarSeries* barre){
     }
     return max;
 }
+
+MyChart::GraphType MyChart::stringToEnum(const QString& stringGraf) {
+    if(stringGraf=="A linee")
+        return GraphType::LineG;
+    else if (stringGraf=="Ad aree")
+        return GraphType::AreaG;
+    else if (stringGraf=="Istogramma")
+        return GraphType::BarG;
+    else if (stringGraf=="Plot")
+        return GraphType::ScatterG;
+    else if (stringGraf=="Radar")
+        return GraphType::RadarG;
+}
+

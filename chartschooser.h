@@ -53,6 +53,10 @@ public slots:
     void selezionaTutti();
     void deselezionaTutti();
     void attivaComp(const bool&);
+
+signals:
+    void comboChanged(const MyChart::GraphType&);
+    void chartCreated();
 };
 
 #endif // CHARTSCHOOSER_H

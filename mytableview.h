@@ -28,6 +28,7 @@ signals:
     void tablePronta();
     void richiestaAggiunta();
     void richiestaRimossa();
+    //void visibilityChanged();
 };
 
 #endif // MYTABLEVIEW_H

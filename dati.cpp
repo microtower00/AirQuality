@@ -36,8 +36,6 @@ Dati::Dati(const QJsonObject& retrievedObj, const QDateTime& dataInizio, const C
 
     if(dataInizio!=QDateTime())
         dati[0].insert("Data", dataInizio.toSecsSinceEpoch());
-    qDebug()<<coords.latitude();
-    qDebug()<<coords.longitude();
 }
 
 bool Dati::salvaJsonDati(const QString& path) const{
@@ -46,9 +44,7 @@ bool Dati::salvaJsonDati(const QString& path) const{
     QJsonObject componente, temp, fileObj, elemArray;
     temp.insert("lat", coords.latitude());
     temp.insert("lon",coords.longitude());
-    qDebug()<<coords.latitude();
     fileObj.insert("coord",temp);
-    qDebug()<<fileObj;
 
     for(auto entry : getDati()){
         componente = QJsonObject();
@@ -64,9 +60,7 @@ bool Dati::salvaJsonDati(const QString& path) const{
             }
         }
         elemArray.insert("components",componente);
-        qDebug()<<elemArray;
         listArray.append(elemArray);
-
     }
     fileObj.insert("list", listArray);
     try{
@@ -148,7 +142,7 @@ bool Dati::isDati(const QJsonDocument& doc){
                             return false;
                         }
                     }
-                    qDebug()<<"Tutto apposto maresciao";
+                    //qDebug()<<"Tutto apposto maresciao";
                     return true;
                 }
             }
@@ -169,7 +163,7 @@ Qt::ItemFlags Dati::flags(const QModelIndex &index) const {
 
 bool Dati::setData(const QModelIndex &index, const QVariant &value, int role) {
     if(role==Qt::EditRole) {
-        if(index.column()>1 || (index.column()==1 && value==int(value.toUInt()) && value<=5 && value>=0)) {
+        if((index.column()>1 && value>=0) || (index.column()==1 && value==value.toUInt() && value<=5 && value>=0)) {
             dati[index.row()].insert(dati[index.row()].keys().at(index.column()), value.toDouble());
             emit dataChanged(index, index, {Qt::EditRole});
             return true;

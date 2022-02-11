@@ -6,7 +6,7 @@ MyTableView::MyTableView(Dati& datiModel) : QTableView() {
 
     setModel(&datiModel);
 
-    resize(1101,750);
+    //resize(1101,900);
     resizeColumnToContents(0);
 
     connect(this, SIGNAL(richiestaAggiunta()), dynamic_cast<Dati*>(this->model()), SLOT(appendRows()));

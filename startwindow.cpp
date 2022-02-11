@@ -7,48 +7,42 @@ QString StartWindow::dateNonCorrette = "Le date inserite non sono valide.";
 
 StartWindow::StartWindow(QWidget *parent) : QMainWindow{parent}
 {
-    // Inizializzazione layout
-    grLayout = new QGridLayout(this);
-    vbImporta = new QVBoxLayout(this);
-    vbOnline = new QVBoxLayout(this);
-    hbDataInizio = new QHBoxLayout(this);
-    hbDataFine = new QHBoxLayout(this);
+    grLayout = new QGridLayout();
+    vbImporta = new QVBoxLayout();
+    vbOnline = new QVBoxLayout();
+    hbDataInizio = new QHBoxLayout();
+    hbDataFine = new QHBoxLayout();
 
-    // Inizializzazione QGroupBox
     gbFile = new QGroupBox("File");
     gbOnline = new QGroupBox("Scarica da internet");
 
-    // Inizializzazione label
-    lbTitolo = new QLabel("AirQuality Charts",this);
-    lbOppure = new QLabel("oppure",this);
-    lbInizio = new QLabel("Inizio",this);
-    lbFine = new QLabel("Fine",this);
-    lbErrore = new QLabel(this);
+    lbTitolo = new QLabel("AirQuality Charts");
+    lbOppure = new QLabel("oppure");
+    lbInizio = new QLabel("Inizio");
+    lbFine = new QLabel("Fine");
+    lbDescr = new QLabel("AirQuality Charts è un programma che consente di creare, importare, scaricare e modificare dati relativi a composizione e qualità dell'aria di determinate città in determinati intervalli di tempo.");
 
-    // Inizializzazione campi di testo/data
-    leCity = new CittaEdit("Inserisci città",this);
+    lbDescr->setWordWrap(true);
+    lbDescr->setAlignment(Qt::AlignJustify);
+
+    leCity = new CittaEdit("Inserisci città");
     dtInizio = new QDateEdit();
     dtFine = new QDateEdit;
 
-    // Inizializzazione QPushButton
-    pbImporta = new QPushButton("Importa",this);
-    pbOttieni = new QPushButton("Ottieni",this);
-    pbCrea = new QPushButton("Crea nuovo",this);
+    pbImporta = new QPushButton("Importa");
+    pbOttieni = new QPushButton("Ottieni");
+    pbCrea = new QPushButton("Crea nuovo");
 
-    // Formattazione titolo
+    error = new QErrorMessage();
+
     QFont ubuntuF("Ubuntu Thin", 24);
     lbTitolo->setFont(ubuntuF);
 
-    // Messaggi di errore non visibili inizialmente
-    lbErrore->setVisible(false);
-
-    // Setting campi date
     dtInizio->setMinimumSize(150,27);
     dtInizio->setDate(QDate(2020,11,27));
     dtFine->setMinimumSize(150,27);
     dtFine->setDate(QDate::currentDate());
 
-    // Aggiunta widget ai rispettivi layout
     vbImporta->addWidget(pbImporta);
     vbImporta->addWidget(pbCrea);
 
@@ -63,27 +57,24 @@ StartWindow::StartWindow(QWidget *parent) : QMainWindow{parent}
     vbOnline->addLayout(hbDataFine);
     vbOnline->addWidget(pbOttieni);
 
-    // Layout assegnati ai rispettivi QGroupBox
     gbFile->setLayout(vbImporta);
     gbOnline->setLayout(vbOnline);
 
-    // Widget aggiunti alla griglia principale
     grLayout->addWidget(lbTitolo, 0, 0, 1, -1);
     grLayout->addWidget(gbFile, 1, 0);
     grLayout->addWidget(lbOppure, 1, 1);
     grLayout->addWidget(gbOnline, 1, 2);
-    grLayout->addWidget(lbErrore, 2, 0, 1, -1);
+    grLayout->addWidget(lbDescr, 3, 0, 1, 3);
 
-    // Inizializzazione finestra e assegnazione layout principale
     finestra = new QWidget();
     finestra->setLayout(grLayout);
 
-    // Formattazione finestra
     setWindowTitle("AirQuality Charts");
-    resize(250,150);
+    resize(425,350);
+    setMaximumSize(425,350);
+    setMinimumSize(425,350);
     setCentralWidget(finestra);
 
-    // Connect varie
     connect(this,SIGNAL(filePronto(const QJsonDocument*)),this,SLOT(creoModel(const QJsonDocument*)));
     connect(&aqr,SIGNAL(readReady(const QJsonDocument*)),this,SLOT(creoModel(const QJsonDocument*)));
     connect(pbImporta,SIGNAL(clicked()),this,SLOT(chooseFile()));
@@ -95,8 +86,6 @@ StartWindow::StartWindow(QWidget *parent) : QMainWindow{parent}
 
 void StartWindow::chooseFile()
 {
-    lbErrore->setVisible(false);
-
     QString fileName = QFileDialog::getOpenFileName(this, "Scegli un file grafico","","File JSON (*.json)");
     if(fileName!=NULL){
         if(Dati::isDati(openJson(fileName)))
@@ -108,7 +97,6 @@ void StartWindow::chooseFile()
 
 void StartWindow::getAirQuality()
 {
-    lbErrore->setVisible(false);
     QDate fine = dtFine->date();
     QDate inizio = dtInizio->date();
 
@@ -211,14 +199,13 @@ void StartWindow::saveJSonReply(const QJsonDocument* doc) const
 
 void StartWindow::apriFinestra(Dati* d)
 {
-    finestra = new ChartsViewer(d, this);
+    finestra = new DataViewer(d, this);
     finestra->show();
 }
 
 void StartWindow::updateErrorLabel(const QString& param)
 {
-    lbErrore->setVisible(true);
-    lbErrore->setText(param);
+    error->showMessage(param);
 }
 
 void StartWindow::apriFileVuoto()

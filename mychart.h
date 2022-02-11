@@ -32,6 +32,8 @@ public:
         RadarG //anche se non è il posto perfetto
     };
 
+    static GraphType stringToEnum(const QString&);
+
     MyChart(QMap<QString,QtCharts::QAbstractSeries*>, MyChart::GraphType);
 
     static double maxValueFromListSeries(QList<QtCharts::QAbstractSeries*>);

@@ -11,9 +11,9 @@ CONFIG += c++11
 #CONFIG(release, debug|release): DEFINES += QT_NO_INFO_OUTPUT
 #CONFIG(release, debug|release): DEFINES += QT_NO_WARNING_OUTPUT
 SOURCES += \
-    chartsviewer.cpp \
     cittaedit.cpp \
     coordinate.cpp \
+    dataviewer.cpp \
     datedialog.cpp \
     tablechooser.cpp \
     dati.cpp \
@@ -31,9 +31,9 @@ SOURCES += \
     mybarseries.cpp \
 
 HEADERS += \
-    chartsviewer.h \
     cittaedit.h \
     coordinate.h \
+    dataviewer.h \
     datedialog.h \
     tablechooser.h \
     dati.h \

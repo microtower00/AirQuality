@@ -21,8 +21,8 @@ QJsonDocument AirQualityRetriever::replyEnded(QNetworkReply* response)
 
     if(response->error()==QNetworkReply::NoError)
         ba = response->readAll();
-    else
-        qDebug() << response->error();
+    /*else
+        qDebug() << response->error();*/
 
     response->deleteLater();
     QJsonDocument dati = QJsonDocument::fromJson(ba);

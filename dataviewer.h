@@ -1,5 +1,5 @@
-#ifndef CHARTSVIEWER_H
-#define CHARTSVIEWER_H
+#ifndef DATAVIEWER_H
+#define DATAVIEWER_H
 
 #include "chartschooser.h"
 #include "tablechooser.h"
@@ -8,7 +8,7 @@
 #include <QGroupBox>
 #include <QTextEdit>
 
-class ChartsViewer : public QMainWindow
+class DataViewer : public QMainWindow
 {
     Q_OBJECT
 
@@ -31,7 +31,7 @@ private:
     QWidget *finestra;
 
 public:
-    ChartsViewer(Dati*, QWidget *parent = nullptr);
+    DataViewer(Dati*, QWidget *parent = nullptr);
 
 public slots:
    void mostraChart();
@@ -39,4 +39,4 @@ public slots:
    void setDescr(const MyChart::GraphType&);
 };
 
-#endif // CHARTSVIEWER_H
+#endif // DATAVIEWER_H

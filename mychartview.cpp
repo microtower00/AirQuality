@@ -24,6 +24,7 @@ MyChartView::MyChartView(Dati* d) : data(d)
     MASSIMICONSENTITI.insert("pm2_5",MAXPM2_5);
 
     this->setRenderHint(QPainter::Antialiasing);
+    setRubberBand(MyChartView::HorizontalRubberBand);
 }
 
 void MyChartView::setCompScelti(const QStringList& compScelti) {

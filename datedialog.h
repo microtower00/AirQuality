@@ -6,7 +6,7 @@
 #include <QDateTimeEdit>
 #include <QFormLayout>
 #include <QDialogButtonBox>
-#include <QLineEdit>
+#include "cittaedit.h"
 
 #include "coordinate.h"
 
@@ -14,16 +14,14 @@ class DateDialog : public QDialog
 {
 public:
     explicit DateDialog(QWidget *parent = nullptr);
-    static QPair<QDateTime,Coordinate> getDateTime(QWidget *parent, bool *ok = nullptr);
+    static QPair<QDateTime,QString> getDateTime(QWidget *parent, bool *ok = nullptr);
 
 private:
     QLabel* labelData;
-    QLabel* labelLat;
-    QLabel* labelLon;
+    QLabel* labelLatLon;
 
     QDateTimeEdit* insertDate;
-    QLineEdit* lat;
-    QLineEdit* lon;
+    CittaEdit* latLon;
 };
 
 #endif // DATEDIALOG_H

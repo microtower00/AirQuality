@@ -7,17 +7,10 @@ DateDialog::DateDialog(QWidget *parent) : QDialog(parent){
     insertDate = new QDateEdit(QDate::currentDate(), this);
     lytMain->addRow(labelData,insertDate);
 
-    labelLat = new QLabel("Inserisci la latitudine alla quale sono stati registrati i dati",this);
-    lat = new QLineEdit();
-    lat->setValidator( new QDoubleValidator(0, 100, 2, this) );
-    lytMain->addRow(labelLat,lat);
-    qDebug("crasho");
-
-    labelLon = new QLabel("Inserisci la longitudine");
-    lon = new QLineEdit();
-    lon->setValidator( new QDoubleValidator(0, 100, 2, this) );
-    lytMain->addRow(labelLon,lon);
-    qDebug("crasho");
+    labelLatLon = new QLabel("Inserisci la città di registrazione dei dati",this);
+    latLon = new CittaEdit("",this);
+    //latLon->setValidator( new QDoubleValidator(0, 100, 2, this) );
+    lytMain->addRow(labelLatLon,latLon);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this );
     lytMain->addWidget(buttonBox);
@@ -31,7 +24,7 @@ DateDialog::DateDialog(QWidget *parent) : QDialog(parent){
     setLayout(lytMain);
 }
 
-QPair<QDateTime,Coordinate> DateDialog::getDateTime(QWidget *parent, bool *ok){
+QPair<QDateTime,QString> DateDialog::getDateTime(QWidget *parent, bool *ok){
     DateDialog *dialog = new DateDialog(parent);
 
     const int ret = dialog->exec();
@@ -40,5 +33,5 @@ QPair<QDateTime,Coordinate> DateDialog::getDateTime(QWidget *parent, bool *ok){
 
     dialog->deleteLater();
 
-    return QPair<QDateTime,Coordinate>(dialog->insertDate->dateTime(),Coordinate(dialog->lat->text().toDouble(),dialog->lon->text().toDouble()));
+    return QPair<QDateTime, QString>(dialog->insertDate->dateTime(),dialog->latLon->text());
 }

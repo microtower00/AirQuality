@@ -12,6 +12,7 @@ CONFIG += c++11
 #CONFIG(release, debug|release): DEFINES += QT_NO_WARNING_OUTPUT
 SOURCES += \
     chartsviewer.cpp \
+    cittaedit.cpp \
     coordinate.cpp \
     datedialog.cpp \
     tablechooser.cpp \
@@ -31,6 +32,7 @@ SOURCES += \
 
 HEADERS += \
     chartsviewer.h \
+    cittaedit.h \
     coordinate.h \
     datedialog.h \
     tablechooser.h \

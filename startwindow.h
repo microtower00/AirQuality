@@ -6,6 +6,7 @@
 #include "chartsviewer.h"
 #include "datedialog.h"
 #include "coordinate.h"
+#include "cittaedit.h"
 
 #include <QMainWindow>
 #include <QLabel>
@@ -51,7 +52,7 @@ private:
     QLabel *lbDescr;
     QLabel *lbErrore;
 
-    QLineEdit *leCity;
+    CittaEdit *leCity;
     QDateEdit *dtInizio;
     QDateEdit *dtFine;
 

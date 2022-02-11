@@ -23,17 +23,17 @@ StartWindow::StartWindow(QWidget *parent) : QMainWindow{parent}
     lbOppure = new QLabel("oppure",this);
     lbInizio = new QLabel("Inizio",this);
     lbFine = new QLabel("Fine",this);
-    lbErrore = new QLabel();
+    lbErrore = new QLabel(this);
 
     // Inizializzazione campi di testo/data
-    leCity = new QLineEdit();
+    leCity = new CittaEdit("Inserisci città",this);
     dtInizio = new QDateEdit();
     dtFine = new QDateEdit;
 
     // Inizializzazione QPushButton
-    pbImporta = new QPushButton("Importa");
-    pbOttieni = new QPushButton("Ottieni");
-    pbCrea = new QPushButton("Crea nuovo");
+    pbImporta = new QPushButton("Importa",this);
+    pbOttieni = new QPushButton("Ottieni",this);
+    pbCrea = new QPushButton("Crea nuovo",this);
 
     // Formattazione titolo
     QFont ubuntuF("Ubuntu Thin", 24);
@@ -41,11 +41,6 @@ StartWindow::StartWindow(QWidget *parent) : QMainWindow{parent}
 
     // Messaggi di errore non visibili inizialmente
     lbErrore->setVisible(false);
-
-    // Setting campo di testo città e relativo completer
-    leCity->setPlaceholderText("Inserisci città");
-    leCity->setMinimumSize(200,27);
-    leCity->setCompleter(createCompleter());
 
     // Setting campi date
     dtInizio->setMinimumSize(150,27);
@@ -230,7 +225,7 @@ void StartWindow::apriFileVuoto()
 {
     QJsonDocument *doc = &openJson(":/fileVuoto.json");
     bool confirm = false;
-    QPair<QDateTime,Coordinate> data = DateDialog::getDateTime(this, &confirm);
+    QPair<QDateTime,QString> data = DateDialog::getDateTime(this, &confirm);
     if(confirm)
-        creoModel(doc, data.first, data.second);
+        creoModel(doc, data.first, coordsResolver(data.second));
 }

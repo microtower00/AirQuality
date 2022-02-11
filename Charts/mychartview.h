@@ -1,12 +1,12 @@
 #ifndef CHARTCONTROLLER_H
 #define CHARTCONTROLLER_H
 
-#include "dati.h"
-#include "mychart.h"
-#include "mybarseries.h"
-#include "myscatterserie.h"
-#include "mypolarseries.h"
-#include "mypolarchart.h"
+#include "Model/dati.h"
+#include "Charts/MyCharts/mychart.h"
+#include "Charts/MySeries/mybarseries.h"
+#include "Charts/MySeries/myscatterserie.h"
+#include "Charts/MySeries/mypolarseries.h"
+#include "Charts/MyCharts/mypolarchart.h"
 
 #include <QMainWindow>
 #include <QChartView>

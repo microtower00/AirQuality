@@ -1,7 +1,7 @@
 #ifndef CHARTSCHOOSER_H
 #define CHARTSCHOOSER_H
 
-#include "dati.h"
+#include "Model/dati.h"
 #include "mychartview.h"
 
 #include <QMainWindow>

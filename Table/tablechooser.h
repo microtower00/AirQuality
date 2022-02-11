@@ -1,7 +1,7 @@
 #ifndef TABLECHOOSER_H
 #define TABLECHOOSER_H
 
-#include "dati.h"
+#include "Model/dati.h"
 #include "mytableview.h"
 
 #include <QGroupBox>

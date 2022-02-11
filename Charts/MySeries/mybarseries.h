@@ -4,7 +4,7 @@
 #include <QBarSeries>
 #include <QBarSet>
 #include <QDebug>
-#include "dati.h"
+#include "Model/dati.h"
 
 class MyBarSeries : public QtCharts::QBarSeries
 {

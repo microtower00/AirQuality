@@ -16,7 +16,7 @@
 #include <QDebug>
 
 
-#include "mylineseries.h"
+#include "Charts/MySeries/mylineseries.h"
 
 
 

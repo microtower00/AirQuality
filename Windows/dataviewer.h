@@ -1,8 +1,8 @@
 #ifndef DATAVIEWER_H
 #define DATAVIEWER_H
 
-#include "chartschooser.h"
-#include "tablechooser.h"
+#include "Charts/chartschooser.h"
+#include "Table/tablechooser.h"
 
 #include <QMainWindow>
 #include <QGroupBox>

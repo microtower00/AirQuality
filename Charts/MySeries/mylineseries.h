@@ -3,7 +3,7 @@
 
 #include <QLineSeries>
 #include <QDebug>
-#include "dati.h"
+#include "Model/dati.h"
 
 class MyLineSeries : public QtCharts::QLineSeries
 {

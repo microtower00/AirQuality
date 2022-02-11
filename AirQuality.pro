@@ -11,43 +11,43 @@ CONFIG += c++11
 #CONFIG(release, debug|release): DEFINES += QT_NO_INFO_OUTPUT
 #CONFIG(release, debug|release): DEFINES += QT_NO_WARNING_OUTPUT
 SOURCES += \
-    cittaedit.cpp \
-    coordinate.cpp \
-    dataviewer.cpp \
-    datedialog.cpp \
-    tablechooser.cpp \
-    dati.cpp \
-    mychart.cpp \
-    mychartview.cpp \
-    airqualityretriever.cpp \
-    chartschooser.cpp \
-    startwindow.cpp\
-    mylineseries.cpp \
-    mypolarchart.cpp \
-    mypolarseries.cpp \
-    myscatterserie.cpp \
-    mytableview.cpp \
-    main.cpp \
-    mybarseries.cpp \
+    Charts/MyCharts/mychart.cpp \
+    Charts/MyCharts/mypolarchart.cpp \
+    Charts/MySeries/mybarseries.cpp \
+    Charts/MySeries/mylineseries.cpp \
+    Charts/MySeries/mypolarseries.cpp \
+    Charts/MySeries/myscatterserie.cpp \
+    Charts/chartschooser.cpp \
+    Charts/mychartview.cpp \
+    Model/dati.cpp \
+    Table/mytableview.cpp \
+    Table/tablechooser.cpp \
+    Utilities/airqualityretriever.cpp \
+    Utilities/cittaedit.cpp \
+    Utilities/coordinate.cpp \
+    Utilities/datedialog.cpp \
+    Windows/dataviewer.cpp \
+    Windows/startwindow.cpp\
+    main.cpp
 
 HEADERS += \
-    cittaedit.h \
-    coordinate.h \
-    dataviewer.h \
-    datedialog.h \
-    tablechooser.h \
-    dati.h \
-    mychart.h \
-    mychartview.h \
-    airqualityretriever.h \
-    chartschooser.h \
-    startwindow.h \
-    mylineseries.h \
-    mypolarchart.h \
-    mypolarseries.h \
-    myscatterserie.h \
-    mybarseries.h \
-    mytableview.h \
+    Charts/MyCharts/mychart.h \
+    Charts/MyCharts/mypolarchart.h \
+    Charts/MySeries/mybarseries.h \
+    Charts/MySeries/mylineseries.h \
+    Charts/MySeries/mypolarseries.h \
+    Charts/MySeries/myscatterserie.h \
+    Charts/chartschooser.h \
+    Charts/mychartview.h \
+    Model/dati.h \
+    Table/mytableview.h \
+    Table/tablechooser.h \
+    Utilities/airqualityretriever.h \
+    Utilities/cittaedit.h \
+    Utilities/coordinate.h \
+    Utilities/datedialog.h \
+    Windows/dataviewer.h \
+    Windows/startwindow.h \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

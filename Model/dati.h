@@ -11,7 +11,7 @@
 #include <QFile>
 #include <QJsonDocument>
 
-#include "coordinate.h"
+#include "Utilities/coordinate.h"
 
 class Dati : public QAbstractTableModel
 {

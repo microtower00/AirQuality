@@ -1,12 +1,12 @@
 #ifndef STARTWINDOW_H
 #define STARTWINDOW_H
 
-#include "airqualityretriever.h"
-#include "dati.h"
-#include "dataviewer.h"
-#include "datedialog.h"
-#include "coordinate.h"
-#include "cittaedit.h"
+#include "Utilities/airqualityretriever.h"
+#include "Model/dati.h"
+#include "Windows/dataviewer.h"
+#include "Utilities/datedialog.h"
+#include "Utilities/coordinate.h"
+#include "Utilities/cittaedit.h"
 
 #include <QMainWindow>
 #include <QLabel>

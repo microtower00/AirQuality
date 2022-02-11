@@ -2,7 +2,7 @@
 
 MyChart::MyChart(QMap<QString,QtCharts::QAbstractSeries*> serie, MyChart::GraphType gt)
 {
-
+    setAnimationOptions(MyChart::SeriesAnimations);
     switch(gt){
     case MyChart::GraphType::LineG :
         buildLineChart(serie);

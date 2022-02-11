@@ -1,9 +1,9 @@
 #include "chartsviewer.h"
 
-ChartsViewer::ChartsViewer(const Dati& d, QWidget *parent) :
+ChartsViewer::ChartsViewer(Dati* d, QWidget *parent) :
     QMainWindow{parent},
-    gbControlliGraf(new ChartsChooser(d)),
     gbControlliTab(new TableChooser(d)),
+    gbControlliGraf(new ChartsChooser(gbControlliTab->getDati())),
     glMain(new QGridLayout()),
     tabella(gbControlliTab->getTabella()),
     grafico(gbControlliGraf->getGrafico())
@@ -97,3 +97,5 @@ void ChartsViewer::setDescr(const MyChart::GraphType& tipoChart) {
         default : lbDescr->setText("nessun grafico");
     }
 }
+
+

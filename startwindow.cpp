@@ -89,7 +89,7 @@ StartWindow::StartWindow(QWidget *parent) : QMainWindow{parent}
     connect(pbImporta,SIGNAL(clicked()),this,SLOT(chooseFile()));
     connect(pbOttieni,SIGNAL(clicked()),this,SLOT(getAirQuality()));
     connect(pbCrea,SIGNAL(clicked()),this,SLOT(apriFileVuoto()));
-    connect(this, SIGNAL(modelCreato(Dati)), this, SLOT(apriFinestra(Dati)));
+    connect(this, SIGNAL(modelCreato(Dati*)), this, SLOT(apriFinestra(Dati*)));
     connect(this,SIGNAL(mostraErrore(QString)),this,SLOT(updateErrorLabel(QString)));
 }
 
@@ -166,7 +166,7 @@ QCompleter* StartWindow::createCompleter() const
 
 void StartWindow::creoModel(const QJsonDocument* datiDoc, const QDateTime& dataInizio, const Coordinate& c)
 {
-    Dati dati(datiDoc->object(), dataInizio, c);
+    Dati* dati = new Dati(datiDoc->object(), dataInizio, c);
     emit modelCreato(dati);
 }
 
@@ -209,7 +209,7 @@ void StartWindow::saveJSonReply(const QJsonDocument* doc) const
     }
 }
 
-void StartWindow::apriFinestra(const Dati& d)
+void StartWindow::apriFinestra(Dati* d)
 {
     finestra = new ChartsViewer(d, this);
     finestra->show();

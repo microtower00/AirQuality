@@ -22,7 +22,7 @@ class ChartsChooser : public QGroupBox
     Q_OBJECT
 
 private:
-    Dati data;
+    Dati* data;
     MyChartView *grafico;
 
     QVBoxLayout *vbMainLayout;
@@ -44,7 +44,7 @@ private:
     QPushButton *pbDelTutti;
 
 public:
-    explicit ChartsChooser(const Dati&);
+    explicit ChartsChooser(Dati*);
     MyChartView* getGrafico() const;
 
 public slots:

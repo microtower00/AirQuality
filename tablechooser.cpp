@@ -1,6 +1,6 @@
 #include "tablechooser.h"
 
-TableChooser::TableChooser(const Dati& dati) :  data(dati)
+TableChooser::TableChooser(Dati* dati) :  data(dati)
 {
     mainLayout = new QVBoxLayout();
 
@@ -18,23 +18,29 @@ TableChooser::TableChooser(const Dati& dati) :  data(dati)
 
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
-    tabella = new MyTableView(data);
+    tabella = new MyTableView(*data);
 
     setTitle("Controlli tabella");
 
     connect(pbTabella,SIGNAL(clicked()),tabella,SIGNAL(tablePronta()));
     connect(pbAddRiga, SIGNAL(clicked()), tabella, SIGNAL(richiestaAggiunta()));
+    connect(pbAddRiga, SIGNAL(clicked()), this, SLOT(datiChanged()));
     connect(pbRemRiga, SIGNAL(clicked()), tabella, SIGNAL(richiestaRimossa()));
+    connect(pbRemRiga, SIGNAL(clicked()), this, SLOT(datiChanged()));
     connect(pbSalvaFile,SIGNAL(clicked()),this,SLOT(iniziaSalvataggio()));
 }
 
 void TableChooser::iniziaSalvataggio(){
     QString path = QFileDialog::getSaveFileName(this, tr("Salva il file"),"/home",tr("JSON (*.json)"));
     if(path!=""){
-        data.salvaJsonDati(path.append(".json"));
+        data->salvaJsonDati(path.append(".json"));
     }
 }
 
 MyTableView* TableChooser::getTabella() const {
     return tabella;
+}
+
+Dati* TableChooser::getDati() const{
+    return data;
 }

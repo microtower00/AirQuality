@@ -1,10 +1,10 @@
 #include "chartschooser.h"
 
-ChartsChooser::ChartsChooser(const Dati& dati) :
+ChartsChooser::ChartsChooser(Dati* dati) :
     data(dati),
     grafico(new MyChartView(data))
 {
-    QStringList listaComp = data.getChiavi();
+    QStringList listaComp = data->getChiavi();
     listaComp.removeFirst();
     listaComp.removeLast();
 

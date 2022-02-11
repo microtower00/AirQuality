@@ -30,10 +30,10 @@ private:
     QMap<QString,double> MASSIMICONSENTITI;
     QtCharts::QValueAxis *asseY;
     QtCharts::QDateTimeAxis *asseX;
-    const Dati& data;
+    Dati* data;
     QStringList comp;
 public:
-    MyChartView(const Dati&);
+    MyChartView(Dati*);
 
     void setCompScelti(const QStringList&);
 

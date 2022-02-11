@@ -210,3 +210,8 @@ bool Dati::removeRows(unsigned int count) {
     return true;
 }
 
+Dati& Dati::operator=(const Dati& d2){
+    this->dati=d2.dati;
+    this->chiavi=d2.chiavi;
+    this->coords=d2.coords;
+}

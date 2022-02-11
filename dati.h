@@ -32,7 +32,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-
+    Dati& operator=(const Dati&);
 public slots:
     bool appendRows(unsigned int count=1);
     bool removeRows(unsigned int count=1);

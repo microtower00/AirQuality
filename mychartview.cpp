@@ -12,7 +12,7 @@ const int MAXPM10 = 50;
 const int MAXPM2_5 = 25;
 
 
-MyChartView::MyChartView(const Dati& d) : data(d)
+MyChartView::MyChartView(Dati* d) : data(d)
 {
     MASSIMICONSENTITI.insert("co",MAXCO);
     MASSIMICONSENTITI.insert("so2",MAXSO2);
@@ -38,7 +38,7 @@ void MyChartView::lineChart(){
     QMap<QString, QtCharts::QAbstractSeries*> series;
     //Creo la lineSeries per ogni componente
     for(QString chiave : comp){
-        series.insert(chiave, new MyLineSeries(data,chiave));
+        series.insert(chiave, new MyLineSeries(*data,chiave));
     }
 
     this->setChart(new MyChart(series,MyChart::GraphType::LineG));
@@ -51,7 +51,7 @@ void MyChartView::areaChart(){
     QMap<QString, QtCharts::QAbstractSeries*> series;
     //Creo la lineSeries per ogni componente
     for(QString chiave : comp){
-        series.insert(chiave, new MyLineSeries(data,chiave));
+        series.insert(chiave, new MyLineSeries(*data,chiave));
     }
 
     this->setChart(new MyChart(series,MyChart::GraphType::AreaG));
@@ -60,7 +60,7 @@ void MyChartView::areaChart(){
 void MyChartView::barChart(){
     resetView();
 
-    MyBarSeries *serie = new MyBarSeries(data, comp);
+    MyBarSeries *serie = new MyBarSeries(*data, comp);
     QMap<QString,QAbstractSeries*> param;
     param.insert("Serie di barre",serie);
     MyChart* barChart = new MyChart(param,MyChart::GraphType::BarG);
@@ -74,7 +74,7 @@ void MyChartView::radarChart(){
     resetView();
 
     QMap<QString,QAbstractSeries*> series;
-    QList<QMap<QString,double>> datiElab, datiGrezzi = data.getDati();
+    QList<QMap<QString,double>> datiElab, datiGrezzi = data->getDati();
     QList<QMap<QString,double>> datiFirstDay, datiLastDay;
     QMap<QString,double> mediaFirstDay, mediaLastDay;
 
@@ -134,7 +134,7 @@ void MyChartView::scatterChart() {
 
     QString singleComp = comp.first();
 
-    MyScatterSerie* sSerie = new MyScatterSerie(data, singleComp);
+    MyScatterSerie* sSerie = new MyScatterSerie(*data, singleComp);
     sSerie->setMarkerSize(10);
     sSerie->setName(singleComp);
 

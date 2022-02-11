@@ -112,13 +112,13 @@ public slots:
     void ottieniDati(const QString&, const QDate&, const QDate&) const;
     void saveJSonReply(const QJsonDocument* doc) const;
     void apriFileVuoto();
-    void apriFinestra(const Dati&);
+    void apriFinestra(Dati*);
     void updateErrorLabel(const QString&);
 
 signals:
     void filePronto(const QJsonDocument*);
     void mostraErrore(const QString&);
-    void modelCreato(const Dati&);
+    void modelCreato(Dati*);
 };
 
 #endif // STARTWINDOW_H

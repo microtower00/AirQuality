@@ -12,7 +12,7 @@ class TableChooser : public QGroupBox
 {
     Q_OBJECT
 private:
-    Dati data;
+    Dati* data;
 
     QVBoxLayout* mainLayout;
 
@@ -24,8 +24,9 @@ private:
     MyTableView* tabella;
 
 public:
-    TableChooser(const Dati&);
+    TableChooser(Dati*);
     MyTableView* getTabella() const;
+    Dati* getDati()const;
 
 public slots:
     //void createTable();

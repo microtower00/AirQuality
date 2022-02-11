@@ -13,8 +13,8 @@ class ChartsViewer : public QMainWindow
     Q_OBJECT
 
 private:
-    ChartsChooser *gbControlliGraf;
     TableChooser *gbControlliTab;
+    ChartsChooser *gbControlliGraf;
 
     QGridLayout *glMain;
     QHBoxLayout *hbGraf;
@@ -31,7 +31,7 @@ private:
     QWidget *finestra;
 
 public:
-    ChartsViewer(const Dati&, QWidget *parent = nullptr);
+    ChartsViewer(Dati*, QWidget *parent = nullptr);
 
 public slots:
    void mostraChart();

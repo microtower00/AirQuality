@@ -6,6 +6,8 @@ MyScatterSerie::MyScatterSerie(const Dati& dati, QString comp, QObject *) : QtCh
     setName(comp);
 
     for (auto record : dati.getDati()){
-        append(QPointF((Dati::getDateFromDouble(record.value("Data")).time().msecsSinceStartOfDay())/3600000, record.value(comp)));
+        int oraDelGiorno = Dati::getDateFromDouble(record.value("Data")).time().hour();
+        qDebug()<<oraDelGiorno;
+        append(QPointF(Dati::getDateFromDouble(record.value("Data")).time().hour(), record.value(comp)));
     }
 }

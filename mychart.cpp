@@ -3,19 +3,18 @@
 MyChart::MyChart(QMap<QString,QtCharts::QAbstractSeries*> serie, MyChart::GraphType gt)
 {
     setAnimationOptions(MyChart::SeriesAnimations);
+    legend()->setVisible(true);
+    legend()->setAlignment(Qt::AlignBottom);
+
     switch(gt){
     case MyChart::GraphType::LineG :
-        buildLineChart(serie);
-        qDebug()<<"Costruisco un LineG";break;
+        buildLineChart(serie);break;
     case MyChart::GraphType::AreaG :
-        buildAreaChart(serie);
-        qDebug()<<"Costruisco un AreaG";break;
+        buildAreaChart(serie);break;
     case MyChart::GraphType::ScatterG :
-        buildScatterChart(serie);
-        qDebug()<<"Costruisco un ScatterG";break;
+        buildScatterChart(serie);break;
     case MyChart::GraphType::BarG :
-        buildBarChart(serie);
-        qDebug()<<"Costruisco un BarG";break;
+        buildBarChart(serie);break;
     }
 
 }
@@ -41,9 +40,8 @@ void MyChart::buildLineChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
 
     //setto il massimo di Y al massimo valore tra tutte le serie
     asseY->setMin(0);
-    asseY->setMax(serie.firstKey()!="aqi" ? maxValueFromListSeries(serie.values()) : maxValueFromListSeries(serie.values())+1);
-    legend()->setVisible(true);
-    legend()->setAlignment(Qt::AlignBottom);
+    asseY->setMax(maxValueFromListSeries(serie.values())+.03*maxValueFromListSeries(serie.values()));
+    setTitle("Andamento della densità dei componenti nel tempo (µg/m³ nel tempo)");
 }
 
 void MyChart::buildAreaChart(QMap<QString, QtCharts::QAbstractSeries *> series){
@@ -75,19 +73,17 @@ void MyChart::buildAreaChart(QMap<QString, QtCharts::QAbstractSeries *> series){
 
     //setto il massimo di Y al massimo valore tra tutte le serie
     asseY->setMin(0);
-    asseY->setMax(maxValueFromListSeries(series.values()));
-    legend()->setVisible(true);
-    legend()->setAlignment(Qt::AlignBottom);
+    asseY->setMax(maxValueFromListSeries(series.values())+.03*maxValueFromListSeries(series.values()));
+    setTitle("Andamento della densità dei componenti nel tempo (µg/m³ nel tempo)");
 }
 void MyChart::buildScatterChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
 
     QtCharts::QScatterSeries* sSerie = static_cast<QtCharts::QScatterSeries*>(serie.first());
     // asse X
-    //asseX = new QtCharts::QDateTimeAxis;
-    //asseX->setFormat("h:mm");
-    QtCharts::QValueAxis* asseX2 = new QtCharts::QValueAxis();
-    asseX2->setTickCount(24);
-    addAxis(asseX2, Qt::AlignBottom);
+    QtCharts::QValueAxis* asseX = new QtCharts::QValueAxis;
+    //QtCharts::QValueAxis* asseX2 = new QtCharts::QValueAxis();
+    asseX->setTickCount(24);
+    addAxis(asseX, Qt::AlignBottom);
 
     // asse Y
     QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();
@@ -96,8 +92,10 @@ void MyChart::buildScatterChart(QMap<QString, QtCharts::QAbstractSeries*> serie)
     addAxis(asseY, Qt::AlignLeft);
 
     addSeries(sSerie);
-    sSerie->attachAxis(asseX2);
+    sSerie->attachAxis(asseX);
     sSerie->attachAxis(asseY);
+
+    setTitle("Densità nell`aria dei componenti nelle ore della giornata (µg/m³ nel tempo)");
 }
 
 void MyChart::buildBarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
@@ -107,7 +105,7 @@ void MyChart::buildBarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
     QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();
     QList<QtCharts::QAbstractSeries*> param;
     param.push_back(serie.first());
-    asseY->setMax(MyChart::maxValueFromListSeries(param));
+    asseY->setMax(MyChart::maxValueFromListSeries(param)+MyChart::maxValueFromListSeries(param)*.03);
     addAxis(asseY,Qt::AlignLeft);
     serie.first()->attachAxis(asseY);
 
@@ -117,16 +115,13 @@ void MyChart::buildBarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
     addAxis(asse,Qt::AlignBottom);
     serie.first()->attachAxis(asse);
 
-    legend()->setVisible(true);
-    legend()->setAlignment(Qt::AlignBottom);
+    setTitle("Media della densità dei componenti nel tempo (µg/m³ nel tempo)");
 }
 
 QtCharts::QLineSeries* MyChart::sommaY(QtCharts::QLineSeries *upper, QtCharts::QLineSeries *lower) {
 
     QVector<QPointF> puntiLower = lower->pointsVector();
     QVector<QPointF> puntiUpper = upper->pointsVector();
-
-    qDebug()<<"Si può morire per aver trattenuto un crash per così tanto tempo";
     for(auto puntoL:puntiLower){
         puntiUpper[puntiLower.indexOf(puntoL)].setY(puntiLower.at(puntiLower.indexOf(puntoL)).y()+puntiUpper.at(puntiLower.indexOf(puntoL)).y());
     }

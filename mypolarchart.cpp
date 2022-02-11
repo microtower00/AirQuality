@@ -2,6 +2,11 @@
 
 MyPolarChart::MyPolarChart(QMap<QString,QtCharts::QAbstractSeries*> mapSerie){
     setAnimationOptions(MyPolarChart::SeriesAnimations);
+    legend()->setVisible(true);
+    legend()->setAlignment(Qt::AlignBottom);
+
+    setTitle("Percentuale dei componenti rispetto ai valori massimi consentiti (µg/m³)");
+
     QtCharts::QValueAxis *ugm3 = new QtCharts::QValueAxis;
     ugm3->setRange(0, 100);
     //Setto il numero di ticks uguale al numero di punti in una serie (Cioè il numero di componenti)

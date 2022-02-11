@@ -5,12 +5,10 @@ MyPolarSeries::MyPolarSeries(const QMap<QString, double>& mediaPrimoGiorno,  con
     for(QString comp:componenti){
         //Segno ai gradi giusti per ogni componente
         append(QPointF(360/componenti.size()*componenti.indexOf(comp), mediaPrimoGiorno.value(comp)*100/fondoScala.value(comp)));
-        qDebug()<<"Inserisco punto a "+QString::number(360/componenti.size()*componenti.indexOf(comp))+" e al "+QString::number(mediaPrimoGiorno.value(comp)*100/fondoScala.value(comp));
     }
 
     //Chiudo il cerchio
     append(QPointF(360, mediaPrimoGiorno.value(componenti.first())*100/fondoScala.value(componenti.first())));
-    qDebug()<<"Inserisco punto a "+QString::number(360)+" gradi e al "+QString::number(mediaPrimoGiorno.value(componenti.first())*100/fondoScala.values().at(0))+"%, comp: "+ componenti.first();
 }
 
 

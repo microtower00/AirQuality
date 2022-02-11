@@ -107,7 +107,7 @@ public:
 public slots:
     void chooseFile();
     void getAirQuality();
-    void creoModel(const QJsonDocument*, const QDateTime& = QDateTime());
+    void creoModel(const QJsonDocument*, const QDateTime& = QDateTime(), const Coordinate& = Coordinate(0,0));
     void ottieniDati(const QString&, const QDate&, const QDate&) const;
     void saveJSonReply(const QJsonDocument* doc) const;
     void apriFileVuoto();

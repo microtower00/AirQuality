@@ -11,11 +11,13 @@
 #include <QFile>
 #include <QJsonDocument>
 
+#include "coordinate.h"
+
 class Dati : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    Dati(const QJsonObject&, const QDateTime& = QDateTime());
+    Dati(const QJsonObject&, const QDateTime& = QDateTime(), const Coordinate& = Coordinate(0,0));
     Dati(const Dati&);
 
     QList<QString> getChiavi() const;
@@ -38,6 +40,7 @@ public slots:
 private:
     QList<QMap<QString, double>> dati;
     QList<QString> chiavi;
+    Coordinate coords;
     static QStringList expectedKeys;
 };
 

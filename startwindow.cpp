@@ -8,11 +8,11 @@ QString StartWindow::dateNonCorrette = "Le date inserite non sono valide.";
 StartWindow::StartWindow(QWidget *parent) : QMainWindow{parent}
 {
     // Inizializzazione layout
-    grLayout = new QGridLayout();
-    vbImporta = new QVBoxLayout();
-    vbOnline = new QVBoxLayout();
-    hbDataInizio = new QHBoxLayout();
-    hbDataFine = new QHBoxLayout();
+    grLayout = new QGridLayout(this);
+    vbImporta = new QVBoxLayout(this);
+    vbOnline = new QVBoxLayout(this);
+    hbDataInizio = new QHBoxLayout(this);
+    hbDataFine = new QHBoxLayout(this);
 
     // Inizializzazione QGroupBox
     gbFile = new QGroupBox("File");
@@ -169,9 +169,9 @@ QCompleter* StartWindow::createCompleter() const
     return citylist;
 }
 
-void StartWindow::creoModel(const QJsonDocument* datiDoc, const QDateTime& dataInizio)
+void StartWindow::creoModel(const QJsonDocument* datiDoc, const QDateTime& dataInizio, const Coordinate& c)
 {
-    Dati dati(datiDoc->object(), dataInizio);
+    Dati dati(datiDoc->object(), dataInizio, c);
     emit modelCreato(dati);
 }
 
@@ -230,8 +230,7 @@ void StartWindow::apriFileVuoto()
 {
     QJsonDocument *doc = &openJson(":/fileVuoto.json");
     bool confirm = false;
-    QDateTime dataInizio = DateDialog::getDateTime(this, &confirm);
-
+    QPair<QDateTime,Coordinate> data = DateDialog::getDateTime(this, &confirm);
     if(confirm)
-        creoModel(doc, dataInizio);
+        creoModel(doc, data.first, data.second);
 }

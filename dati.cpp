@@ -2,7 +2,7 @@
 
 QStringList Dati::expectedKeys = {"co","nh3","no","no2","o3","pm10","pm2_5","so2"};
 
-Dati::Dati(const QJsonObject& retrievedObj, const QDateTime& dataInizio) {
+Dati::Dati(const QJsonObject& retrievedObj, const QDateTime& dataInizio, const Coordinate& c):coords(c) {
     QJsonArray listArray = retrievedObj.value("list").toArray();
     QStringList componentsNames = listArray.at(0).toObject().value("components").toObject().keys();
 
@@ -31,20 +31,24 @@ Dati::Dati(const QJsonObject& retrievedObj, const QDateTime& dataInizio) {
         dati.push_back(singleRow);
     }
 
+    if(c.latitude() == 0 && c.longitude()==0)
+        coords = Coordinate(retrievedObj.value("coord").toObject().value("lat").toDouble(),retrievedObj.value("coord").toObject().value("lon").toDouble());
+
     if(dataInizio!=QDateTime())
         dati[0].insert("Data", dataInizio.toSecsSinceEpoch());
-
+    qDebug()<<coords.latitude();
+    qDebug()<<coords.longitude();
 }
 
 bool Dati::salvaJsonDati(const QString& path) const{
     QJsonArray listArray;
 
     QJsonObject componente, temp, fileObj, elemArray;
-    temp.insert("lat", 0);
-    temp.insert("lon",0);
-
-    componente.insert("coord",temp);
+    temp.insert("lat", coords.latitude());
+    temp.insert("lon",coords.longitude());
+    qDebug()<<coords.latitude();
     fileObj.insert("coord",temp);
+    qDebug()<<fileObj;
 
     for(auto entry : getDati()){
         componente = QJsonObject();
@@ -60,6 +64,7 @@ bool Dati::salvaJsonDati(const QString& path) const{
             }
         }
         elemArray.insert("components",componente);
+        qDebug()<<elemArray;
         listArray.append(elemArray);
 
     }
@@ -78,7 +83,7 @@ bool Dati::salvaJsonDati(const QString& path) const{
         return false;
     }
 }
-Dati::Dati(const Dati& d2) : dati(d2.dati), chiavi(d2.chiavi) {}
+Dati::Dati(const Dati& d2) : dati(d2.dati), chiavi(d2.chiavi), coords(d2.coords) {}
 
 QList<QString> Dati::getChiavi() const{
     return chiavi;

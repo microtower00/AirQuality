@@ -1,33 +1,28 @@
 #ifndef STARTWINDOW_H
 #define STARTWINDOW_H
 
-#include "Utilities/airqualityretriever.h"
 #include "Model/dati.h"
-#include "Windows/dataviewer.h"
-#include "Utilities/datedialog.h"
-#include "Utilities/coordinate.h"
+#include "Utilities/airqualityretriever.h"
 #include "Utilities/cittaedit.h"
+#include "Utilities/coordinate.h"
+#include "Utilities/datedialog.h"
+#include "Windows/dataviewer.h"
 
-#include <QMainWindow>
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QGroupBox>
-#include <QLineEdit>
-#include <QDateEdit>
-#include <QFileDialog>
 #include <QCompleter>
+#include <QDateEdit>
 #include <QErrorMessage>
+#include <QFileDialog>
+#include <QGroupBox>
+#include <QLabel>
+#include <QLineEdit>
+#include <QMainWindow>
+#include <QPushButton>
+#include <QVBoxLayout>
 
-/*!
- * @brief   La classe FPickerController si occupa della interazione inizale con l'utente all'interno dell'app AirQuality
- *          La classe possiede é una mainwindow e possiede diversi widget attraverso i quali l'utente puó specificare da
- *          quale file creare il model
- */
 class StartWindow : public QMainWindow
 {
     Q_OBJECT
-private:
+  private:
     const static QString APIKEY;
     static QString fileNonValido;
     static QString cittaNonPresente;
@@ -64,64 +59,33 @@ private:
     QStringList wordList;
     QCompleter *completer;
 
-    QErrorMessage* error;
+    QErrorMessage *error;
 
     QWidget *finestra;
 
-public:
-    /*!
-     * @brief FPickerController É il metodo costruttore della classe che inizializza l'interfaccia grafica dell'applicazione
-     * @param parent            Widget parent della mainwindow
-     */
-    explicit StartWindow(QWidget *parent = nullptr);
+  public:
+    explicit StartWindow (QWidget *parent = nullptr);
+    Coordinate coordsResolver (const QString &citta) const;
+    bool validCity (const QString &citta) const;
+    QJsonDocument &getCitiesJson () const;
+    QCompleter *createCompleter () const;
+    QJsonDocument &openJson (const QString &relativePath) const;
 
-    /*!
-     * @brief coordsResolver    Ritorna le coordinate della cittá passata come parametro
-     * @param citta             Cittá della quale ottenere le coordinate, deve essere presente nel file worldcities.json
-     * @return                  Oggetto Coordinate con le coordinate richieste
-     */
-    Coordinate coordsResolver(const QString& citta) const;
+  public slots:
+    void chooseFile ();
+    void getAirQuality ();
+    void creoModel (const QJsonDocument *, const QDateTime & = QDateTime (),
+                    const Coordinate & = Coordinate (0, 0));
+    void ottieniDati (const QString &, const QDate &, const QDate &) const;
+    void saveJSonReply (const QJsonDocument *doc) const;
+    void apriFileVuoto ();
+    void apriFinestra (Dati *);
+    void errorDialog (const QString &);
 
-    /*!
-     * @brief validCity Verifica se la cittá inserita è presente nell'elenco worldcities.json
-     * @param citta     Stringa con il nome della cittá
-     * @return
-     */
-    bool validCity(const QString& citta) const;
-
-    /*!
-     * @brief getCitiesJson Apre il file contenente l'elenco di città.
-     * @return              Ritorna il QJSonObject del file worldcities.json
-     */
-    QJsonDocument& getCitiesJson() const;
-
-    /*!
-     * @brief createCompleter   Scorre tutto il file worldcities.json per creare una lista per il completer
-     * @return                  Completer inizializzato con tutte le città
-     */
-    QCompleter* createCompleter() const;
-
-    /*!
-     * @brief openJSon      Metodo che ritorna un JsonDocument aperto da un file
-     * @param relativePath  Path del file da aprire
-     * @return              Riferimento al JSonDocument
-     */
-    QJsonDocument& openJson(const QString& relativePath) const;
-
-public slots:
-    void chooseFile();
-    void getAirQuality();
-    void creoModel(const QJsonDocument*, const QDateTime& = QDateTime(), const Coordinate& = Coordinate(0,0));
-    void ottieniDati(const QString&, const QDate&, const QDate&) const;
-    void saveJSonReply(const QJsonDocument* doc) const;
-    void apriFileVuoto();
-    void apriFinestra(Dati*);
-    void errorDialog(const QString&);
-
-signals:
-    void filePronto(const QJsonDocument*);
-    void mostraErrore(const QString&);
-    void modelCreato(Dati*);
+  signals:
+    void filePronto (const QJsonDocument *);
+    void mostraErrore (const QString &);
+    void modelCreato (Dati *);
 };
 
 #endif // STARTWINDOW_H

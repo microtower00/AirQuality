@@ -4,15 +4,15 @@
 #include "Charts/chartschooser.h"
 #include "Table/tablechooser.h"
 
-#include <QMainWindow>
 #include <QGroupBox>
+#include <QMainWindow>
 #include <QTextEdit>
 
 class DataViewer : public QMainWindow
 {
     Q_OBJECT
 
-private:
+  private:
     TableChooser *gbControlliTab;
     ChartsChooser *gbControlliGraf;
 
@@ -32,14 +32,14 @@ private:
 
     QWidget *finestra;
 
-public:
-    DataViewer(Dati*, QWidget *parent = nullptr);
+  public:
+    DataViewer (Dati *, QWidget *parent = nullptr);
 
-public slots:
-   void mostraChart();
-   void mostraTable();
-   void setDescr(const MyChart::GraphType&);
-   void erroreDialog(const QString&);
+  public slots:
+    void mostraChart ();
+    void mostraTable ();
+    void setDescr (const MyChart::GraphType &);
+    void erroreDialog (const QString &);
 };
 
 #endif // DATAVIEWER_H

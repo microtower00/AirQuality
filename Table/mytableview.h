@@ -1,32 +1,32 @@
 #ifndef MYTABLEVIEW_H
 #define MYTABLEVIEW_H
 
-#include <QMainWindow>
-#include <QObject>
+#include "Model/dati.h"
+#include <QDateTime>
+#include <QHeaderView>
+#include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QLabel>
+#include <QMainWindow>
+#include <QObject>
 #include <QTableView>
 #include <QTableWidget>
-#include <QJsonArray>
 #include <QVBoxLayout>
-#include <QDateTime>
-#include <QLabel>
-#include<QHeaderView>
-#include "Model/dati.h"
 
 class MyTableView : public QTableView
 {
     Q_OBJECT
-public slots:
+  public slots:
 
-public:
-    MyTableView(Dati*);
-private:
+  public:
+    MyTableView (Dati *);
 
-signals:
-    void tablePronta();
-    void richiestaAggiunta();
-    void richiestaRimossa();
+  private:
+  signals:
+    void tablePronta ();
+    void richiestaAggiunta ();
+    void richiestaRimossa ();
 };
 
 #endif // MYTABLEVIEW_H

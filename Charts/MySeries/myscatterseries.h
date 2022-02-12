@@ -7,8 +7,8 @@
 
 class MyScatterSerie : public QtCharts::QScatterSeries
 {
-public:
-    MyScatterSerie(Dati*, QString comp ,QObject *parent = nullptr);
+  public:
+    MyScatterSerie (Dati *, QString comp, QObject *parent = nullptr);
 };
 
 #endif // MYSCATTERSERIES_H

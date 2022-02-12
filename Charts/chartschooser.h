@@ -4,26 +4,26 @@
 #include "Model/dati.h"
 #include "mychartview.h"
 
-#include <QMainWindow>
-#include <QLabel>
-#include <QPushButton>
-#include <QGridLayout>
+#include <QButtonGroup>
+#include <QCheckBox>
 #include <QComboBox>
 #include <QDateTimeAxis>
-#include <QSizePolicy>
-#include <QGroupBox>
-#include <QCheckBox>
-#include <QRadioButton>
-#include <QButtonGroup>
-#include <QFileDialog>
 #include <QErrorMessage>
+#include <QFileDialog>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QLabel>
+#include <QMainWindow>
+#include <QPushButton>
+#include <QRadioButton>
+#include <QSizePolicy>
 
 class ChartsChooser : public QGroupBox
 {
     Q_OBJECT
 
-private:
-    Dati* data;
+  private:
+    Dati *data;
     MyChartView *grafico;
 
     QVBoxLayout *vbMainLayout;
@@ -44,21 +44,21 @@ private:
     QPushButton *pbSelTutti;
     QPushButton *pbDelTutti;
 
-public:
-    explicit ChartsChooser(Dati*);
-    MyChartView* getGrafico() const;
+  public:
+    explicit ChartsChooser (Dati *);
+    MyChartView *getGrafico () const;
 
-public slots:
-    void createChart();
-    void controlliComboBox(const QString&);
-    void selezionaTutti();
-    void deselezionaTutti();
-    void attivaComp(const bool&);
+  public slots:
+    void createChart ();
+    void controlliComboBox (const QString &);
+    void selezionaTutti ();
+    void deselezionaTutti ();
+    void attivaComp (const bool &);
 
-signals:
-    void comboChanged(const MyChart::GraphType&);
-    void chartCreated();
-    void erroreGraf(const QString&);
+  signals:
+    void comboChanged (const MyChart::GraphType &);
+    void chartCreated ();
+    void erroreGraf (const QString &);
 };
 
 #endif // CHARTSCHOOSER_H

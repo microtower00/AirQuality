@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>worldcities.json</file>
         <file>fileVuoto.json</file>
+        <file>icona.ico</file>
     </qresource>
 </RCC>

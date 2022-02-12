@@ -23,7 +23,6 @@ MyChartView::MyChartView (Dati *d) : data (d)
     MASSIMICONSENTITI.insert ("pm2_5", MAXPM2_5);
 
     this->setRenderHint (QPainter::Antialiasing);
-    setRubberBand (MyChartView::HorizontalRubberBand);
 }
 
 void
@@ -38,6 +37,8 @@ MyChartView::lineChart ()
     resetView ();
     emit chartPronto ();
     emit tipoChartPronto (MyChart::GraphType::LineG);
+
+    setRubberBand (MyChartView::HorizontalRubberBand);
     QMap<QString, QtCharts::QAbstractSeries *> series;
 
     for (QString chiave : comp)
@@ -54,6 +55,8 @@ MyChartView::areaChart ()
     resetView ();
     emit chartPronto ();
     emit tipoChartPronto (MyChart::GraphType::AreaG);
+
+    setRubberBand (MyChartView::HorizontalRubberBand);
     QMap<QString, QtCharts::QAbstractSeries *> series;
 
     for (QString chiave : comp)
@@ -77,6 +80,8 @@ MyChartView::barChart ()
 
     emit chartPronto ();
     emit tipoChartPronto (MyChart::GraphType::BarG);
+
+    setRubberBand (MyChartView::HorizontalRubberBand);
 }
 
 void

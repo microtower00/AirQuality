@@ -137,6 +137,8 @@ MyChart::buildScatterChart (QMap<QString, QtCharts::QAbstractSeries *> serie)
     asseY->setRange (0, maxFromSerie (sSerie)
                             + (maxFromSerie (sSerie) / sSerie->markerSize ()));
     addAxis (asseY, Qt::AlignLeft);
+    asseY->setTickCount (10);
+    asseY->setMinorTickCount (asseY->tickCount () / 4);
 
     addSeries (sSerie);
     sSerie->attachAxis (asseX);
@@ -144,6 +146,7 @@ MyChart::buildScatterChart (QMap<QString, QtCharts::QAbstractSeries *> serie)
 
     setTitle ("Densità nell'aria dei componenti nelle ore della giornata "
               "(µg/m³ nel tempo)");
+
 }
 
 void
@@ -158,6 +161,9 @@ MyChart::buildBarChart (QMap<QString, QtCharts::QAbstractSeries *> serie)
                    + MyChart::maxValueFromListSeries (param) * .03);
     addAxis (asseY, Qt::AlignLeft);
     serie.first ()->attachAxis (asseY);
+
+    asseY->setTickCount (10);
+    asseY->setMinorTickCount (asseY->tickCount () / 4);
 
     QtCharts::QBarCategoryAxis *asse = new QtCharts::QBarCategoryAxis ();
     addAxis (asse, Qt::AlignBottom);

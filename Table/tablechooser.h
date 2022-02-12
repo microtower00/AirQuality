@@ -4,34 +4,34 @@
 #include "Model/dati.h"
 #include "mytableview.h"
 
+#include <QFileDialog>
 #include <QGroupBox>
 #include <QPushButton>
-#include <QFileDialog>
 
 class TableChooser : public QGroupBox
 {
     Q_OBJECT
-private:
-    Dati* data;
+  private:
+    Dati *data;
 
-    QVBoxLayout* mainLayout;
+    QVBoxLayout *mainLayout;
 
-    QPushButton* pbTabella;
-    QPushButton* pbSalvaFile;
-    QPushButton* pbAddRiga;
-    QPushButton* pbRemRiga;
+    QPushButton *pbTabella;
+    QPushButton *pbSalvaFile;
+    QPushButton *pbAddRiga;
+    QPushButton *pbRemRiga;
 
-    MyTableView* tabella;
+    MyTableView *tabella;
 
-public:
-    TableChooser(Dati*);
-    MyTableView* getTabella() const;
-    Dati* getDati() const;
+  public:
+    TableChooser (Dati *);
+    MyTableView *getTabella () const;
+    Dati *getDati () const;
 
-public slots:
-    void enableTabella();
-    void disableTabella();
-    void iniziaSalvataggio();
+  public slots:
+    void enableTabella ();
+    void disableTabella ();
+    void iniziaSalvataggio ();
 };
 
 #endif // TABLECHOOSER_H

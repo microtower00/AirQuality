@@ -1,60 +1,61 @@
 #ifndef CHARTCONTROLLER_H
 #define CHARTCONTROLLER_H
 
-#include "Model/dati.h"
 #include "Charts/MyCharts/mychart.h"
-#include "Charts/MySeries/mybarseries.h"
-#include "Charts/MySeries/myscatterseries.h"
-#include "Charts/MySeries/mypolarseries.h"
 #include "Charts/MyCharts/mypolarchart.h"
+#include "Charts/MySeries/mybarseries.h"
+#include "Charts/MySeries/mypolarseries.h"
+#include "Charts/MySeries/myscatterseries.h"
+#include "Model/dati.h"
 
-#include <QMainWindow>
-#include <QChartView>
-#include <QLineSeries>
-#include <QDateTimeAxis>
-#include <QBarSet>
-#include <QBarSeries>
-#include <QBarCategoryAxis>
-#include <QDebug>
-#include <QValueAxis>
-#include <QPolarChart>
 #include <QAreaSeries>
-#include <QColor>
-#include <QScatterSeries>
+#include <QBarCategoryAxis>
+#include <QBarSeries>
+#include <QBarSet>
 #include <QCategoryAxis>
+#include <QChartView>
+#include <QDateTimeAxis>
+#include <QLineSeries>
+#include <QMainWindow>
+#include <QPolarChart>
+#include <QScatterSeries>
+#include <QValueAxis>
 #include <typeinfo>
 
-class MyChartView : public QtCharts::QChartView {
+class MyChartView : public QtCharts::QChartView
+{
     Q_OBJECT
-private:
-    QMap<QString,double> MASSIMICONSENTITI;
+  private:
+    QMap<QString, double> MASSIMICONSENTITI;
     QtCharts::QValueAxis *asseY;
     QtCharts::QDateTimeAxis *asseX;
-    Dati* data;
+    Dati *data;
     QStringList comp;
-public:
-    MyChartView(Dati*);
 
-    void setCompScelti(const QStringList&);
+  public:
+    MyChartView (Dati *);
 
-    QMap<QString, QtCharts::QLineSeries*> genericLAchart();
+    void setCompScelti (const QStringList &);
 
-    void lineChart();
-    void areaChart();
-    void barChart();
-    void radarChart();
-    void scatterChart();
+    QMap<QString, QtCharts::QLineSeries *> genericLAchart ();
 
-    void resetView();
+    void lineChart ();
+    void areaChart ();
+    void barChart ();
+    void radarChart ();
+    void scatterChart ();
 
-    QtCharts::QLineSeries* sommaY (QtCharts::QLineSeries*, QtCharts::QLineSeries*) const;
-    static double maxValueFromListSeries(QList<QtCharts::QAbstractSeries*>);
-    static double maxFromSerie(QtCharts::QXYSeries*);
-    static double maxFromBarSets(QtCharts::QBarSeries*);
+    void resetView ();
 
-signals:
-    void chartPronto();
-    void tipoChartPronto(const MyChart::GraphType&);
+    QtCharts::QLineSeries *sommaY (QtCharts::QLineSeries *,
+                                   QtCharts::QLineSeries *) const;
+    static double maxValueFromListSeries (QList<QtCharts::QAbstractSeries *>);
+    static double maxFromSerie (QtCharts::QXYSeries *);
+    static double maxFromBarSets (QtCharts::QBarSeries *);
+
+  signals:
+    void chartPronto ();
+    void tipoChartPronto (const MyChart::GraphType &);
 };
 
 #endif // CHARTCONTROLLER_H

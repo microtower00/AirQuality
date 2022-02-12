@@ -28,7 +28,7 @@ QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> MyChart::setLineAxis(QMap<
     QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();
     addAxis(asseY, Qt::AlignLeft);
     QtCharts::QLineSeries* serieLine = dynamic_cast<QtCharts::QLineSeries*>(serie.first());
-    int secondiIntervallo = (serieLine->points().last().x()-serieLine->points().first().x())/1000;
+    int secondiIntervallo = (serieLine->points().at(serieLine->points().size()-1).x()-serieLine->points().at(0).x())/1000;
 
     if(secondiIntervallo<7*86400)//meno di 3 giorni
         asseX->setFormat("dd/MM hh:mm");

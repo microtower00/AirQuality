@@ -84,6 +84,7 @@ void MyChart::buildAreaChart(QMap<QString, QtCharts::QAbstractSeries *> series){
         aSeries->attachAxis(assi.second);
     }
 
+    assi.second->setMax(maxValueFromListSeries(series.values())+.03*maxValueFromListSeries(series.values()));
 
     setTitle("Andamento della densità dei componenti nel tempo (µg/m³ nel tempo)");
 }

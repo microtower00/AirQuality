@@ -29,7 +29,6 @@ MyChartView::MyChartView(Dati* d) : data(d)
 
 void MyChartView::setCompScelti(const QStringList& compScelti) {
     comp = compScelti;
-    //resize(1250,750);
 }
 
 void MyChartView::lineChart(){
@@ -37,7 +36,7 @@ void MyChartView::lineChart(){
     emit chartPronto();
     emit tipoChartPronto(MyChart::GraphType::LineG);
     QMap<QString, QtCharts::QAbstractSeries*> series;
-    //Creo la lineSeries per ogni componente
+
     for(QString chiave : comp){
         series.insert(chiave, new MyLineSeries(data,chiave));
     }
@@ -50,7 +49,7 @@ void MyChartView::areaChart(){
     emit chartPronto();
     emit tipoChartPronto(MyChart::GraphType::AreaG);
     QMap<QString, QtCharts::QAbstractSeries*> series;
-    //Creo la lineSeries per ogni componente
+
     for(QString chiave : comp){
         series.insert(chiave, new MyLineSeries(data,chiave));
     }
@@ -80,7 +79,6 @@ void MyChartView::radarChart(){
     QMap<QString,double> mediaFirstDay, mediaLastDay;
 
     datiElab.push_back(MASSIMICONSENTITI);
-    //Per ogni record, determino se è del primo o ultimo giorno e lo inserisco acco
     for(auto record : datiGrezzi){
         if(record.value("Data")==datiGrezzi.first().value("Data"))
             datiFirstDay.push_back(record);
@@ -88,7 +86,6 @@ void MyChartView::radarChart(){
             datiLastDay.push_back(record);
     }
 
-    //calcolo le medie
     for(auto record : datiFirstDay){
         for(QString componente : comp){
             mediaFirstDay.insert(componente, mediaFirstDay.value(componente)+record.value(componente)/2);
@@ -104,12 +101,10 @@ void MyChartView::radarChart(){
     datiElab.push_back(mediaFirstDay);
     datiElab.push_back(mediaLastDay);
 
-    //Creo le serie
     QMap<QString,double> fondoScala = MyPolarSeries::calcolaFondoScala(datiElab);
     QString nomeserie;
     for(QMap<QString,double> entry : datiElab){
         nomeserie = entry == mediaFirstDay ? "Primo giorno" : entry == mediaLastDay ? "Ultimo giorno" : "Val. di riferimento";
-        qDebug()<<nomeserie;
         series.insert(nomeserie, new MyPolarSeries(entry, fondoScala, comp));
     }
 
@@ -135,7 +130,6 @@ void MyChartView::scatterChart() {
     sSerie->setMarkerSize(10);
     sSerie->setName(singleComp);
 
-    //mi pare strano
     QMap<QString, QAbstractSeries*> param;
     param.insert(singleComp, sSerie);
     setChart(new MyChart(param, MyChart::GraphType::ScatterG));
@@ -148,5 +142,4 @@ void MyChartView::resetView(){
     QtCharts::QChart* graf = this->chart();
     this->setChart(new QtCharts::QChart());
     delete graf;
-    //resize(1250,900);
 }

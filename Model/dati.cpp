@@ -6,10 +6,8 @@ Dati::Dati(const QJsonObject& retrievedObj, const QDateTime& dataInizio, const C
     QJsonArray listArray = retrievedObj.value("list").toArray();
     QStringList componentsNames = listArray.at(0).toObject().value("components").toObject().keys();
 
-    //singola riga, una mappa con coppie chiave:valore
     QMap<QString, double> singleRow;
 
-    //Riempio la lista di chiavi con data e aqi oltre ai componenti
     chiavi.push_back("Data");
 
     for(auto comp:componentsNames){
@@ -18,10 +16,8 @@ Dati::Dati(const QJsonObject& retrievedObj, const QDateTime& dataInizio, const C
 
     chiavi.push_back("aqi");
 
-    //numero di righe
     unsigned int rowsSize = listArray.size();
 
-    //riempio le singole righe e l'insieme di righe
     for(unsigned int i=0; i<rowsSize; ++i) {
         for(auto chiave:chiavi) {
             if(chiave=="Data") singleRow.insert(chiave, listArray.at(i).toObject().value("dt").toDouble());
@@ -124,38 +120,30 @@ QVariant Dati::headerData(int section, Qt::Orientation orientation, int role) co
 
 bool Dati::isDati(const QJsonDocument& doc){
     if(!(doc.isNull()||doc.isEmpty())){
-        //contiene coords e list
+
         if(doc.object().contains("coord") && doc.object().contains("list")){
             QJsonArray listArray = doc.object().value("list").toArray();
 
-            //per ogni elemento di list controllo che abbia components, main e dt
             for(int i = 0; i < listArray.size(); ++i){
-                //qDebug()<<"Controllo la lista";
                 if(!(listArray.at(i).toObject().contains("components") && listArray.at(i).toObject().contains("dt") && listArray.at(i).toObject().contains("main"))){
-                    //qDebug()<<"Non contiene main, components e dt";
                     return false;
                 } else {
                     QJsonObject componenti = listArray.at(i).toObject().value("components").toObject();
                     for(QString componente:expectedKeys){
                         if(!componenti.contains(componente)){
-                            //qDebug()<<"Non ha tutta la robba";
                             return false;
                         }
                     }
-                    //qDebug()<<"Tutto apposto maresciao";
                     return true;
                 }
             }
         }else
-        //qDebug()<<"Non contiene list";
         return false;
     }
-    //qDebug()<<"è nullo o empty";
     return false;
 }
 
 Qt::ItemFlags Dati::flags(const QModelIndex &index) const {
-    //Q_UNUSED(index);
     if(index.column()>0)
         return {Qt::ItemIsEnabled, Qt::ItemIsEditable};
     else return {Qt::ItemIsEnabled};
@@ -180,7 +168,8 @@ bool Dati::appendRows(unsigned int count) {
 
 
     for(unsigned int i=0; i<count; ++i) {
-        beginInsertRows(QModelIndex(), dati.size(), dati.size());        nuovaRiga.insert("Data", dati.at(dati.size()-1).value("Data")+3600);
+        beginInsertRows(QModelIndex(), dati.size(), dati.size());
+        nuovaRiga.insert("Data", dati.at(dati.size()-1).value("Data")+3600);
 
         dati.insert(dati.size(), nuovaRiga);
 

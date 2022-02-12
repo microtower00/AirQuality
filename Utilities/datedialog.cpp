@@ -9,7 +9,6 @@ DateDialog::DateDialog(QWidget *parent) : QDialog(parent){
 
     labelLatLon = new QLabel("Inserisci la città di registrazione dei dati",this);
     latLon = new CittaEdit("",this);
-    //latLon->setValidator( new QDoubleValidator(0, 100, 2, this) );
     lytMain->addRow(labelLatLon,latLon);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox( QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this );

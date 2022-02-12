@@ -34,7 +34,9 @@ QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> MyChart::setLineAxis(QMap<
     }else{
         //setto il massimo di Y al massimo valore tra tutte le serie
         asseY->setMin(0);
-        asseY->setMax(maxValueFromListSeries(serie.values())+.03*maxValueFromListSeries(serie.values()));}
+        asseY->setMax(maxValueFromListSeries(serie.values())+.03*maxValueFromListSeries(serie.values()));
+        asseY->setTickCount(10);
+    }
 
     QtCharts::QLineSeries* serieLine = dynamic_cast<QtCharts::QLineSeries*>(serie.first());
     int secondiIntervallo = (serieLine->points().last().x()-serieLine->points().first().x())/1000;
@@ -46,7 +48,7 @@ QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> MyChart::setLineAxis(QMap<
     else
         asseX->setFormat("dd/MM/yy");
 
-    asseY->setMinorTickCount(asseY->tickCount());
+    asseY->setMinorTickCount(asseY->tickCount()/4);
     return QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*>(asseX,asseY);
 }
 void MyChart::buildLineChart(QMap<QString, QtCharts::QAbstractSeries*> serie){

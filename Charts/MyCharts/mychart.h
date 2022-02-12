@@ -47,6 +47,7 @@ private:
     void buildPolarChart(QMap<QString,QtCharts::QAbstractSeries*>);
     void buildBarChart(QMap<QString,QtCharts::QAbstractSeries*>);
     void buildAreaChart(QMap<QString,QtCharts::QAbstractSeries*>);
+    QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> setLineAxis(QMap<QString, QtCharts::QAbstractSeries*>);
 
 
 

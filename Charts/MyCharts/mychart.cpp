@@ -19,41 +19,43 @@ MyChart::MyChart(QMap<QString,QtCharts::QAbstractSeries*> serie, MyChart::GraphT
 
 }
 
-void MyChart::buildLineChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
-    //asse X
+QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> MyChart::setLineAxis(QMap<QString, QtCharts::QAbstractSeries*> serie){
     QtCharts::QDateTimeAxis* asseX = new QtCharts::QDateTimeAxis;
-    asseX->setFormat("dd-MM-yyyy h:mm");
     asseX->setTickCount(12);
     addAxis(asseX, Qt::AlignBottom);
 
-    // asse Y
     QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();
     addAxis(asseY, Qt::AlignLeft);
+    QtCharts::QLineSeries* serieLine = dynamic_cast<QtCharts::QLineSeries*>(serie.first());
+    int secondiIntervallo = (serieLine->points().last().x()-serieLine->points().first().x())/1000;
+
+    if(secondiIntervallo<7*86400)//meno di 3 giorni
+        asseX->setFormat("dd/MM hh:mm");
+    else if(secondiIntervallo<365*86400)
+        asseX->setFormat("dd/MM");
+    else
+        asseX->setFormat("dd/MM/yy");
+    return QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*>(asseX,asseY);
+}
+void MyChart::buildLineChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
+    QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> assi = setLineAxis(serie);
 
     //Per ogni serie nella mapps setto nome e collego gli assi
     for(auto it=serie.begin(); it!=serie.end(); ++it){
         addSeries(*it);
         it.value()->setName(it.key());
-        it.value()->attachAxis(asseX);
-        it.value()->attachAxis(asseY);
+        it.value()->attachAxis(assi.first);
+        it.value()->attachAxis(assi.second);
     }
 
     //setto il massimo di Y al massimo valore tra tutte le serie
-    asseY->setMin(0);
-    asseY->setMax(maxValueFromListSeries(serie.values())+.03*maxValueFromListSeries(serie.values()));
+    assi.second->setMin(0);
+    assi.second->setMax(maxValueFromListSeries(serie.values())+.03*maxValueFromListSeries(serie.values()));
     setTitle("Andamento della densità dei componenti nel tempo (µg/m³ nel tempo)");
 }
 
 void MyChart::buildAreaChart(QMap<QString, QtCharts::QAbstractSeries *> series){
-    //asse X codice riciclabile
-    QtCharts::QDateTimeAxis* asseX = new QtCharts::QDateTimeAxis;
-    asseX->setFormat("dd-MM-yyyy h:mm");
-    asseX->setTickCount(12);
-    addAxis(asseX, Qt::AlignBottom);
-
-    // asse Y
-    QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();
-    addAxis(asseY, Qt::AlignLeft);
+    QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> assi = setLineAxis(series);
     //Sistemo le Y per stacked area chart
     for(auto it=series.begin()+1; it!=series.end(); ++it)
             *it=sommaY(dynamic_cast<QtCharts::QLineSeries*>(*it), dynamic_cast<QtCharts::QLineSeries*>(*(it-1)));
@@ -67,13 +69,13 @@ void MyChart::buildAreaChart(QMap<QString, QtCharts::QAbstractSeries *> series){
         aSeries->setBorderColor(QColor::fromRgba64(0,0,0,0));
         addSeries(aSeries);
         aSeries->setName(it.key());
-        aSeries->attachAxis(asseX);
-        aSeries->attachAxis(asseY);
+        aSeries->attachAxis(assi.first);
+        aSeries->attachAxis(assi.second);
     }
 
     //setto il massimo di Y al massimo valore tra tutte le serie
-    asseY->setMin(0);
-    asseY->setMax(maxValueFromListSeries(series.values())+.03*maxValueFromListSeries(series.values()));
+    assi.second->setMin(0);
+    assi.second->setMax(maxValueFromListSeries(series.values())+.03*maxValueFromListSeries(series.values()));
     setTitle("Andamento della densità dei componenti nel tempo (µg/m³ nel tempo)");
 }
 void MyChart::buildScatterChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
@@ -81,7 +83,6 @@ void MyChart::buildScatterChart(QMap<QString, QtCharts::QAbstractSeries*> serie)
     QtCharts::QScatterSeries* sSerie = static_cast<QtCharts::QScatterSeries*>(serie.first());
     // asse X
     QtCharts::QValueAxis* asseX = new QtCharts::QValueAxis;
-    //QtCharts::QValueAxis* asseX2 = new QtCharts::QValueAxis();
     asseX->setTickCount(24);
     addAxis(asseX, Qt::AlignBottom);
 

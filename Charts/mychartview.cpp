@@ -31,7 +31,6 @@ void MyChartView::setCompScelti(const QStringList& compScelti) {
     comp = compScelti;
     //resize(1250,750);
 }
-
 void MyChartView::lineChart(){
     resetView();
     emit chartPronto();
@@ -73,7 +72,7 @@ void MyChartView::barChart(){
 
 void MyChartView::radarChart(){
     resetView();
-
+    setRubberBand(MyChartView::NoRubberBand);
     QMap<QString,QAbstractSeries*> series;
     QList<QMap<QString,double>> datiElab, datiGrezzi = data->getDati();
     QList<QMap<QString,double>> datiFirstDay, datiLastDay;
@@ -132,7 +131,7 @@ void MyChartView::radarChart(){
 
 void MyChartView::scatterChart() {
     resetView();
-
+    setRubberBand(MyChartView::NoRubberBand);
     QString singleComp = comp.first();
 
     MyScatterSerie* sSerie = new MyScatterSerie(*data, singleComp);

@@ -19,6 +19,8 @@ TableChooser::TableChooser(Dati* dati) :  data(dati)
 
     setLayout(mainLayout);
 
+    setMaximumHeight(200);
+    setMinimumHeight(200);
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
     tabella = new MyTableView(data);

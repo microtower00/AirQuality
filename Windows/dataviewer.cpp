@@ -22,34 +22,43 @@ DataViewer::DataViewer(Dati* d, QWidget *parent) :
     lbDescr->setWordWrap(true);
     lbDescr->setAlignment(Qt::AlignJustify);
     setDescr(MyChart::GraphType::LineG);
+    //lbDescr->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
     hbDescr->addWidget(lbDescr);
     gbDescr->setLayout(hbDescr);
     gbDescr->setMaximumWidth(gbControlliGraf->width());
+    gbDescr->setMaximumHeight(200);
     gbDescr->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding));
 
     glMain->addWidget(gbControlliGraf, 0, 0);
     glMain->addWidget(gbControlliTab, 1, 0);
     glMain->addWidget(gbDescr, 2, 0);
 
+    errorDialog = new QErrorMessage();
+
+    setMinimumSize(325,800);
+    setMaximumSize(325,800);
+
     finestra = new QWidget();
     finestra->setLayout(glMain);
 
     setCentralWidget(finestra);
     setWindowTitle("Visualizzazione dati");
-
     connect(grafico, SIGNAL(chartPronto()), this, SLOT(mostraChart()));
     connect(grafico, SIGNAL(tipoChartPronto(MyChart::GraphType)), this, SLOT(setDescr(MyChart::GraphType)));
     connect(tabella, SIGNAL(tablePronta()), this, SLOT(mostraTable()));
     connect(gbControlliGraf, SIGNAL(comboChanged(MyChart::GraphType)), this, SLOT(setDescr(MyChart::GraphType)));
     connect(gbControlliGraf, SIGNAL(chartCreated()), gbControlliTab, SLOT(disableTabella()));
+    connect(gbControlliGraf, SIGNAL(erroreGraf(QString)), this, SLOT(erroreDialog(QString)));
 }
 
 void DataViewer::mostraChart() {
+    setMinimumWidth(1000);
+    setMaximumSize(QWIDGETSIZE_MAX,QWIDGETSIZE_MAX);
     tabella->close();
 
     if(hbGraf->count()!=1)
-        resize(gbControlliGraf->width()+1250, 900);
+        resize(gbControlliGraf->width()+1250, 800);
 
     hbGraf->removeWidget(tabella);
     hbGraf->addWidget(grafico);
@@ -59,14 +68,17 @@ void DataViewer::mostraChart() {
     gbMostraDati->setTitle("Grafico");
     gbMostraDati->setLayout(hbGraf);
 
-    glMain->addWidget(gbMostraDati, 0, 1, 3, 1);
+    glMain->addWidget(new QLabel(),3,0);
+    glMain->addWidget(gbMostraDati, 0, 1, 4, 1);
 }
 
 void DataViewer::mostraTable() {
+    setMinimumWidth(1000);
+    setMaximumSize(QWIDGETSIZE_MAX,QWIDGETSIZE_MAX);
     grafico->close();
 
     if(hbGraf->count()!=1)
-        resize(gbControlliGraf->width()+1101, 900);
+        resize(gbControlliGraf->width()+1101, 800);
 
     hbGraf->removeWidget(grafico);
     hbGraf->addWidget(tabella);
@@ -78,7 +90,8 @@ void DataViewer::mostraTable() {
 
     lbDescr->setText("Visualizzazione dei dati in forma tabellare. È possibile modificare e salvare i dati aggiornati in un file JSON.");
 
-    glMain->addWidget(gbMostraDati, 0, 1, 3, 1);
+    glMain->addWidget(new QLabel(),3,0);
+    glMain->addWidget(gbMostraDati, 0, 1, 4, 1);
 }
 
 void DataViewer::setDescr(const MyChart::GraphType& tipoChart) {
@@ -97,4 +110,6 @@ void DataViewer::setDescr(const MyChart::GraphType& tipoChart) {
     }
 }
 
-
+void DataViewer::erroreDialog(const QString& errore) {
+    errorDialog->showMessage(errore);
+}

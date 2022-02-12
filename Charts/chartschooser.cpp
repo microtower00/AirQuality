@@ -38,9 +38,9 @@ ChartsChooser::ChartsChooser(Dati* dati) :
 
     gbSceltaComp->setVisible(rbComponenti->isChecked());
 
-    glSceltaGraf->addWidget(cbGrafici, 0, 0);
-    glSceltaGraf->addWidget(rbComponenti, 1, 0);
-    glSceltaGraf->addWidget(rbAqi, 1, 1);
+    glSceltaGraf->addWidget(rbComponenti, 0, 0);
+    glSceltaGraf->addWidget(rbAqi, 0, 1);
+    glSceltaGraf->addWidget(cbGrafici, 1, 0);
 
     for(auto comp:listaComp) {
         cbComponenti->addButton(new QCheckBox(comp));
@@ -59,7 +59,7 @@ ChartsChooser::ChartsChooser(Dati* dati) :
 
     setTitle("Controlli grafici");
     setFixedWidth(300);
-    setFixedHeight(350);
+    setFixedHeight(325);
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
     connect(rbComponenti,SIGNAL(toggled(bool)),this,SLOT(attivaComp(bool)));
@@ -98,14 +98,17 @@ void ChartsChooser::createChart()
                 grafico->areaChart();
             else if(cbGrafici->currentText()=="Istogramma")
                 grafico->barChart();
-            else if(cbGrafici->currentText()=="Radar" && compScelti.size()>=3)
-                grafico->radarChart();
-            else if(cbGrafici->currentText()=="Plot")
+            else if(cbGrafici->currentText()=="Radar") {
+                if(compScelti.size()>=3)
+                    grafico->radarChart();
+                else
+                    emit erroreGraf("Inserire almeno 3 componenti per il grafico radar.");
+            } else if(cbGrafici->currentText()=="Plot")
                 grafico->scatterChart();
 
             emit chartCreated();
-
-        }
+        } else
+            emit erroreGraf("Inserire almeno uno o più componenti.");
 
     } else if(rbAqi->isChecked()) {
         compScelti.push_back("aqi");
@@ -146,3 +149,4 @@ void ChartsChooser::attivaComp(const bool& compChecked)
             cbGrafici->setItemData(i, 33,  Qt::UserRole -1);
     }
 }
+

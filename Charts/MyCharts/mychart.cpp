@@ -51,6 +51,7 @@ QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> MyChart::setLineAxis(QMap<
     asseY->setMinorTickCount(asseY->tickCount()/4);
     return QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*>(asseX,asseY);
 }
+
 void MyChart::buildLineChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
     QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> assi = setLineAxis(serie);
 
@@ -86,6 +87,7 @@ void MyChart::buildAreaChart(QMap<QString, QtCharts::QAbstractSeries *> series){
 
     setTitle("Andamento della densità dei componenti nel tempo (µg/m³ nel tempo)");
 }
+
 void MyChart::buildScatterChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
 
     QtCharts::QScatterSeries* sSerie = static_cast<QtCharts::QScatterSeries*>(serie.first());
@@ -104,7 +106,7 @@ void MyChart::buildScatterChart(QMap<QString, QtCharts::QAbstractSeries*> serie)
     sSerie->attachAxis(asseX);
     sSerie->attachAxis(asseY);
 
-    setTitle("Densità nell`aria dei componenti nelle ore della giornata (µg/m³ nel tempo)");
+    setTitle("Densità nell'aria dei componenti nelle ore della giornata (µg/m³ nel tempo)");
 }
 
 void MyChart::buildBarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){

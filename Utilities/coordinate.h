@@ -5,12 +5,15 @@
 
 class Coordinate : public QPair<double,double>
 {
+private:
+    QPair<double,double> coords;
 public:
     Coordinate(double lat = 0, double lon = 0);
     Coordinate(const Coordinate&);
-    double latitude()const;
-    double longitude()const;
+    Coordinate& operator=(const Coordinate& c2) =default;
 
+    double latitude() const;
+    double longitude() const;
 };
 
 #endif // COORDINATE_H

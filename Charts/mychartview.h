@@ -4,7 +4,7 @@
 #include "Model/dati.h"
 #include "Charts/MyCharts/mychart.h"
 #include "Charts/MySeries/mybarseries.h"
-#include "Charts/MySeries/myscatterserie.h"
+#include "Charts/MySeries/myscatterseries.h"
 #include "Charts/MySeries/mypolarseries.h"
 #include "Charts/MyCharts/mypolarchart.h"
 

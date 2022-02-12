@@ -9,7 +9,7 @@
 class MyBarSeries : public QtCharts::QBarSeries
 {
 public:
-    MyBarSeries(const Dati&, QList<QString>, QObject *parent = nullptr);
+    MyBarSeries(Dati*, QList<QString>, QObject *parent = nullptr);
 };
 
 #endif // MYBARSERIES_H

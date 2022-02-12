@@ -25,6 +25,7 @@ void MyChart::buildLineChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
     asseX->setFormat("dd-MM-yyyy h:mm");
     asseX->setTickCount(12);
     addAxis(asseX, Qt::AlignBottom);
+    //asseX
 
     // asse Y
     QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();

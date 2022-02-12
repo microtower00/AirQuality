@@ -16,7 +16,7 @@ SOURCES += \
     Charts/MySeries/mybarseries.cpp \
     Charts/MySeries/mylineseries.cpp \
     Charts/MySeries/mypolarseries.cpp \
-    Charts/MySeries/myscatterserie.cpp \
+    Charts/MySeries/myscatterseries.cpp \
     Charts/chartschooser.cpp \
     Charts/mychartview.cpp \
     Model/dati.cpp \
@@ -36,7 +36,7 @@ HEADERS += \
     Charts/MySeries/mybarseries.h \
     Charts/MySeries/mylineseries.h \
     Charts/MySeries/mypolarseries.h \
-    Charts/MySeries/myscatterserie.h \
+    Charts/MySeries/myscatterseries.h \
     Charts/chartschooser.h \
     Charts/mychartview.h \
     Model/dati.h \

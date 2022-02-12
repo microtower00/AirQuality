@@ -1,10 +1,10 @@
 #include "mytableview.h"
 
-MyTableView::MyTableView(Dati& datiModel) : QTableView() {
+MyTableView::MyTableView(Dati* datiModel) : QTableView() {
 
-    QStringList chiavi = datiModel.getChiavi();
+    QStringList chiavi = datiModel->getChiavi();
 
-    setModel(&datiModel);
+    setModel(datiModel);
 
     //resize(1101,900);
     resizeColumnToContents(0);

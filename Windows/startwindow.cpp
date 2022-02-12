@@ -21,6 +21,7 @@ StartWindow::StartWindow(QWidget *parent) : QMainWindow{parent}
     lbInizio = new QLabel("Inizio");
     lbFine = new QLabel("Fine");
     lbDescr = new QLabel("AirQuality Charts è un programma che consente di creare, importare, scaricare e modificare dati relativi a composizione e qualità dell'aria di determinate città in determinati intervalli di tempo.");
+    lbInfoDati = new QLabel("");
 
     lbDescr->setWordWrap(true);
     lbDescr->setAlignment(Qt::AlignJustify);
@@ -64,7 +65,8 @@ StartWindow::StartWindow(QWidget *parent) : QMainWindow{parent}
     grLayout->addWidget(gbFile, 1, 0);
     grLayout->addWidget(lbOppure, 1, 1);
     grLayout->addWidget(gbOnline, 1, 2);
-    grLayout->addWidget(lbDescr, 3, 0, 1, 3);
+    grLayout->addWidget(lbInfoDati, 3, 0, 1, 3);
+    grLayout->addWidget(lbDescr, 4, 0, 1, 3);
 
     finestra = new QWidget();
     finestra->setLayout(grLayout);
@@ -81,7 +83,8 @@ StartWindow::StartWindow(QWidget *parent) : QMainWindow{parent}
     connect(pbOttieni,SIGNAL(clicked()),this,SLOT(getAirQuality()));
     connect(pbCrea,SIGNAL(clicked()),this,SLOT(apriFileVuoto()));
     connect(this, SIGNAL(modelCreato(Dati*)), this, SLOT(apriFinestra(Dati*)));
-    connect(this,SIGNAL(mostraErrore(QString)),this,SLOT(updateErrorLabel(QString)));
+    connect(this,SIGNAL(mostraErrore(QString)),this,SLOT(errorDialog(QString)));
+    connect(&aqr, SIGNAL(erroreRichiesta(QString)), this, SLOT(errorDialog(QString)));
 }
 
 void StartWindow::chooseFile()
@@ -104,9 +107,10 @@ void StartWindow::getAirQuality()
         Coordinate coords_citta = coordsResolver(leCity->text());
         QDate primadataDisp = primadataDisp.fromString("2020-11-27", Qt::ISODate);
 
-        if(inizio>=primadataDisp && fine<=QDate::currentDate() && fine>inizio)
+        if(inizio>=primadataDisp && fine<=QDate::currentDate() && fine>inizio) {
+            lbInfoDati->setText("Ottengo i dati...");
             aqr.retrieveHistorical(coords_citta.latitude(), coords_citta.longitude(), inizio, fine);
-        else
+        } else
             throw std::invalid_argument("Date non valide");
     } catch(std::domain_error& a) {
         emit mostraErrore(cittaNonPresente);
@@ -154,6 +158,7 @@ QCompleter* StartWindow::createCompleter() const
 
 void StartWindow::creoModel(const QJsonDocument* datiDoc, const QDateTime& dataInizio, const Coordinate& c)
 {
+    lbInfoDati->setText("");
     Dati* dati = new Dati(datiDoc->object(), dataInizio, c);
     emit modelCreato(dati);
 }
@@ -203,7 +208,7 @@ void StartWindow::apriFinestra(Dati* d)
     finestra->show();
 }
 
-void StartWindow::updateErrorLabel(const QString& param)
+void StartWindow::errorDialog(const QString& param)
 {
     error->showMessage(param);
 }
@@ -213,6 +218,10 @@ void StartWindow::apriFileVuoto()
     QJsonDocument *doc = &openJson(":/fileVuoto.json");
     bool confirm = false;
     QPair<QDateTime,QString> data = DateDialog::getDateTime(this, &confirm);
-    if(confirm)
-        creoModel(doc, data.first, coordsResolver(data.second));
+    try {
+        if(confirm)
+            creoModel(doc, data.first, coordsResolver(data.second));
+    }  catch (std::domain_error e) {
+        errorDialog(e.what());
+    }
 }

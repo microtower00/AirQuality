@@ -21,7 +21,7 @@ TableChooser::TableChooser(Dati* dati) :  data(dati)
 
     setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
-    tabella = new MyTableView(*data);
+    tabella = new MyTableView(data);
 
     setTitle("Controlli tabella");
 

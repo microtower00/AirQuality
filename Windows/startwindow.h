@@ -51,6 +51,7 @@ private:
     QLabel *lbInizio;
     QLabel *lbFine;
     QLabel *lbDescr;
+    QLabel *lbInfoDati;
 
     CittaEdit *leCity;
     QDateEdit *dtInizio;
@@ -115,7 +116,7 @@ public slots:
     void saveJSonReply(const QJsonDocument* doc) const;
     void apriFileVuoto();
     void apriFinestra(Dati*);
-    void updateErrorLabel(const QString&);
+    void errorDialog(const QString&);
 
 signals:
     void filePronto(const QJsonDocument*);

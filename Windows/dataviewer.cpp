@@ -36,8 +36,8 @@ DataViewer::DataViewer(Dati* d, QWidget *parent) :
 
     errorDialog = new QErrorMessage();
 
-    setMinimumHeight(800);
-    setMaximumHeight(800);
+    setMinimumSize(325,800);
+    setMaximumSize(325,800);
 
     finestra = new QWidget();
     finestra->setLayout(glMain);
@@ -53,8 +53,8 @@ DataViewer::DataViewer(Dati* d, QWidget *parent) :
 }
 
 void DataViewer::mostraChart() {
-    setMinimumWidth(1100);
-    setMaximumHeight(QWIDGETSIZE_MAX);
+    setMinimumWidth(1000);
+    setMaximumSize(QWIDGETSIZE_MAX,QWIDGETSIZE_MAX);
     tabella->close();
 
     if(hbGraf->count()!=1)
@@ -68,12 +68,13 @@ void DataViewer::mostraChart() {
     gbMostraDati->setTitle("Grafico");
     gbMostraDati->setLayout(hbGraf);
 
-    glMain->addWidget(gbMostraDati, 0, 1, 3, 1);
+    glMain->addWidget(new QLabel(),3,0);
+    glMain->addWidget(gbMostraDati, 0, 1, 4, 1);
 }
 
 void DataViewer::mostraTable() {
-    setMinimumWidth(1100);
-    setMaximumHeight(QWIDGETSIZE_MAX);
+    setMinimumWidth(1000);
+    setMaximumSize(QWIDGETSIZE_MAX,QWIDGETSIZE_MAX);
     grafico->close();
 
     if(hbGraf->count()!=1)
@@ -89,7 +90,8 @@ void DataViewer::mostraTable() {
 
     lbDescr->setText("Visualizzazione dei dati in forma tabellare. È possibile modificare e salvare i dati aggiornati in un file JSON.");
 
-    glMain->addWidget(gbMostraDati, 0, 1, 3, 1);
+    glMain->addWidget(new QLabel(),3,0);
+    glMain->addWidget(gbMostraDati, 0, 1, 4, 1);
 }
 
 void DataViewer::setDescr(const MyChart::GraphType& tipoChart) {
@@ -111,6 +113,3 @@ void DataViewer::setDescr(const MyChart::GraphType& tipoChart) {
 void DataViewer::erroreDialog(const QString& errore) {
     errorDialog->showMessage(errore);
 }
-
-
-

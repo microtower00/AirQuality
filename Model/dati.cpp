@@ -31,8 +31,8 @@ Dati::Dati(const QJsonObject& retrievedObj, const QDateTime& dataInizio, const C
         dati.push_back(singleRow);
     }
 
-    if(c.latitude() == 0 && c.longitude()==0)
-        coords = Coordinate(retrievedObj.value("coord").toObject().value("lat").toDouble(),retrievedObj.value("coord").toObject().value("lon").toDouble());
+    if(c.latitude()==0 && c.longitude()==0)
+        coords=Coordinate(retrievedObj.value("coord").toObject().value("lat").toDouble(),retrievedObj.value("coord").toObject().value("lon").toDouble());
 
     if(dataInizio!=QDateTime())
         dati[0].insert("Data", dataInizio.toSecsSinceEpoch());
@@ -163,14 +163,14 @@ Qt::ItemFlags Dati::flags(const QModelIndex &index) const {
 
 bool Dati::setData(const QModelIndex &index, const QVariant &value, int role) {
     if(role==Qt::EditRole) {
-        if((index.column()>1 && value>=0) || (index.column()==1 && value==value.toUInt() && value<=5 && value>=0)) {
+        if((index.column()>1 && value>=0) || (index.column()==1 && value==value.toUInt() && value<=5 && value>=1)) {
             dati[index.row()].insert(dati[index.row()].keys().at(index.column()), value.toDouble());
             emit dataChanged(index, index, {Qt::EditRole});
             return true;
         }
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 bool Dati::appendRows(unsigned int count) {
@@ -208,4 +208,6 @@ Dati& Dati::operator=(const Dati& d2){
     this->dati=d2.dati;
     this->chiavi=d2.chiavi;
     this->coords=d2.coords;
+
+    return *this;
 }

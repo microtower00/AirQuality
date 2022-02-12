@@ -8,7 +8,7 @@
 class MyLineSeries : public QtCharts::QLineSeries
 {
 public:
-    MyLineSeries(const Dati&, QString, QObject *parent = nullptr);
+    MyLineSeries(Dati*, QString, QObject *parent = nullptr);
 };
 
 #endif // MYLINESERIES_H

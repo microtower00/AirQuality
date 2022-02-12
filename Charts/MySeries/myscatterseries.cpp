@@ -1,11 +1,11 @@
-#include "myscatterserie.h"
+#include "myscatterseries.h"
 
-MyScatterSerie::MyScatterSerie(const Dati& dati, QString comp, QObject *) : QtCharts::QScatterSeries{/*parent*/}{
+MyScatterSerie::MyScatterSerie(Dati* dati, QString comp, QObject *) : QtCharts::QScatterSeries{/*parent*/}{
 
     setMarkerSize(10);
     setName(comp);
 
-    for (auto record : dati.getDati()){
+    for (auto record : dati->getDati()){
         int oraDelGiorno = Dati::getDateFromDouble(record.value("Data")).time().hour();
         qDebug()<<oraDelGiorno;
         append(QPointF(Dati::getDateFromDouble(record.value("Data")).time().hour(), record.value(comp)));

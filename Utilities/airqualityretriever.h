@@ -26,6 +26,7 @@ public slots:
 
 signals:
     void readReady(const QJsonDocument*);
+    void erroreRichiesta(const QString&);
 };
 
 #endif // AIRQUALITYRETRIEVER_H

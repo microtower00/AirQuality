@@ -23,6 +23,7 @@ QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> MyChart::setLineAxis(QMap<
     QtCharts::QDateTimeAxis* asseX = new QtCharts::QDateTimeAxis;
     asseX->setTickCount(12);
     addAxis(asseX, Qt::AlignBottom);
+    //asseX
 
     QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();
     addAxis(asseY, Qt::AlignLeft);

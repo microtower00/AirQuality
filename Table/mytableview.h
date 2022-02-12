@@ -21,7 +21,7 @@ class MyTableView : public QTableView
 public slots:
 
 public:
-    MyTableView(Dati&);
+    MyTableView(Dati*);
 private:
 
 signals:

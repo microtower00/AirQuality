@@ -17,16 +17,14 @@ void AirQualityRetriever::retrieveHistorical(const double& lat, const double& lo
 
 QJsonDocument AirQualityRetriever::replyEnded(QNetworkReply* response)
 {
-    QByteArray ba;
-
-    if(response->error()==QNetworkReply::NoError)
-        ba = response->readAll();
-    /*else
-        qDebug() << response->error();*/
-
-    response->deleteLater();
-    QJsonDocument dati = QJsonDocument::fromJson(ba);
-    emit readReady(&dati);
-
-    return dati;
+    if(response->error()==QNetworkReply::NoError) {
+        QByteArray ba = response->readAll();
+        response->deleteLater();
+        QJsonDocument dati = QJsonDocument::fromJson(ba);
+        emit readReady(&dati);
+        return dati;
+    } else {
+        emit erroreRichiesta("Errore nella richiesta. Prova a controllare la connessione.");
+        return QJsonDocument();
+    }
 }

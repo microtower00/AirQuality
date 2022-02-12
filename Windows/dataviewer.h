@@ -25,6 +25,8 @@ private:
 
     QLabel *lbDescr;
 
+    QErrorMessage *errorDialog;
+
     MyTableView *tabella;
     MyChartView *grafico;
 
@@ -37,6 +39,7 @@ public slots:
    void mostraChart();
    void mostraTable();
    void setDescr(const MyChart::GraphType&);
+   void erroreDialog(const QString&);
 };
 
 #endif // DATAVIEWER_H

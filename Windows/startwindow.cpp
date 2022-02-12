@@ -20,7 +20,7 @@ StartWindow::StartWindow(QWidget *parent) : QMainWindow{parent}
     lbOppure = new QLabel("oppure");
     lbInizio = new QLabel("Inizio");
     lbFine = new QLabel("Fine");
-    lbDescr = new QLabel("AirQuality Charts è un programma che consente di creare, importare, scaricare e modificare dati relativi a composizione e qualità dell'aria di determinate città in determinati intervalli di tempo.");
+    lbDescr = new QLabel("AirQuality Charts è un programma che consente di creare, importare, scaricare e modificare dati orari relativi a composizione e qualità dell'aria di determinate città in determinati intervalli di tempo.");
     lbInfoDati = new QLabel("");
 
     lbDescr->setWordWrap(true);

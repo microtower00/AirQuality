@@ -31,6 +31,7 @@ void MyChartView::setCompScelti(const QStringList& compScelti) {
     comp = compScelti;
     //resize(1250,750);
 }
+
 void MyChartView::lineChart(){
     resetView();
     emit chartPronto();
@@ -105,10 +106,6 @@ void MyChartView::radarChart(){
 
     //Creo le serie
     QMap<QString,double> fondoScala = MyPolarSeries::calcolaFondoScala(datiElab);
-    qDebug()<<fondoScala;
-    qDebug()<<MASSIMICONSENTITI;
-    qDebug()<<mediaFirstDay;
-    qDebug()<<mediaLastDay;
     QString nomeserie;
     for(QMap<QString,double> entry : datiElab){
         nomeserie = entry == mediaFirstDay ? "Primo giorno" : entry == mediaLastDay ? "Ultimo giorno" : "Val. di riferimento";

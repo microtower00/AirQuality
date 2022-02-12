@@ -16,6 +16,7 @@
 #include <QRadioButton>
 #include <QButtonGroup>
 #include <QFileDialog>
+#include <QErrorMessage>
 
 class ChartsChooser : public QGroupBox
 {
@@ -57,6 +58,7 @@ public slots:
 signals:
     void comboChanged(const MyChart::GraphType&);
     void chartCreated();
+    void erroreGraf(const QString&);
 };
 
 #endif // CHARTSCHOOSER_H

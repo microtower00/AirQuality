@@ -22,34 +22,43 @@ DataViewer::DataViewer(Dati* d, QWidget *parent) :
     lbDescr->setWordWrap(true);
     lbDescr->setAlignment(Qt::AlignJustify);
     setDescr(MyChart::GraphType::LineG);
+    //lbDescr->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
     hbDescr->addWidget(lbDescr);
     gbDescr->setLayout(hbDescr);
     gbDescr->setMaximumWidth(gbControlliGraf->width());
+    gbDescr->setMaximumHeight(200);
     gbDescr->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding));
 
     glMain->addWidget(gbControlliGraf, 0, 0);
     glMain->addWidget(gbControlliTab, 1, 0);
     glMain->addWidget(gbDescr, 2, 0);
 
+    errorDialog = new QErrorMessage();
+
+    setMinimumHeight(800);
+    setMaximumHeight(800);
+
     finestra = new QWidget();
     finestra->setLayout(glMain);
 
     setCentralWidget(finestra);
     setWindowTitle("Visualizzazione dati");
-
     connect(grafico, SIGNAL(chartPronto()), this, SLOT(mostraChart()));
     connect(grafico, SIGNAL(tipoChartPronto(MyChart::GraphType)), this, SLOT(setDescr(MyChart::GraphType)));
     connect(tabella, SIGNAL(tablePronta()), this, SLOT(mostraTable()));
     connect(gbControlliGraf, SIGNAL(comboChanged(MyChart::GraphType)), this, SLOT(setDescr(MyChart::GraphType)));
     connect(gbControlliGraf, SIGNAL(chartCreated()), gbControlliTab, SLOT(disableTabella()));
+    connect(gbControlliGraf, SIGNAL(erroreGraf(QString)), this, SLOT(erroreDialog(QString)));
 }
 
 void DataViewer::mostraChart() {
+    setMinimumWidth(1100);
+    setMaximumHeight(QWIDGETSIZE_MAX);
     tabella->close();
 
     if(hbGraf->count()!=1)
-        resize(gbControlliGraf->width()+1250, 900);
+        resize(gbControlliGraf->width()+1250, 800);
 
     hbGraf->removeWidget(tabella);
     hbGraf->addWidget(grafico);
@@ -63,10 +72,12 @@ void DataViewer::mostraChart() {
 }
 
 void DataViewer::mostraTable() {
+    setMinimumWidth(1100);
+    setMaximumHeight(QWIDGETSIZE_MAX);
     grafico->close();
 
     if(hbGraf->count()!=1)
-        resize(gbControlliGraf->width()+1101, 900);
+        resize(gbControlliGraf->width()+1101, 800);
 
     hbGraf->removeWidget(grafico);
     hbGraf->addWidget(tabella);
@@ -96,5 +107,10 @@ void DataViewer::setDescr(const MyChart::GraphType& tipoChart) {
         default : lbDescr->setText("nessun grafico");
     }
 }
+
+void DataViewer::erroreDialog(const QString& errore) {
+    errorDialog->showMessage(errore);
+}
+
 
 

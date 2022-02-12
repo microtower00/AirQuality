@@ -22,7 +22,6 @@ DataViewer::DataViewer(Dati* d, QWidget *parent) :
     lbDescr->setWordWrap(true);
     lbDescr->setAlignment(Qt::AlignJustify);
     setDescr(MyChart::GraphType::LineG);
-    //lbDescr->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 
     hbDescr->addWidget(lbDescr);
     gbDescr->setLayout(hbDescr);

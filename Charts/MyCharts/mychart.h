@@ -13,8 +13,6 @@
 #include <QCategoryAxis>
 #include <QScatterSeries>
 #include <QBarCategoryAxis>
-#include <QDebug>
-
 
 #include "Charts/MySeries/mylineseries.h"
 
@@ -29,7 +27,7 @@ public:
         AreaG,
         BarG,
         ScatterG,
-        RadarG //anche se non è il posto perfetto
+        RadarG
     };
 
     static GraphType stringToEnum(const QString&);
@@ -48,9 +46,6 @@ private:
     void buildBarChart(QMap<QString,QtCharts::QAbstractSeries*>);
     void buildAreaChart(QMap<QString,QtCharts::QAbstractSeries*>);
     QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> setLineAxis(QMap<QString, QtCharts::QAbstractSeries*>);
-
-
-
 };
 
 

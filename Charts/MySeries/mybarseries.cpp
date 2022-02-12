@@ -20,9 +20,7 @@ MyBarSeries::MyBarSeries(Dati* data, QList<QString> comp, QObject *parent)  : Qt
         }
     }
 
-    //Inserisco le barre
     for(QString c : comp){
-        //Un barset per ogni componente
         temp = new QtCharts::QBarSet(c);
         //Ad ogni intervallo la sua media
         for(int i = 0; i<10; ++i){

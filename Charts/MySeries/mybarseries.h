@@ -3,7 +3,6 @@
 
 #include <QBarSeries>
 #include <QBarSet>
-#include <QDebug>
 #include "Model/dati.h"
 
 class MyBarSeries : public QtCharts::QBarSeries

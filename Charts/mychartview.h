@@ -15,11 +15,9 @@
 #include <QBarSet>
 #include <QBarSeries>
 #include <QBarCategoryAxis>
-#include <QDebug>
 #include <QValueAxis>
 #include <QPolarChart>
 #include <QAreaSeries>
-#include <QColor>
 #include <QScatterSeries>
 #include <QCategoryAxis>
 #include <typeinfo>

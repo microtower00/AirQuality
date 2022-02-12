@@ -41,7 +41,7 @@ QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> MyChart::setLineAxis(QMap<
     QtCharts::QLineSeries* serieLine = dynamic_cast<QtCharts::QLineSeries*>(serie.first());
     int secondiIntervallo = (serieLine->points().at(serieLine->points().size()-1).x()-serieLine->points().at(0).x())/1000;
 
-    if(secondiIntervallo<7*86400)//meno di 3 giorni
+    if(secondiIntervallo<7*86400) //meno di 3 giorni
         asseX->setFormat("dd/MM hh:mm");
     else if(secondiIntervallo<365*86400)
         asseX->setFormat("dd/MM");
@@ -55,7 +55,6 @@ QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> MyChart::setLineAxis(QMap<
 void MyChart::buildLineChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
     QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> assi = setLineAxis(serie);
 
-    //Per ogni serie nella mapps setto nome e collego gli assi
     for(auto it=serie.begin(); it!=serie.end(); ++it){
         addSeries(*it);
         it.value()->setName(it.key());
@@ -67,6 +66,7 @@ void MyChart::buildLineChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
 
 void MyChart::buildAreaChart(QMap<QString, QtCharts::QAbstractSeries *> series){
     QPair<QtCharts::QDateTimeAxis*,QtCharts::QValueAxis*> assi = setLineAxis(series);
+
     //Sistemo le Y per stacked area chart
     for(auto it=series.begin()+1; it!=series.end(); ++it)
             *it=sommaY(dynamic_cast<QtCharts::QLineSeries*>(*it), dynamic_cast<QtCharts::QLineSeries*>(*(it-1)));
@@ -92,12 +92,11 @@ void MyChart::buildAreaChart(QMap<QString, QtCharts::QAbstractSeries *> series){
 void MyChart::buildScatterChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
 
     QtCharts::QScatterSeries* sSerie = static_cast<QtCharts::QScatterSeries*>(serie.first());
-    // asse X
+
     QtCharts::QValueAxis* asseX = new QtCharts::QValueAxis;
     asseX->setTickCount(24);
     addAxis(asseX, Qt::AlignBottom);
 
-    // asse Y
     QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();
     // lascio spazio sopra l'ultimo pallino
     asseY->setRange(0, maxFromSerie(sSerie)+(maxFromSerie(sSerie)/sSerie->markerSize()));
@@ -111,7 +110,6 @@ void MyChart::buildScatterChart(QMap<QString, QtCharts::QAbstractSeries*> serie)
 }
 
 void MyChart::buildBarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
-    //Posso perch`prevedo di passargli una sola serie, con tutti i barset
     addSeries(serie.first());
 
     QtCharts::QValueAxis* asseY = new QtCharts::QValueAxis();
@@ -123,7 +121,6 @@ void MyChart::buildBarChart(QMap<QString, QtCharts::QAbstractSeries*> serie){
 
 
     QtCharts::QBarCategoryAxis* asse = new QtCharts::QBarCategoryAxis();
-    //asse->setRange(QDateTime::currentDateTime().addMonths(-1).toString(),QDateTime::currentDateTime().toString());
     addAxis(asse,Qt::AlignBottom);
     serie.first()->attachAxis(asse);
 

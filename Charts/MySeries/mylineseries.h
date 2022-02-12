@@ -2,7 +2,6 @@
 #define MYLINESERIES_H
 
 #include <QLineSeries>
-#include <QDebug>
 #include "Model/dati.h"
 
 class MyLineSeries : public QtCharts::QLineSeries

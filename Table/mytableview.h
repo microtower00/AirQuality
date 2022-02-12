@@ -7,7 +7,6 @@
 #include <QJsonObject>
 #include <QTableView>
 #include <QTableWidget>
-#include <QDebug>
 #include <QJsonArray>
 #include <QVBoxLayout>
 #include <QDateTime>

@@ -2,10 +2,8 @@
 
 MyPolarSeries::MyPolarSeries(const QMap<QString, double>& mediaPrimoGiorno,  const QMap<QString, double>& fondoScala, const QList<QString>& componenti, QObject *parent) : QtCharts::QLineSeries{parent}{
 
-    for(QString comp:componenti){
-        //Segno ai gradi giusti per ogni componente
+    for(QString comp:componenti)
         append(QPointF(360/componenti.size()*componenti.indexOf(comp), mediaPrimoGiorno.value(comp)*100/fondoScala.value(comp)));
-    }
 
     //Chiudo il cerchio
     append(QPointF(360, mediaPrimoGiorno.value(componenti.first())*100/fondoScala.value(componenti.first())));

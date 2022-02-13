@@ -44,16 +44,16 @@ DataViewer::DataViewer (Dati *d, QWidget *parent)
 
     setCentralWidget (finestra);
     setWindowTitle ("Visualizzazione dati");
-    connect (grafico, SIGNAL (chartPronto ()), this, SLOT (mostraChart ()));
-    connect (grafico, SIGNAL (tipoChartPronto (MyChart::GraphType)), this,
-             SLOT (setDescr (MyChart::GraphType)));
-    connect (tabella, SIGNAL (tablePronta ()), this, SLOT (mostraTable ()));
-    connect (gbControlliGraf, SIGNAL (comboChanged (MyChart::GraphType)), this,
-             SLOT (setDescr (MyChart::GraphType)));
-    connect (gbControlliGraf, SIGNAL (chartCreated ()), gbControlliTab,
-             SLOT (disableTabella ()));
-    connect (gbControlliGraf, SIGNAL (erroreGraf (QString)), this,
-             SLOT (erroreDialog (QString)));
+    connect (grafico, SIGNAL (chartPronto()), this, SLOT(mostraChart()));
+    connect (grafico, SIGNAL (tipoChartPronto(MyChart::GraphType)), this,
+             SLOT (setDescr(MyChart::GraphType)));
+    connect (tabella, SIGNAL (tablePronta()), this, SLOT (mostraTable()));
+    connect (gbControlliGraf, SIGNAL(comboChanged(MyChart::GraphType)), this,
+             SLOT (setDescr(MyChart::GraphType)));
+    connect (gbControlliGraf, SIGNAL (chartCreated()), gbControlliTab,
+             SLOT (disableTabella()));
+    connect (gbControlliGraf, SIGNAL (erroreGraf(QString)), this,
+             SLOT (erroreDialog(QString)));
 }
 
 void

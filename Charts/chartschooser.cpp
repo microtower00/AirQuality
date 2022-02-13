@@ -64,13 +64,13 @@ ChartsChooser::ChartsChooser (Dati *dati)
     setFixedHeight (325);
     setSizePolicy (QSizePolicy (QSizePolicy::Fixed, QSizePolicy::Fixed));
 
-    connect (rbComponenti, SIGNAL (toggled (bool)), this,
-             SLOT (attivaComp (bool)));
-    connect (cbGrafici, SIGNAL (currentTextChanged (QString)), this,
-             SLOT (controlliComboBox (QString)));
-    connect (pbSelTutti, SIGNAL (clicked ()), this, SLOT (selezionaTutti ()));
-    connect (pbDelTutti, SIGNAL (clicked ()), this, SLOT (deselezionaTutti ()));
-    connect (pbConferma, SIGNAL (clicked ()), this, SLOT (createChart ()));
+    connect (rbComponenti, SIGNAL(toggled(bool)), this,
+             SLOT(attivaComp(bool)));
+    connect (cbGrafici, SIGNAL(currentTextChanged(QString)), this,
+             SLOT (controlliComboBox(QString)));
+    connect (pbSelTutti, SIGNAL (clicked()), this, SLOT(selezionaTutti()));
+    connect (pbDelTutti, SIGNAL (clicked()), this, SLOT(deselezionaTutti()));
+    connect (pbConferma, SIGNAL (clicked()), this, SLOT(createChart()));
 }
 
 void

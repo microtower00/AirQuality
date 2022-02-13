@@ -82,19 +82,19 @@ StartWindow::StartWindow (QWidget *parent) : QMainWindow{ parent }
     setMinimumSize (425, 350);
     setCentralWidget (finestra);
 
-    connect (this, SIGNAL (filePronto (const QJsonDocument *)), this,
-             SLOT (creoModel (const QJsonDocument *)));
-    connect (&aqr, SIGNAL (readReady (const QJsonDocument *)), this,
-             SLOT (creoModel (const QJsonDocument *)));
-    connect (pbImporta, SIGNAL (clicked ()), this, SLOT (chooseFile ()));
-    connect (pbOttieni, SIGNAL (clicked ()), this, SLOT (getAirQuality ()));
-    connect (pbCrea, SIGNAL (clicked ()), this, SLOT (apriFileVuoto ()));
-    connect (this, SIGNAL (modelCreato (Dati *)), this,
-             SLOT (apriFinestra (Dati *)));
-    connect (this, SIGNAL (mostraErrore (QString)), this,
-             SLOT (errorDialog (QString)));
-    connect (&aqr, SIGNAL (erroreRichiesta (QString)), this,
-             SLOT (errorDialog (QString)));
+    connect (this, SIGNAL (filePronto(const QJsonDocument*)), this,
+             SLOT (creoModel(const QJsonDocument*)));
+    connect (&aqr, SIGNAL(readReady(const QJsonDocument*)), this,
+             SLOT (creoModel(const QJsonDocument*)));
+    connect (pbImporta, SIGNAL(clicked()), this, SLOT (chooseFile()));
+    connect (pbOttieni, SIGNAL(clicked()), this, SLOT (getAirQuality()));
+    connect (pbCrea, SIGNAL(clicked()), this, SLOT (apriFileVuoto()));
+    connect (this, SIGNAL(modelCreato(Dati*)), this,
+             SLOT (apriFinestra(Dati*)));
+    connect (this, SIGNAL(mostraErrore(QString)), this,
+             SLOT(errorDialog(QString)));
+    connect (&aqr, SIGNAL(erroreRichiesta(QString)), this,
+             SLOT(errorDialog(QString)));
 }
 
 void
@@ -259,6 +259,7 @@ void
 StartWindow::errorDialog (const QString &param)
 {
     error->showMessage (param);
+    lbInfoDati->setText("");
 }
 
 void

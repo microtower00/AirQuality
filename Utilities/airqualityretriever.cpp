@@ -3,8 +3,8 @@
 AirQualityRetriever::AirQualityRetriever (QString apik) : apikey (apik)
 {
     manager = new QNetworkAccessManager ();
-    connect (manager, SIGNAL (finished (QNetworkReply *)), this,
-             SLOT (replyEnded (QNetworkReply *)));
+    connect (manager, SIGNAL (finished(QNetworkReply*)), this,
+             SLOT (replyEnded(QNetworkReply*)));
 }
 
 void
